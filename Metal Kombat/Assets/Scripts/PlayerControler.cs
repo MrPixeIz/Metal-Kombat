@@ -5,43 +5,88 @@ using UnityEngine;
 public class PlayerControler : MonoBehaviour
 {
 
-    public Animator animator;
-    float InputX;
-    public float InputY;
-    public float speed = 10.0F;
-    public float rotationSpeed = 10.0F;
+    public float inputX;
+    public float inputZ;
+    public Vector3 desiredMoveDirection;
+    public bool blockRotationPlayer;
+    public float desiredRotationSpeed;
+    public Animator anim;
+    public float speed;
+    public float allowPlayerRotation;
+    public Camera cam;
+    public CharacterController controller;
+    public bool isGrounded;
+    private float verticalVel;
+    private Vector3 moveVector;
 
-    // Use this for initialization
+    
+
     void Start()
     {
-        animator = this.gameObject.GetComponent<Animator>();
+        anim = this.GetComponent<Animator>();
+        cam = Camera.main;
+        controller = this.GetComponent<CharacterController>();
+
     }
 
-    // Update is called once per frame
     void Update()
     {
+        inputMagnitude();
 
-        float translation = Input.GetAxis("Vertical") * speed;
-        float rotation = Input.GetAxis("Horizontal") * rotationSpeed;
-        translation *= Time.deltaTime;
-        rotation *= Time.deltaTime;
-        transform.Translate(0, 0, translation);
-        transform.Rotate(0, rotation, 0);
-
-        if (Input.GetButtonDown("Jump"))
+        isGrounded = controller.isGrounded;
+        if (isGrounded)
         {
-            animator.SetTrigger("isJumping");
-        }
-
-        if (translation != 0)
-        {
-            animator.SetBool("isWalking", true);
+            verticalVel -= 0;
         }
         else
         {
-            animator.SetBool("isWalking", false);
+            verticalVel -= 2;
         }
-
-        
+        moveVector = new Vector3(0, verticalVel, 0);
+        controller.Move(moveVector);
     }
+
+    void PlayerMoveAndRotation()
+    {
+        inputX = Input.GetAxis("Horizontal");
+        inputZ = Input.GetAxis("Vertical");
+
+        var camera = Camera.main;
+        var foward = cam.transform.forward;
+        var right = cam.transform.right;
+
+        foward.y = 0f;
+        right.y = 0f;
+
+        foward.Normalize();
+        right.Normalize();
+
+        desiredMoveDirection = foward * inputZ + right * inputX;
+        if (blockRotationPlayer == false)
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(desiredMoveDirection), desiredRotationSpeed);
+        }
+    }
+
+    void inputMagnitude()
+    {
+        inputX = Input.GetAxis("Horizontal");
+        inputZ = Input.GetAxis("Vertical");
+        anim.SetFloat("InputZ", inputZ, 0.0f, Time.deltaTime * 2f);
+        anim.SetFloat("InputX", inputX, 0.0f, Time.deltaTime * 2f);
+
+        speed = new Vector2(inputZ, inputX).sqrMagnitude;
+
+        //Déplacer le joueur
+
+        if (speed > allowPlayerRotation)
+        {
+            anim.SetFloat("InputMagnitude", speed, 0.0f, Time.deltaTime);
+            PlayerMoveAndRotation();
+        }
+        else if (speed < allowPlayerRotation)
+        {
+            anim.SetFloat("InputMagnitude", speed, 0.0f, Time.deltaTime);
+        }
+    } 
 }

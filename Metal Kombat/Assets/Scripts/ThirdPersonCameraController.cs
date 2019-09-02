@@ -1,72 +1,61 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ThirdPersonCameraController : MonoBehaviour
 {
-    public float RotationSpeed = 1;
-    public Transform Target, Player;
-    float mouseX, mouseY;
-    public Transform Obstruction;
-    float zoomSpeed = 2f;
-    // Use this for initialization
+    public float cameraMoveSpeed=120.0f;
+    public GameObject cameraFollowObject;
+    Vector3 followPosition;
+    public float clampAngle = 80.0f;
+    public float inputSensitivity = 150.0f;
+    public GameObject cameraObject;
+    public GameObject playerObject;
+    public float CamDistanceXToPlayer;
+    public float CamDistanceYToPlayer;
+    public float CamDistanceZToPlayer;
+    public float mouseX;
+    public float mouseY;
+    public float finalInputX;
+    public float finalInputZ;
+    public float smoothX;
+    public float smoothY;
+    private float rotY = 0.0f;
+    private float rotX = 0.0f;
+
     void Start()
     {
-        Obstruction = Target;
-        Cursor.visible = false;
+        Vector3 rot = transform.localRotation.eulerAngles;
+        rotY = rot.y;
+        rotX = rot.x;
         Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
     }
 
-    // Update is called once per frame
     void Update()
-    {
-        CamControl();
-        ViewObstructed();
-    }
-    void CamControl()
-    {
-        mouseX += Input.GetAxis("Mouse X") * RotationSpeed;
-        mouseY -= Input.GetAxis("Mouse Y") * RotationSpeed;
-        mouseY = Mathf.Clamp(mouseY, -35, 60);
+    {   
+        mouseX = Input.GetAxis("Mouse X");
+        mouseY = Input.GetAxis("Mouse Y");
 
-        transform.LookAt(Target);
-
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            Target.rotation = Quaternion.Euler(mouseY, mouseX, 0);
-        }
-        else
-        {
-
-            Player.rotation = Quaternion.Euler(0, mouseX, 0);
-        }
-
+        rotY += mouseX * inputSensitivity * Time.deltaTime;
+        rotX+= mouseY * inputSensitivity * Time.deltaTime;
+        rotX = Mathf.Clamp(rotX, -clampAngle, clampAngle);
+        Quaternion localRotation = Quaternion.Euler(rotX, rotY, 0.0f);
+        transform.rotation = localRotation;
     }
 
-    void ViewObstructed()
+    private void LateUpdate()
     {
-        RaycastHit hit;
+        CameraUpdater();
+    }
 
-        if (Physics.Raycast(transform.position, Target.position - transform.position, out hit, 4.5f))
-        {
-            if (hit.collider.gameObject.tag != "Player")
-            {
-                Obstruction = hit.transform;
-                Obstruction.gameObject.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
+    private void CameraUpdater()
+    {
+        Transform target = cameraFollowObject.transform;
 
-                if (Vector3.Distance(Obstruction.position, transform.position) >= 3f && Vector3.Distance(transform.position, Target.position) >= 1.5f)
-                {
-                    transform.Translate(Vector3.forward * zoomSpeed * Time.deltaTime);
-                }
-            }
-            else
-            {
-                Obstruction.gameObject.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
-                if ( Vector3.Distance(transform.position, Target.position) < 4.5f)
-                {
-                    transform.Translate(Vector3.back * zoomSpeed * Time.deltaTime);
-                }
-            }
-        }
+        float step = cameraMoveSpeed * Time.deltaTime;
+        transform.position = Vector3.MoveTowards(transform.position, target.position, step);
     }
 }
