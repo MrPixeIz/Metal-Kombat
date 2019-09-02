@@ -19,14 +19,12 @@ public class PlayerControler : MonoBehaviour
     private float verticalVel;
     private Vector3 moveVector;
 
-    
-
     void Start()
     {
         anim = this.GetComponent<Animator>();
         cam = Camera.main;
         controller = this.GetComponent<CharacterController>();
-
+       
     }
 
     void Update()
@@ -37,10 +35,19 @@ public class PlayerControler : MonoBehaviour
         if (isGrounded)
         {
             verticalVel -= 0;
+            if (Input.GetButtonDown("Jump"))
+            {
+                anim.SetTrigger("isJumping");     
+            }
+            if (Input.GetMouseButtonDown(0))
+            {
+                anim.SetTrigger("isPunching");
+            }
         }
         else
         {
             verticalVel -= 2;
+
         }
         moveVector = new Vector3(0, verticalVel, 0);
         controller.Move(moveVector);
@@ -88,5 +95,5 @@ public class PlayerControler : MonoBehaviour
         {
             anim.SetFloat("InputMagnitude", speed, 0.0f, Time.deltaTime);
         }
-    } 
+    }
 }

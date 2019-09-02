@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 8439ef0946a215f4a96db94b0613a15c
+guid: 754b30496d56daf40af3d87443b4efdc
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
@@ -617,13 +617,13 @@ ModelImporter:
         length: 0
         modified: 0
     skeleton:
-    - name: dreyar_m_aure@Jump (1)(Clone)
+    - name: dreyar_m_aure@Jump (2)(Clone)
       parentName: 
       position: {x: 0, y: 0, z: 0}
       rotation: {x: 0, y: 0, z: 0, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: mixamorig:Hips
-      parentName: dreyar_m_aure@Jump (1)(Clone)
+      parentName: dreyar_m_aure@Jump (2)(Clone)
       position: {x: 0.035960775, y: 9.477514, z: -0.17011009}
       rotation: {x: -0.049420334, y: -0.09013591, z: -0.01409505, w: 0.9946027}
       scale: {x: 1, y: 1, z: 1}
