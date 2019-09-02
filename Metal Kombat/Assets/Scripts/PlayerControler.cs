@@ -90,6 +90,7 @@ public class PlayerControler : MonoBehaviour
         {
             anim.SetFloat("InputMagnitude", speed, 0.0f, Time.deltaTime);
             PlayerMoveAndRotation();
+            
         }
         else if (speed < allowPlayerRotation)
         {
