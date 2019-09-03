@@ -100,7 +100,7 @@ public class PlayerControler : MonoBehaviour
     bool GroundCheck()
     {
         RaycastHit hit;
-        float distance = 2f;
+        float distance = 5f;
         Vector3 dir = new Vector3(0, -1);
 
         Debug.DrawRay(transform.position, dir,Color.red);
