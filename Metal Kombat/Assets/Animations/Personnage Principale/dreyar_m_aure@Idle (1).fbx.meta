@@ -142,7 +142,22 @@ ModelImporter:
     7400000: Idle (1)
     9500000: //RootNode
     13700000: Dreyar
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Dreyar_diffuse
+    second: {fileID: 2800000, guid: b97ce3978940e53488f33bd9e41ef930, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Dreyar_normal
+    second: {fileID: 2800000, guid: 4aa4906cbf9a52b4eb3f99d2af191828, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Dreyar_specular
+    second: {fileID: 2800000, guid: e589d1dc6d237a9429c454376706a9d7, type: 3}
   materials:
     importMaterials: 1
     materialName: 0

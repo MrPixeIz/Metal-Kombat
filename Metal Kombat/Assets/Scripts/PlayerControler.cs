@@ -18,20 +18,20 @@ public class PlayerControler : MonoBehaviour
     public bool isGrounded;
     private float verticalVel;
     private Vector3 moveVector;
-
+    
+    
     void Start()
     {
         anim = this.GetComponent<Animator>();
         cam = Camera.main;
         controller = this.GetComponent<CharacterController>();
-       
     }
 
     void Update()
     {
         inputMagnitude();
 
-        isGrounded = controller.isGrounded;
+        isGrounded = GroundCheck();
         if (isGrounded)
         {
             verticalVel -= 0;
@@ -47,7 +47,6 @@ public class PlayerControler : MonoBehaviour
         else
         {
             verticalVel -= 2;
-
         }
         moveVector = new Vector3(0, verticalVel, 0);
         controller.Move(moveVector);
@@ -97,4 +96,25 @@ public class PlayerControler : MonoBehaviour
             anim.SetFloat("InputMagnitude", speed, 0.0f, Time.deltaTime);
         }
     }
+
+    bool GroundCheck()
+    {
+        RaycastHit hit;
+        float distance = 2f;
+        Vector3 dir = new Vector3(0, -1);
+
+        Debug.DrawRay(transform.position, dir,Color.red);
+        
+        if (Physics.Raycast(transform.position, dir, out hit, distance))
+        {
+            isGrounded = true;
+        }
+        else
+        {
+            isGrounded = false;
+        }
+        return isGrounded;
+    }
+
+
 }
