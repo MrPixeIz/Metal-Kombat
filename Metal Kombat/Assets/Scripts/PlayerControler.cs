@@ -34,19 +34,26 @@ public class PlayerControler : MonoBehaviour
         isGrounded = GroundCheck();
         if (isGrounded)
         {
-            verticalVel -= 0;
+            //verticalVel -= 0;
             if (Input.GetButtonDown("Jump"))
             {
                 anim.SetTrigger("isJumping");     
             }
+            //****************************************************************************************************************************
+            //****************************************************************************************************************************
+            //Retirer GetMouseButton pour axis
             if (Input.GetMouseButtonDown(0))
             {
                 anim.SetTrigger("isPunching");
             }
+            //****************************************************************************************************************************
+            //****************************************************************************************************************************
+
         }
         else
         {
-            verticalVel -= 2;
+            verticalVel -= 1;
+            anim.SetTrigger("isFalling");
         }
         moveVector = new Vector3(0, verticalVel, 0);
         controller.Move(moveVector);
@@ -100,7 +107,7 @@ public class PlayerControler : MonoBehaviour
     bool GroundCheck()
     {
         RaycastHit hit;
-        float distance = 5f;
+        float distance = 0.9f;
         Vector3 dir = new Vector3(0, -1);
 
         Debug.DrawRay(transform.position, dir,Color.red);
