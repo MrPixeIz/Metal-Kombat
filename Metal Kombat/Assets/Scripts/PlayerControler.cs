@@ -18,10 +18,10 @@ public class PlayerControler : MonoBehaviour
     public bool isGrounded;
     private float verticalVel;
     private Vector3 moveVector;
-    private float gravity=20.0f;
+    private float gravity = 20.0f;
     private float jumpForce = 10.0f;
-    
-    
+
+
     void Start()
     {
         anim = this.GetComponent<Animator>();
@@ -37,12 +37,21 @@ public class PlayerControler : MonoBehaviour
         if (isGrounded)
         {
             anim.SetBool("isFalling", false);
-            verticalVel = - gravity*Time.deltaTime;
+            verticalVel = -gravity * Time.deltaTime;
             if (Input.GetButtonDown("Jump"))
             {
                 verticalVel = jumpForce;
-                anim.SetTrigger("isJumping");     
+                anim.SetTrigger("isJumping");
             }
+            /*if (Input.GetKeyDown(KeyCode.C))
+            {
+                anim.SetBool("isCrouched", true);
+            }
+            else
+            {
+                anim.SetBool("isCrouched", false);
+            }*/
+
             //****************************************************************************************************************************
             //****************************************************************************************************************************
             //Retirer GetMouseButton pour axis
@@ -56,11 +65,11 @@ public class PlayerControler : MonoBehaviour
         }
         else
         {
-            verticalVel -= gravity * Time.deltaTime;
+            verticalVel -=gravity*Time.deltaTime ;
             //anim.SetBool("isFalling",true);
         }
         moveVector = new Vector3(0, verticalVel, 0);
-        controller.Move(moveVector*Time.deltaTime);
+        controller.Move(moveVector * Time.deltaTime);
     }
 
     void PlayerMoveAndRotation()
@@ -100,7 +109,7 @@ public class PlayerControler : MonoBehaviour
         {
             anim.SetFloat("InputMagnitude", speed, 0.0f, Time.deltaTime);
             PlayerMoveAndRotation();
-            
+
         }
         else if (speed < allowPlayerRotation)
         {
@@ -115,9 +124,9 @@ public class PlayerControler : MonoBehaviour
         float distance2 = 1.95f;
         Vector3 dir = new Vector3(0, -1);
 
-        Debug.DrawRay(transform.position, dir,Color.red);
-        
-        if (Physics.Raycast(transform.position, dir, out hit, distance1)|| Physics.Raycast(transform.position, dir, out hit, distance2))
+        Debug.DrawRay(transform.position, dir, Color.red);
+
+        if (Physics.Raycast(transform.position, dir, out hit, distance1) || Physics.Raycast(transform.position, dir, out hit, distance2))
         {
             isGrounded = true;
         }
