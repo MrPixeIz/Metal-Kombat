@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(CharacterController))]
 public class PlayerControler : MonoBehaviour
 {
 
@@ -19,8 +20,10 @@ public class PlayerControler : MonoBehaviour
     private float verticalVel;
     private Vector3 moveVector;
     private float gravity = 20.0f;
-    private float jumpForce = 10.0f;
+    private float jumpForce = 15.0f;
     private bool isCrouched = false;
+    private float crouchStartTime;
+    
 
 
     void Start()
@@ -39,7 +42,7 @@ public class PlayerControler : MonoBehaviour
         {
             anim.SetBool("isFalling", false);
             verticalVel = -gravity * Time.deltaTime;
-            if (Input.GetButtonDown("Jump") && isCrouched==false)
+            if (Input.GetButtonDown("Jump") && isCrouched == false)
             {
                 verticalVel = jumpForce;
                 anim.SetTrigger("isJumping");
@@ -48,6 +51,7 @@ public class PlayerControler : MonoBehaviour
             {
                 if (isCrouched)
                 {
+
                     isCrouched = false;
                 }
                 else
@@ -55,8 +59,19 @@ public class PlayerControler : MonoBehaviour
                     isCrouched = true;
                 }
                 anim.SetBool("isCrouched", isCrouched);
+crouchStartTime = Time.time;
+                if (isCrouched)
+                {                                     
+                    StartCoroutine(UpdateHeight(17, 10, 0.5f));
+                }
+                else
+                {
+                    StartCoroutine(UpdateHeight(10, 17, 0.5f));
+                }
+
+
             }
-            
+
 
             //****************************************************************************************************************************
             //****************************************************************************************************************************
@@ -71,11 +86,24 @@ public class PlayerControler : MonoBehaviour
         }
         else
         {
-            verticalVel -=gravity*Time.deltaTime ;
-            //anim.SetBool("isFalling",true);
+            verticalVel -= gravity * Time.deltaTime;
+            anim.SetBool("isFalling", true);
         }
+
+        //if (isCrouched)
+        //{
+
+        //    controller.height = 10.0f;
+        //}
+        //else
+        //{
+
+        //    controller.height = 17.0f;
+        //}
+
         moveVector = new Vector3(0, verticalVel, 0);
-        controller.Move(moveVector * Time.deltaTime);
+        controller.SimpleMove(moveVector * Time.deltaTime);
+
     }
 
     void PlayerMoveAndRotation()
@@ -120,6 +148,7 @@ public class PlayerControler : MonoBehaviour
         else if (speed < allowPlayerRotation)
         {
             anim.SetFloat("InputMagnitude", speed, 0.0f, Time.deltaTime);
+
         }
     }
 
@@ -127,12 +156,15 @@ public class PlayerControler : MonoBehaviour
     {
         RaycastHit hit;
         float distance1 = 0.1f;
-        float distance2 = 1.95f;
+        float distance2 = 2.5f;
         Vector3 dir = new Vector3(0, -1);
+        Vector3 startPosition = transform.position;
+        startPosition.y += 2f;
+        Debug.DrawRay(startPosition, dir, Color.red);
 
-        Debug.DrawRay(transform.position, dir, Color.red);
 
-        if (Physics.Raycast(transform.position, dir, out hit, distance1) || Physics.Raycast(transform.position, dir, out hit, distance2))
+
+        if (Physics.Raycast(startPosition, dir, out hit, distance1) || Physics.Raycast(startPosition, dir, out hit, distance2))
         {
             isGrounded = true;
         }
@@ -141,6 +173,22 @@ public class PlayerControler : MonoBehaviour
             isGrounded = false;
         }
         return isGrounded;
+    }
+    IEnumerator UpdateHeight(float startHeight, float endHeight, float time)
+    {
+        float delta = Time.time - crouchStartTime;
+        while (delta < 1)
+        {
+            delta = Time.time - crouchStartTime;
+            float percentCompletion = delta / time;
+            controller.height = Mathf.Lerp(startHeight, endHeight, percentCompletion);
+           
+            Mathf.Lerp(17, 10, delta);
+            //StartCoroutine("UpdateHeight");
+            print(Mathf.Lerp(17, 10, delta));
+            yield return new WaitForSeconds(0.1f);
+           
+        }
     }
 
 
