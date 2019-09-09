@@ -53,7 +53,7 @@ public class PlayerControler : MonoBehaviour
         else
         {
             verticalVel -= 1;
-            anim.SetTrigger("isFalling");
+            //anim.SetTrigger("isFalling");
         }
         moveVector = new Vector3(0, verticalVel, 0);
         controller.Move(moveVector);

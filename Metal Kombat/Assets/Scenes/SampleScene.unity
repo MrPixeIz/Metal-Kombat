@@ -1122,7 +1122,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 778203265}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 20, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 451210729}
@@ -1982,6 +1982,47 @@ Transform:
   m_Father: {fileID: 541940753}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1485072219 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100132, guid: 2f1b4d1405f4b0c4894a9607eb69e11a,
+    type: 3}
+  m_PrefabInternal: {fileID: 1582068362}
+--- !u!114 &1485072221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1485072219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76be8f5a13c204a4d887afb7838bad86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputX: 0
+  inputZ: 0
+  Target: {fileID: 0}
+  chaseRange: 10
+  anim: {fileID: 0}
+  speed: 0
+  desiredMoveDirection: {x: 0, y: 0, z: 0}
+  desiredRotationSpeed: 0
+--- !u!143 &1485072222
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1485072219}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Height: 1.89
+  m_Radius: 0.3
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0.95, z: 0}
 --- !u!1 &1523840831
 GameObject:
   m_ObjectHideFlags: 0
@@ -2266,6 +2307,10 @@ Prefab:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 06486cbace7535a4ab36c118bdb5a2a7, type: 2}
+    - target: {fileID: 9500000, guid: 2f1b4d1405f4b0c4894a9607eb69e11a, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2f1b4d1405f4b0c4894a9607eb69e11a, type: 3}
   m_IsPrefabAsset: 0
@@ -2848,6 +2893,7 @@ GameObject:
   - component: {fileID: 2108509472}
   - component: {fileID: 2108509471}
   - component: {fileID: 2108509473}
+  - component: {fileID: 2108509474}
   m_Layer: 0
   m_Name: Ennemi
   m_TagString: Untagged
@@ -2897,13 +2943,32 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 1.95
+  m_Height: 1.89
   m_Radius: 0.3
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0.65, y: 0.95, z: 0.4}
+--- !u!114 &2108509474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2108509470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76be8f5a13c204a4d887afb7838bad86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputX: 0
+  inputZ: 0
+  Target: {fileID: 0}
+  chaseRange: 10
+  anim: {fileID: 0}
+  speed: 0
+  desiredMoveDirection: {x: 0, y: 0, z: 0}
+  desiredRotationSpeed: 0
 --- !u!1 &2128793931
 GameObject:
   m_ObjectHideFlags: 0
