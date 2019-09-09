@@ -18,8 +18,11 @@ public class PlayerControler : MonoBehaviour
     public bool isGrounded;
     private float verticalVel;
     private Vector3 moveVector;
-    
-    
+    private float gravity = 20.0f;
+    private float jumpForce = 10.0f;
+    private bool isCrouched = false;
+
+
     void Start()
     {
         anim = this.GetComponent<Animator>();
@@ -34,11 +37,27 @@ public class PlayerControler : MonoBehaviour
         isGrounded = GroundCheck();
         if (isGrounded)
         {
-            //verticalVel -= 0;
-            if (Input.GetButtonDown("Jump"))
+            anim.SetBool("isFalling", false);
+            verticalVel = -gravity * Time.deltaTime;
+            if (Input.GetButtonDown("Jump") && isCrouched==false)
             {
-                anim.SetTrigger("isJumping");     
+                verticalVel = jumpForce;
+                anim.SetTrigger("isJumping");
             }
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                if (isCrouched)
+                {
+                    isCrouched = false;
+                }
+                else
+                {
+                    isCrouched = true;
+                }
+                anim.SetBool("isCrouched", isCrouched);
+            }
+            
+
             //****************************************************************************************************************************
             //****************************************************************************************************************************
             //Retirer GetMouseButton pour axis
@@ -52,11 +71,11 @@ public class PlayerControler : MonoBehaviour
         }
         else
         {
-            verticalVel -= 1;
-            anim.SetTrigger("isFalling");
+            verticalVel -=gravity*Time.deltaTime ;
+            anim.SetBool("isFalling",true);
         }
         moveVector = new Vector3(0, verticalVel, 0);
-        controller.Move(moveVector);
+        controller.Move(moveVector * Time.deltaTime);
     }
 
     void PlayerMoveAndRotation()
@@ -96,7 +115,7 @@ public class PlayerControler : MonoBehaviour
         {
             anim.SetFloat("InputMagnitude", speed, 0.0f, Time.deltaTime);
             PlayerMoveAndRotation();
-            
+
         }
         else if (speed < allowPlayerRotation)
         {
@@ -107,12 +126,13 @@ public class PlayerControler : MonoBehaviour
     bool GroundCheck()
     {
         RaycastHit hit;
-        float distance = 0.9f;
+        float distance1 = 0.1f;
+        float distance2 = 1.95f;
         Vector3 dir = new Vector3(0, -1);
 
-        Debug.DrawRay(transform.position, dir,Color.red);
-        
-        if (Physics.Raycast(transform.position, dir, out hit, distance))
+        Debug.DrawRay(transform.position, dir, Color.red);
+
+        if (Physics.Raycast(transform.position, dir, out hit, distance1) || Physics.Raycast(transform.position, dir, out hit, distance2))
         {
             isGrounded = true;
         }
