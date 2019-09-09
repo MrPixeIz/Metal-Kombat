@@ -20,6 +20,7 @@ public class PlayerControler : MonoBehaviour
     private Vector3 moveVector;
     private float gravity = 20.0f;
     private float jumpForce = 10.0f;
+    private bool isCrouched = false;
 
 
     void Start()
@@ -38,19 +39,24 @@ public class PlayerControler : MonoBehaviour
         {
             anim.SetBool("isFalling", false);
             verticalVel = -gravity * Time.deltaTime;
-            if (Input.GetButtonDown("Jump"))
+            if (Input.GetButtonDown("Jump") && isCrouched==false)
             {
                 verticalVel = jumpForce;
                 anim.SetTrigger("isJumping");
             }
-            /*if (Input.GetKeyDown(KeyCode.C))
+            if (Input.GetKeyDown(KeyCode.C))
             {
-                anim.SetBool("isCrouched", true);
+                if (isCrouched)
+                {
+                    isCrouched = false;
+                }
+                else
+                {
+                    isCrouched = true;
+                }
+                anim.SetBool("isCrouched", isCrouched);
             }
-            else
-            {
-                anim.SetBool("isCrouched", false);
-            }*/
+            
 
             //****************************************************************************************************************************
             //****************************************************************************************************************************
