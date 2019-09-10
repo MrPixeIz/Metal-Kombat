@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class followMouse : MonoBehaviour {
 
-   public GameObject player;
+    public GameObject player;
     public Camera playerCamera;
+    public float axisY = 0;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
 		
 	}
 	
@@ -19,10 +20,23 @@ public class followMouse : MonoBehaviour {
         {
             player.transform.Rotate(0, Input.GetAxis("Mouse X") * 5, 0);
         }
-        if(Input.GetAxis("Mouse Y") != 0)
+
+
+        if (Input.GetAxis("Mouse Y") != 0 && axisY < 20 && axisY > -20)
         {
-                playerCamera.transform.Rotate(-Input.GetAxis("Mouse Y") * 5, 0, 0);
-                playerCamera.transform.Translate(0, -Input.GetAxis("Mouse Y") * 0.1f, 0);
+            axisY += Input.GetAxis("Mouse Y");
+            playerCamera.transform.Rotate(-Input.GetAxis("Mouse Y") * 2, 0, 0);
+            playerCamera.transform.Translate(0, -Input.GetAxis("Mouse Y") * 0.1f, 0);
+        } else if (Input.GetAxis("Mouse Y") > 0 && axisY <= -20)
+        {
+            axisY += Input.GetAxis("Mouse Y");
+            playerCamera.transform.Rotate(-Input.GetAxis("Mouse Y") * 2, 0, 0);
+            playerCamera.transform.Translate(0, -Input.GetAxis("Mouse Y") * 0.1f, 0);
+        } else if (Input.GetAxis("Mouse Y") < 0 && axisY >= 20)
+        {
+            axisY += Input.GetAxis("Mouse Y");
+            playerCamera.transform.Rotate(-Input.GetAxis("Mouse Y") * 2, 0, 0);
+            playerCamera.transform.Translate(0, -Input.GetAxis("Mouse Y") * 0.1f, 0);
         }
    
 	}
