@@ -96,8 +96,8 @@ public class PlayerControler : MonoBehaviour
         {           
             anim.SetBool("isFalling", true);
             moveVector = new Vector3(0, verticalVel, 0);
-            moveVector.x = (((1f - hitNormal.y) * hitNormal.x * (1f - slideFriction)));
-            moveVector.z = (((1f - hitNormal.y) * hitNormal.z * (1f - slideFriction)));
+            moveVector.x = (((1f - hitNormal.y) * hitNormal.x * (1f - slideFriction))*10);
+            moveVector.z = (((1f - hitNormal.y) * hitNormal.z * (1f - slideFriction))*10);
             
         }
 
