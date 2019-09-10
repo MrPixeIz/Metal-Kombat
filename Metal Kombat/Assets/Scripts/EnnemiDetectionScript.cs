@@ -8,7 +8,8 @@ public class EnnemiDetectionScript : MonoBehaviour
     public float inputZ;
     private float Distance;
     public Transform Target;
-    public float chaseRange = 10;
+    public float chaseRange = 30;
+    public float attackRange = 5;
     public Animator anim;
     public float speed;
     public Vector3 desiredMoveDirection;
@@ -26,30 +27,50 @@ public class EnnemiDetectionScript : MonoBehaviour
 
         if (Distance > chaseRange)
         {
-            idle();
+            anim.SetBool("isPunching", false);
+            anim.SetBool("isIdlePunching", false);
+            Idle();
         }
 
-        if (Distance <= chaseRange)
-        {      
-            chase();
+        if (Distance <= chaseRange && Distance >= attackRange)
+        {
+            anim.SetBool("isPunching", false);
+            anim.SetBool("isIdlePunching", false);
+            Chase();
+        }
+
+        if (Distance <= attackRange)
+        {
+            Attack();
         }
     }
 
-    void chase()
+    void Chase()
     {
-        /*Changer le inputX,Z pour qu'il prenne les coordonnées du Player*/
-        inputX = 0;       
-        inputZ = 0.2f;
-        
-        speed = 0.5f;
+        CharacterController controller = this.GetComponent<CharacterController>();
+
+        speed = 3f;
 
         anim.SetFloat("InputMagnitude", speed, 0.0f, Time.deltaTime);
-        transform.Translate(new Vector3(inputX, 0, inputZ));
+        var forward = transform.TransformDirection(Vector3.forward);
+        controller.SimpleMove(forward * speed);
+        transform.LookAt(Target);
     }
 
-    void idle()
+    void Idle()
     {
-        /*On met l'inputMagnitude à 0 pour que l'animation redevienne à Idle*/
         anim.SetFloat("InputMagnitude", 0, 0.0f, Time.deltaTime);
     }
+
+    void Attack()
+    {
+        anim.SetBool("isPunching", true);
+        IdlePunching();
+    }
+
+    void IdlePunching()
+    {
+        anim.SetBool("isIdlePunching", true);
+    }
+
 }
