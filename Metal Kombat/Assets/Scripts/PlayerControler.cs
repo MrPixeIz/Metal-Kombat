@@ -23,6 +23,8 @@ public class PlayerControler : MonoBehaviour
     private float jumpForce = 15.0f;
     private bool isCrouched = false;
     private float crouchStartTime;
+    private bool isCrouching = false;
+    private Sounds sounds;
     
 
 
@@ -31,12 +33,12 @@ public class PlayerControler : MonoBehaviour
         anim = this.GetComponent<Animator>();
         cam = Camera.main;
         controller = this.GetComponent<CharacterController>();
+        sounds = GetComponentInChildren<Sounds>();
     }
 
     void Update()
     {
         inputMagnitude();
-
         isGrounded = GroundCheck();
         if (isGrounded)
         {
@@ -49,27 +51,31 @@ public class PlayerControler : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.C))
             {
-                if (isCrouched)
+                if (!isCrouching)
                 {
-
-                    isCrouched = false;
+                    isCrouching = true;
+                    if (isCrouched)
+                    {
+                        isCrouched = false;
+                    }
+                    else
+                    {
+                        isCrouched = true;
+                    }
+                    anim.SetBool("isCrouched", isCrouched);
+                    crouchStartTime = Time.time;
+                    if (isCrouched)
+                    {
+                        print("going down");
+                        StartCoroutine(UpdateHeight(17, 10, 0.5f));
+                    }
+                    else
+                    {
+                        print("going up");
+                        StartCoroutine(UpdateHeight(10, 17, 0.1f));
+                    }
                 }
-                else
-                {
-                    isCrouched = true;
-                }
-                anim.SetBool("isCrouched", isCrouched);
-crouchStartTime = Time.time;
-                if (isCrouched)
-                {                                     
-                    StartCoroutine(UpdateHeight(17, 10, 0.5f));
-                }
-                else
-                {
-                    StartCoroutine(UpdateHeight(10, 17, 0.5f));
-                }
-
-
+               
             }
 
 
@@ -82,25 +88,13 @@ crouchStartTime = Time.time;
             }
             //****************************************************************************************************************************
             //****************************************************************************************************************************
-
         }
         else
         {
             verticalVel -= gravity * Time.deltaTime;
             anim.SetBool("isFalling", true);
         }
-
-        //if (isCrouched)
-        //{
-
-        //    controller.height = 10.0f;
-        //}
-        //else
-        //{
-
-        //    controller.height = 17.0f;
-        //}
-
+      
         moveVector = new Vector3(0, verticalVel, 0);
         controller.SimpleMove(moveVector * Time.deltaTime);
 
@@ -184,12 +178,17 @@ crouchStartTime = Time.time;
             controller.height = Mathf.Lerp(startHeight, endHeight, percentCompletion);
            
             Mathf.Lerp(17, 10, delta);
-            //StartCoroutine("UpdateHeight");
+
             print(Mathf.Lerp(17, 10, delta));
             yield return new WaitForSeconds(0.1f);
            
         }
+        isCrouching = false;
     }
 
+    public void PlaySound(AudioClip clipAudio)
+    {
+        //sounds.PlaySound(clipAudio);
+    }
 
 }
