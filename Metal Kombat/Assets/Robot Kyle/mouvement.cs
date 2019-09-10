@@ -22,7 +22,7 @@ public class mouvement : MonoBehaviour {
             Vector3 mouvement = new Vector3(horizontal, 0.0f, vertical);
             Vector3 ajustedMouvement = transform.TransformDirection(mouvement);
 
-            ajustedMouvement.y -= 50.0f * Time.deltaTime;
+            ajustedMouvement.y -= 90.0f * Time.deltaTime;
 
             characterController.Move(ajustedMouvement * Time.deltaTime * 20);
 
