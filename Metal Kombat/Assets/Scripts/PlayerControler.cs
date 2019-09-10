@@ -20,7 +20,7 @@ public class PlayerControler : MonoBehaviour
     private float verticalVel;
     private Vector3 moveVector;
     private float gravity = 20.0f;
-    private float jumpForce = 1000.0f;
+    private float jumpForce = 10.0f;
     private bool isCrouched = false;
     private float crouchStartTime;
     private bool isCrouching = false;
@@ -44,7 +44,7 @@ public class PlayerControler : MonoBehaviour
         if (isGrounded)
         {
             anim.SetBool("isFalling", false);
-            verticalVel = -gravity * Time.deltaTime;
+            //verticalVel = -gravity * Time.deltaTime;
             if (Input.GetButtonDown("Jump") && isCrouched == false)
             {
                 verticalVel = jumpForce;
@@ -90,19 +90,20 @@ public class PlayerControler : MonoBehaviour
             //****************************************************************************************************************************
             //****************************************************************************************************************************
             moveVector = new Vector3(0, verticalVel, 0);
+            
         }
         else
-        {
-            verticalVel -= gravity * Time.deltaTime;
+        {           
             anim.SetBool("isFalling", true);
             moveVector = new Vector3(0, verticalVel, 0);
-            moveVector.x = (((1f - hitNormal.y) * hitNormal.x * (1f - slideFriction)) * 2000);
-            moveVector.z = (((1f - hitNormal.y) * hitNormal.z * (1f - slideFriction)) * 2000);
-            print(moveVector.z + " " + moveVector.x);
+            moveVector.x = (((1f - hitNormal.y) * hitNormal.x * (1f - slideFriction)));
+            moveVector.z = (((1f - hitNormal.y) * hitNormal.z * (1f - slideFriction)));
+            
         }
 
-        print(moveVector.y);
-        controller.SimpleMove(moveVector * Time.deltaTime);
+        
+        verticalVel -= gravity * Time.deltaTime;
+        controller.Move(moveVector * Time.deltaTime);
 
     }
 
