@@ -19,8 +19,8 @@ public class PlayerControler : MonoBehaviour
     public bool isGrounded;
     private float verticalVel;
     private Vector3 moveVector;
-    private float gravity = 20.0f;
-    private float jumpForce = 15.0f;
+    private float gravity = 30.0f;
+    private float jumpForce = 10.0f;
     private bool isCrouched = false;
     private float crouchStartTime;
     private bool isCrouching = false;
@@ -44,11 +44,13 @@ public class PlayerControler : MonoBehaviour
         if (isGrounded)
         {
             anim.SetBool("isFalling", false);
-            verticalVel = -gravity * Time.deltaTime;
+            anim.SetBool("isJumping", false);
+            //verticalVel = -gravity * Time.deltaTime;
             if (Input.GetButtonDown("Jump") && isCrouched == false)
             {
                 verticalVel = jumpForce;
-                anim.SetTrigger("isJumping");
+                anim.SetBool("isJumping",true);
+                
             }
             if (Input.GetKeyDown(KeyCode.C))
             {
@@ -76,7 +78,7 @@ public class PlayerControler : MonoBehaviour
                         StartCoroutine(UpdateHeight(10, 17, 0.1f));
                     }
                 }
-                moveVector = new Vector3(0, verticalVel, 0);  
+ 
             }
 
 
@@ -90,26 +92,27 @@ public class PlayerControler : MonoBehaviour
             //****************************************************************************************************************************
             //****************************************************************************************************************************
             moveVector = new Vector3(0, verticalVel, 0);
+            
         }
         else
-        {
-            verticalVel -= gravity * Time.deltaTime;
+        {           
             anim.SetBool("isFalling", true);
             moveVector = new Vector3(0, verticalVel, 0);
-            moveVector.x = (((1f - hitNormal.y) * hitNormal.x * (1f - slideFriction))*2000);
-        moveVector.z = (((1f - hitNormal.y) * hitNormal.z * (1f - slideFriction))*2000);
-        print(moveVector.z +" "+ moveVector.x);
+            moveVector.x = (((1f - hitNormal.y) * hitNormal.x * (1f - slideFriction))*10);
+            moveVector.z = (((1f - hitNormal.y) * hitNormal.z * (1f - slideFriction))*10);
+            
         }
-      
-       
-        controller.SimpleMove(moveVector * Time.deltaTime);
+
+        
+        verticalVel -= gravity * Time.deltaTime;
+        controller.Move(moveVector * Time.deltaTime);
 
     }
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
         hitNormal = hit.normal;
-       
+
     }
     void PlayerMoveAndRotation()
     {
@@ -187,12 +190,12 @@ public class PlayerControler : MonoBehaviour
             delta = Time.time - crouchStartTime;
             float percentCompletion = delta / time;
             controller.height = Mathf.Lerp(startHeight, endHeight, percentCompletion);
-           
+
             Mathf.Lerp(17, 10, delta);
 
             print(Mathf.Lerp(17, 10, delta));
             yield return new WaitForSeconds(0.1f);
-           
+
         }
         isCrouching = false;
     }
