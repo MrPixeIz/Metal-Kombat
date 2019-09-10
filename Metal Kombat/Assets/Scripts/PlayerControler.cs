@@ -25,7 +25,8 @@ public class PlayerControler : MonoBehaviour
     private float crouchStartTime;
     private bool isCrouching = false;
     private Sounds sounds;
-    
+    private Vector3 hitNormal;
+    private float slideFriction = 0f;
 
 
     void Start()
@@ -75,7 +76,7 @@ public class PlayerControler : MonoBehaviour
                         StartCoroutine(UpdateHeight(10, 17, 0.1f));
                     }
                 }
-               
+                moveVector = new Vector3(0, verticalVel, 0);  
             }
 
 
@@ -88,18 +89,28 @@ public class PlayerControler : MonoBehaviour
             }
             //****************************************************************************************************************************
             //****************************************************************************************************************************
+            moveVector = new Vector3(0, verticalVel, 0);
         }
         else
         {
             verticalVel -= gravity * Time.deltaTime;
             anim.SetBool("isFalling", true);
+            moveVector = new Vector3(0, verticalVel, 0);
+            moveVector.x = (((1f - hitNormal.y) * hitNormal.x * (1f - slideFriction))*2000);
+        moveVector.z = (((1f - hitNormal.y) * hitNormal.z * (1f - slideFriction))*2000);
+        print(moveVector.z +" "+ moveVector.x);
         }
       
-        moveVector = new Vector3(0, verticalVel, 0);
+       
         controller.SimpleMove(moveVector * Time.deltaTime);
 
     }
 
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        hitNormal = hit.normal;
+       
+    }
     void PlayerMoveAndRotation()
     {
         inputX = Input.GetAxis("Horizontal");
@@ -150,7 +161,7 @@ public class PlayerControler : MonoBehaviour
     {
         RaycastHit hit;
         float distance1 = 0.1f;
-        float distance2 = 2.5f;
+        float distance2 = 4f;
         Vector3 dir = new Vector3(0, -1);
         Vector3 startPosition = transform.position;
         startPosition.y += 2f;

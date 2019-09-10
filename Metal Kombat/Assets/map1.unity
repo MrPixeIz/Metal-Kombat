@@ -2934,6 +2934,11 @@ Prefab:
       propertyPath: m_SlopeLimit
       value: 30
       objectReference: {fileID: 0}
+    - target: {fileID: 143740040538761444, guid: af2f6f338253cc047b74c849aa98e99d,
+        type: 2}
+      propertyPath: m_Radius
+      value: 2.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: af2f6f338253cc047b74c849aa98e99d, type: 2}
   m_IsPrefabAsset: 0
