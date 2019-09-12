@@ -19,8 +19,10 @@ public class Sounds : MonoBehaviour {
 
     public void PlaySound(AudioClip clipAudio)
     {
-        //audiosource.clip = clipAudio;
-        
+        audiosource.clip = clipAudio;
+        audiosource.volume = Random.Range(0.4f, 0.5f);
+        audiosource.pitch = Random.Range(1, 1.2f);
         audiosource.Play();
     }
+    
 }
