@@ -143,7 +143,7 @@ public class PlayerControler : MonoBehaviour
 
         speed = new Vector2(inputZ, inputX).sqrMagnitude;
 
-        //Déplacer le joueur
+        //Déplacer le joueur     
 
         if (speed > allowPlayerRotation)
         {
