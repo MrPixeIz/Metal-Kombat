@@ -76,31 +76,31 @@ public class PlayerControler : MonoBehaviour
                         StartCoroutine(UpdateHeight(10, 17, 0.1f));
                     }
                 }
- 
+
             }
-           
-                //****************************************************************************************************************************
-                //****************************************************************************************************************************
-                //Retirer GetMouseButton pour axis
-                if (Input.GetMouseButtonDown(0))
+
+            //****************************************************************************************************************************
+            //****************************************************************************************************************************
+            //Retirer GetMouseButton pour axis
+            if (Input.GetMouseButtonDown(0))
             {
-                anim.SetTrigger("isPunching");             
+                anim.SetTrigger("isPunching");
             }
             //****************************************************************************************************************************
             //****************************************************************************************************************************
             moveVector = new Vector3(0, verticalVel, 0);
-            
+
         }
         else
-        {           
+        {
             anim.SetBool("isFalling", true);
             moveVector = new Vector3(0, verticalVel, 0);
-            moveVector.x = (((1f - hitNormal.y) * hitNormal.x * (1f - slideFriction))*10);
-            moveVector.z = (((1f - hitNormal.y) * hitNormal.z * (1f - slideFriction))*10);
-            
+            moveVector.x = (((1f - hitNormal.y) * hitNormal.x * (1f - slideFriction)) * 10);
+            moveVector.z = (((1f - hitNormal.y) * hitNormal.z * (1f - slideFriction)) * 10);
+
         }
 
-        
+
         verticalVel -= gravity * Time.deltaTime;
         controller.Move(moveVector * Time.deltaTime);
 
@@ -199,7 +199,11 @@ public class PlayerControler : MonoBehaviour
 
     public void PlaySound(AudioClip clipAudio)
     {
-        sounds.PlaySound(clipAudio);
+        if (isGrounded)
+        {
+            sounds.PlaySound(clipAudio);
+        }
+
     }
 
 }
