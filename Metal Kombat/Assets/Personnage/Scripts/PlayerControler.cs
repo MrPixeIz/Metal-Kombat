@@ -19,8 +19,8 @@ public class PlayerControler : MonoBehaviour
     public bool isGrounded;
     private float verticalVel;
     private Vector3 moveVector;
-    private float gravity = 20.0f;
-    private float jumpForce = 10.0f;
+    private float gravity = 65.0f;
+    private float jumpForce = 20.0f;
     private bool isCrouched = false;
     private float crouchStartTime;
     private bool isCrouching = false;
