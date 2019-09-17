@@ -29140,9 +29140,10 @@ AnimationClip:
   m_GenerateMotionCurves: 0
   m_Events:
   - time: 0.33333334
-    functionName: PlaySound
+    functionName: Punch
     data: 
-    objectReferenceParameter: {fileID: 0}
+    objectReferenceParameter: {fileID: 8300000, guid: 0f8dead86862c7040a6427ec66031286,
+      type: 3}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0

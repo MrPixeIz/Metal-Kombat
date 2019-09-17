@@ -27,6 +27,8 @@ public class PlayerControler : MonoBehaviour
     private Sounds sounds;
     private Vector3 hitNormal;
     private float slideFriction = 0f;
+    public float fireDelay = 0.1f;
+    private float delayBeforeNextFire = 0;
 
 
     void Start()
@@ -44,7 +46,6 @@ public class PlayerControler : MonoBehaviour
         if (isGrounded)
         {
             anim.SetBool("isFalling", false);
-            //verticalVel = -gravity * Time.deltaTime;
             if (Input.GetButtonDown("Jump") && isCrouched == false)
             {
                 verticalVel = jumpForce;
@@ -67,29 +68,27 @@ public class PlayerControler : MonoBehaviour
                     crouchStartTime = Time.time;
                     if (isCrouched)
                     {
-                        print("going down");
                         StartCoroutine(UpdateHeight(17, 10, 0.5f));
                     }
                     else
                     {
-                        print("going up");
                         StartCoroutine(UpdateHeight(10, 17, 0.1f));
                     }
                 }
-
             }
-
-            //****************************************************************************************************************************
-            //****************************************************************************************************************************
-            //Retirer GetMouseButton pour axis
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetAxis("Fire1") != 0)
             {
-                anim.SetTrigger("isPunching");
+                delayBeforeNextFire -= Time.deltaTime;
+                if (anim)
+                {
+                    if (delayBeforeNextFire <= 0)
+                    {
+                        anim.SetTrigger("isPunching");
+                        delayBeforeNextFire = fireDelay;
+                    }
+                }
             }
-            //****************************************************************************************************************************
-            //****************************************************************************************************************************
             moveVector = new Vector3(0, verticalVel, 0);
-
         }
         else
         {
@@ -99,23 +98,18 @@ public class PlayerControler : MonoBehaviour
             moveVector.z = (((1f - hitNormal.y) * hitNormal.z * (1f - slideFriction)) * 10);
 
         }
-
-
         verticalVel -= gravity * Time.deltaTime;
         controller.Move(moveVector * Time.deltaTime);
-
     }
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
         hitNormal = hit.normal;
-
     }
     void PlayerMoveAndRotation()
     {
         inputX = Input.GetAxis("Horizontal");
         inputZ = Input.GetAxis("Vertical");
-
         var camera = Camera.main;
         var foward = cam.transform.forward;
         var right = cam.transform.right;
@@ -139,7 +133,6 @@ public class PlayerControler : MonoBehaviour
         inputZ = Input.GetAxis("Vertical");
         anim.SetFloat("InputZ", inputZ, 0.0f, Time.deltaTime * 2f);
         anim.SetFloat("InputX", inputX, 0.0f, Time.deltaTime * 2f);
-
         speed = new Vector2(inputZ, inputX).sqrMagnitude;
 
         //Déplacer le joueur     
@@ -148,12 +141,10 @@ public class PlayerControler : MonoBehaviour
         {
             anim.SetFloat("InputMagnitude", speed, 0.0f, Time.deltaTime);
             PlayerMoveAndRotation();
-
         }
         else if (speed < allowPlayerRotation)
         {
             anim.SetFloat("InputMagnitude", speed, 0.0f, Time.deltaTime);
-
         }
     }
 
@@ -167,7 +158,25 @@ public class PlayerControler : MonoBehaviour
         startPosition.y += 2f;
         Debug.DrawRay(startPosition, dir, Color.red);
 
-
+        if (Physics.Raycast(startPosition, dir, out hit, distance1) || Physics.Raycast(startPosition, dir, out hit, distance2))
+        {
+            isGrounded = true;
+        }
+        else
+        {
+            isGrounded = false;
+        }
+        return isGrounded;
+    }
+    bool HitCheck()
+    {
+        RaycastHit hit;
+        float distance1 = 0.1f;
+        float distance2 = 4f;
+        Vector3 dir = new Vector3(0, -1);
+        Vector3 startPosition = transform.position;
+        startPosition.y += 2f;
+        Debug.DrawRay(startPosition, dir, Color.red);
 
         if (Physics.Raycast(startPosition, dir, out hit, distance1) || Physics.Raycast(startPosition, dir, out hit, distance2))
         {
@@ -179,6 +188,7 @@ public class PlayerControler : MonoBehaviour
         }
         return isGrounded;
     }
+
     IEnumerator UpdateHeight(float startHeight, float endHeight, float time)
     {
         float delta = Time.time - crouchStartTime;
@@ -187,12 +197,8 @@ public class PlayerControler : MonoBehaviour
             delta = Time.time - crouchStartTime;
             float percentCompletion = delta / time;
             controller.height = Mathf.Lerp(startHeight, endHeight, percentCompletion);
-
             Mathf.Lerp(17, 10, delta);
-
-            print(Mathf.Lerp(17, 10, delta));
             yield return new WaitForSeconds(0.1f);
-
         }
         isCrouching = false;
     }
@@ -203,7 +209,18 @@ public class PlayerControler : MonoBehaviour
         {
             sounds.PlaySound(clipAudio);
         }
+    }
+    public void Punch(AudioClip clipAudio)
+    {
+        if (isGrounded)
+        {
+            if (HitCheck())
+            {
+                sounds.PlaySound(clipAudio);
+            }
 
+
+        }
     }
 
 }
