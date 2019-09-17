@@ -19,16 +19,18 @@ public class PlayerControler : MonoBehaviour
     public bool isGrounded;
     private float verticalVel;
     private Vector3 moveVector;
-    private float gravity = 20.0f;
-    private float jumpForce = 10.0f;
+    private float gravity = 65.0f;
+    private float jumpForce = 20.0f;
     private bool isCrouched = false;
     private float crouchStartTime;
     private bool isCrouching = false;
     private Sounds sounds;
     private Vector3 hitNormal;
     private float slideFriction = 0f;
-    public float fireDelay = 0.1f;
+    public float fireDelay = 1f;
     private float delayBeforeNextFire = 0;
+    public GameObject raycastObject;
+    Vector3 fwd;
 
 
     void Start()
@@ -77,16 +79,18 @@ public class PlayerControler : MonoBehaviour
                 }
             }
             if (Input.GetAxis("Fire1") != 0)
+
             {
+
                 delayBeforeNextFire -= Time.deltaTime;
-                if (anim)
+
+                if (delayBeforeNextFire <= 0)
                 {
-                    if (delayBeforeNextFire <= 0)
-                    {
-                        anim.SetTrigger("isPunching");
-                        delayBeforeNextFire = fireDelay;
-                    }
+                    fwd = raycastObject.transform.TransformDirection(Vector3.forward);
+                    anim.SetTrigger("isPunching");
+                    delayBeforeNextFire = fireDelay;
                 }
+
             }
             moveVector = new Vector3(0, verticalVel, 0);
         }
@@ -170,23 +174,19 @@ public class PlayerControler : MonoBehaviour
     }
     bool HitCheck()
     {
-        RaycastHit hit;
-        float distance1 = 0.1f;
-        float distance2 = 4f;
-        Vector3 dir = new Vector3(0, -1);
-        Vector3 startPosition = transform.position;
-        startPosition.y += 2f;
-        Debug.DrawRay(startPosition, dir, Color.red);
-
-        if (Physics.Raycast(startPosition, dir, out hit, distance1) || Physics.Raycast(startPosition, dir, out hit, distance2))
+        bool hitDetected = false;
+        RaycastHit objectHit;
+        Debug.DrawRay(raycastObject.transform.position, fwd * 6, Color.green, 2);
+        if (Physics.Raycast(raycastObject.transform.position, fwd, out objectHit, 6))
         {
-            isGrounded = true;
+            hitDetected = true;
         }
         else
         {
-            isGrounded = false;
+            hitDetected = false;
+
         }
-        return isGrounded;
+        return hitDetected;
     }
 
     IEnumerator UpdateHeight(float startHeight, float endHeight, float time)
@@ -217,9 +217,8 @@ public class PlayerControler : MonoBehaviour
             if (HitCheck())
             {
                 sounds.PlaySound(clipAudio);
+                print("HIT");
             }
-
-
         }
     }
 
