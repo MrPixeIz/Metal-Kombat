@@ -4,25 +4,25 @@ using UnityEngine;
 
 public class EnnemiDetectionScript : MonoBehaviour
 {
-    public float inputX;
-    public float inputZ;
+   
+    public Animator anim;
+    public Transform playerTarget;
+
     private float DistancePlayer;
     private float DistanceEndPatrol;
-    private float DistanceStartPatrol;
-    public Transform playerTarget;
-    public float chaseRange = 30;
-    public float attackRange = 5;
-    public Animator anim;
-    public float speed;
-    public Vector3 desiredMoveDirection;
-    public float desiredRotationSpeed;
-    public Transform startPatrol;
-    public Transform endPatrol;
-    public float switchToRange = 4;
+    private float DistanceStartPatrol;   
+    private float chaseRange = 30;
+    private float attackRange = 5;   
+    private float speed;
+    private Transform startPatrol;
+    private Transform endPatrol;
+    private GameObject patrolTarget;
+    private float switchToRange = 4;
 
     void Start()
     {
         anim = this.GetComponent<Animator>();
+        patrolTarget = GameObject.Find("EndPatrol");
     }
 
     void Update()
@@ -38,7 +38,7 @@ public class EnnemiDetectionScript : MonoBehaviour
         {
             ResetBool();
             //Idle();
-            Patrol();
+            Patrol(patrolTarget);
         }
 
         if (DistancePlayer <= chaseRange && DistancePlayer >= attackRange)
@@ -69,7 +69,7 @@ public class EnnemiDetectionScript : MonoBehaviour
     {
         anim.SetBool("isIdlePunching", true);
     }
-
+ 
     #endregion
 
     #region Move
@@ -82,7 +82,8 @@ public class EnnemiDetectionScript : MonoBehaviour
         anim.SetFloat("InputMagnitude", speed, 0.0f, Time.deltaTime);
         var forward = transform.TransformDirection(Vector3.forward);
         controller.SimpleMove(forward * speed);
-        transform.LookAt(pGameObject);
+        Vector3 lookat = new Vector3(pGameObject.transform.position.x, gameObject.transform.position.y, pGameObject.transform.position.z);
+        transform.LookAt(lookat);
     }
 
     void Chase()
@@ -90,18 +91,16 @@ public class EnnemiDetectionScript : MonoBehaviour
         MoveTo(playerTarget);
     }
 
-    void Patrol()
+    public void Patrol(GameObject gameObject)
     {
-        //Mettre un bool qui dit s'il est rendu vire de bord parce que sinon il est entre deux phases.
-        if (DistanceEndPatrol <= switchToRange)
-        {
-            MoveTo(startPatrol);
-        }
+        print(gameObject.name);
+        // print(DistanceEndPatrol + ", " + DistanceStartPatrol);
+        MoveTo(gameObject.transform);           
+    }
 
-        if(DistanceEndPatrol >= switchToRange)
-        {
-            MoveTo(endPatrol);
-        }
+    public void SetPatrol(GameObject newPatrolTarget)
+    {
+        patrolTarget = newPatrolTarget;
     }
 
     #endregion
