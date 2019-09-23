@@ -73,7 +73,7 @@ GameObject:
   - component: {fileID: 4693328716713268}
   - component: {fileID: 205391094574615458}
   m_Layer: 0
-  m_Name: clotureVertical 1
+  m_Name: clotureHorizontal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
