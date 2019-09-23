@@ -8,6 +8,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 403196}
+  - component: {fileID: 136363481484523104}
   m_Layer: 0
   m_Name: barrel 3
   m_TagString: Untagged
@@ -39,7 +40,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 115764}
   m_LocalRotation: {x: 0, y: 0.13494575, z: 0, w: 0.990853}
-  m_LocalPosition: {x: 215.305, y: 120.4, z: -249.341}
+  m_LocalPosition: {x: 62.061935, y: 0.011987999, z: 66.01445}
   m_LocalScale: {x: 6, y: 6, z: 6}
   m_Children:
   - {fileID: 410770}
@@ -112,3 +113,16 @@ Prefab:
   m_SourcePrefab: {fileID: 0}
   m_RootGameObject: {fileID: 115764}
   m_IsPrefabAsset: 1
+--- !u!136 &136363481484523104
+CapsuleCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 115764}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.29
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.5, z: 0}
