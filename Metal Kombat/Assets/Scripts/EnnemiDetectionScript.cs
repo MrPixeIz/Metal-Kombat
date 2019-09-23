@@ -4,20 +4,24 @@ using UnityEngine;
 
 public class EnnemiDetectionScript : MonoBehaviour
 {
-   
+
     public Animator anim;
     public Transform playerTarget;
+    public GameObject startPatrolObject;
+    public GameObject endPatrolObject;
 
     private float DistancePlayer;
     private float DistanceEndPatrol;
-    private float DistanceStartPatrol;   
+    private float DistanceStartPatrol;
     private float chaseRange = 30;
-    private float attackRange = 5;   
+    private float attackRange = 5;
     private float speed;
     private Transform startPatrol;
     private Transform endPatrol;
     private GameObject patrolTarget;
     private float switchToRange = 4;
+    private RaycastHit hit;
+    private Sounds sounds;
 
     void Start()
     {
@@ -33,18 +37,20 @@ public class EnnemiDetectionScript : MonoBehaviour
         DistancePlayer = Vector3.Distance(playerTarget.position, transform.position);
         DistanceStartPatrol = Vector3.Distance(startPatrol.position, transform.position);
         DistanceEndPatrol = Vector3.Distance(endPatrol.position, transform.position);
-       
-        if (DistancePlayer > chaseRange)
-        {
-            ResetBool();
-            //Idle();
-            Patrol(patrolTarget);
-        }
+
+        VerifyIfHitSomething();
 
         if (DistancePlayer <= chaseRange && DistancePlayer >= attackRange)
         {
             ResetBool();
             Chase();
+        }
+
+        if (DistancePlayer > chaseRange)
+        {
+            ResetBool();
+            //Idle();
+            Patrol(patrolTarget);
         }
 
         if (DistancePlayer <= attackRange)
@@ -54,7 +60,7 @@ public class EnnemiDetectionScript : MonoBehaviour
     }
 
     #region Movement
-    void Idle()
+    public void Idle()
     {
         anim.SetFloat("InputMagnitude", 0, 0.0f, Time.deltaTime);
     }
@@ -69,7 +75,7 @@ public class EnnemiDetectionScript : MonoBehaviour
     {
         anim.SetBool("isIdlePunching", true);
     }
- 
+
     #endregion
 
     #region Move
@@ -95,7 +101,7 @@ public class EnnemiDetectionScript : MonoBehaviour
     {
         print(gameObject.name);
         // print(DistanceEndPatrol + ", " + DistanceStartPatrol);
-        MoveTo(gameObject.transform);           
+        MoveTo(gameObject.transform);
     }
 
     public void SetPatrol(GameObject newPatrolTarget)
@@ -114,5 +120,31 @@ public class EnnemiDetectionScript : MonoBehaviour
     }
 
     #endregion
+
+    #region Events
+    void VerifyIfHitSomething()
+    {
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 5))
+        {
+            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.red);
+            print(ReachPatrol.FindObjectOfType<GameObject>().gameObject);
+            if (patrolTarget == endPatrolObject)
+            {
+                SetPatrol(startPatrolObject);
+            }
+            else
+            {
+                SetPatrol(endPatrolObject);
+            }
+
+        }
+    }
+
+    public void PlaySound(AudioClip audioClip)
+    {
+        sounds.PlaySound(audioClip);
+    }
+    #endregion
+    
 
 }
