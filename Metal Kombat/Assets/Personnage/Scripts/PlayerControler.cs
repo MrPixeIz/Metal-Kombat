@@ -15,7 +15,7 @@ public class PlayerControler : MonoBehaviour
     private CharacterController controller;
     public bool isGrounded;
     private float gravity = 65.0f;
-    private float jumpForce = 50.0f;
+    private float jumpForce = 30.0f;
     private bool isCrouched = false;
     private float crouchStartTime;
     private bool isCrouching = false;
@@ -27,7 +27,7 @@ public class PlayerControler : MonoBehaviour
     private float verticalVel = 0;
     Vector3 fwd;
     private bool canMove = true;
-    private int walkForce = 500;
+    private int walkForce = 1500;
     private Vector3 moveVector;
     private float slopeLimit = 80;
     private float slideFriction = 0f;
@@ -70,7 +70,7 @@ public class PlayerControler : MonoBehaviour
         else
         {
             anim.SetBool("isFalling", true);
-          
+
             Slide();
         }
 
@@ -83,7 +83,7 @@ public class PlayerControler : MonoBehaviour
     }
     void Slide()
     {
-        if (Vector3.Angle(Vector3.up, hitNormal) <= slopeLimit)
+        if (Vector3.Angle(Vector3.up, hitNormal) >= slopeLimit)
         {
             moveVector.x = (((1f - hitNormal.y) * hitNormal.x * (1f - slideFriction)) * 10);
             moveVector.z = (((1f - hitNormal.y) * hitNormal.z * (1f - slideFriction)) * 10);
@@ -95,11 +95,12 @@ public class PlayerControler : MonoBehaviour
         {
             moveVector.x = 0;
             moveVector.z = 0;
-            if (Input.GetAxis("Vertical") != 0)
+
+            if (Input.GetAxis("Vertical") != 0 && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Punching")
             {
                 moveVector += transform.forward * walkForce * Time.deltaTime * Mathf.Abs(Input.GetAxis("Vertical"));
             }
-            if (Input.GetAxis("Horizontal") != 0)
+            if (Input.GetAxis("Horizontal") != 0 && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Punching")
             {
                 moveVector += transform.forward * walkForce * Time.deltaTime * Mathf.Abs(Input.GetAxis("Horizontal"));
             }
@@ -120,10 +121,6 @@ public class PlayerControler : MonoBehaviour
         {
             canMove = true;
         }
-        //if (!isCrouching)
-        //{
-        print("Crouch Function");
-        //isCrouching = true;
         if (isCrouched)
         {
             isCrouched = false;
@@ -134,17 +131,6 @@ public class PlayerControler : MonoBehaviour
         }
         anim.SetBool("isCrouched", isCrouched);
         float crouchStartTime = Time.time;
-        if (isCrouched)
-        {
-            print("crouch");
-            //StartCoroutine(UpdateHeight(17, 10, 0.5f));
-        }
-        else
-        {
-            // StartCoroutine(UpdateHeight(10, 17, 0.1f));
-            print("uncrouch");
-        }
-        //}
     }
     void Attack()
     {
@@ -240,7 +226,7 @@ public class PlayerControler : MonoBehaviour
             delta = Time.time - crouchStartTime;
             float percentCompletion = delta / time;
             controller.height = Mathf.Lerp(startHeight, endHeight, percentCompletion);
-            print(Mathf.Lerp(startHeight, endHeight, percentCompletion));
+
             Mathf.Lerp(17, 10, delta);
             yield return new WaitForSeconds(0.1f);
         }
