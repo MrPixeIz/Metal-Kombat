@@ -5,17 +5,18 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerControler : MonoBehaviour
 {
-
+    public GameObject raycastObject;
     public float inputX;
+    public bool isGrounded;
     public float inputZ;
-    public float desiredRotationSpeed;
-    private Animator anim;
     public float allowPlayerRotation;
+    public float desiredRotationSpeed;
+
+    private Animator anim;
     private Camera cam;
     private CharacterController controller;
-    public bool isGrounded;
     private float gravity = 65.0f;
-    private float jumpForce = 30.0f;
+    private float jumpForce = 20.0f;
     private bool isCrouched = false;
     private float crouchStartTime;
     private bool isCrouching = false;
@@ -23,13 +24,12 @@ public class PlayerControler : MonoBehaviour
     private Vector3 hitNormal;
     private float fireDelay = 0.5f;
     private float delayBeforeNextFire = 0;
-    public GameObject raycastObject;
     private float verticalVel = 0;
-    Vector3 fwd;
+    private Vector3 fwd;
     private bool canMove = true;
     private int walkForce = 1500;
     private Vector3 moveVector;
-    private float slopeLimit = 80;
+    private float slopeLimit = 50;
     private float slideFriction = 0f;
 
     void Start()
@@ -43,22 +43,18 @@ public class PlayerControler : MonoBehaviour
     void Update()
     {
         moveVector.y = verticalVel;
-
         InputMagnitude();
-        isGrounded = GroundCheck();
 
-        if (isGrounded)
+        if (GroundCheck())
         {
             anim.SetBool("isFalling", false);
             delayBeforeNextFire -= Time.deltaTime;
             if (Input.GetButtonDown("Jump") && isCrouched == false)
             {
-
                 Jump();
             }
             if (Input.GetKeyDown(KeyCode.C))
             {
-
                 Crouch();
             }
             if (Input.GetAxis("Fire1") != 0)
@@ -70,24 +66,41 @@ public class PlayerControler : MonoBehaviour
         else
         {
             anim.SetBool("isFalling", true);
-
+            verticalVel -= gravity * Time.deltaTime;
             Slide();
         }
-
-        verticalVel -= gravity * Time.deltaTime;
+        // print(verticalVel);
         controller.Move(moveVector * Time.deltaTime);
     }
+
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
+        print("HIT");
         hitNormal = hit.normal;
     }
+
     void Slide()
     {
-        if (Vector3.Angle(Vector3.up, hitNormal) >= slopeLimit)
+        print(hitNormal);
+        print(moveVector);
+        if (hitNormal != Vector3.zero)
         {
-            moveVector.x = (((1f - hitNormal.y) * hitNormal.x * (1f - slideFriction)) * 10);
-            moveVector.z = (((1f - hitNormal.y) * hitNormal.z * (1f - slideFriction)) * 10);
+            if (verticalVel < 0 && Vector3.Angle(Vector3.up, hitNormal) >= slopeLimit)
+            {
+                print("Slide");
+                verticalVel = 0;
+                moveVector.x = (((1f - hitNormal.y) * hitNormal.x * (1.3f - slideFriction)) * gravity * Time.deltaTime * 10);
+                moveVector.z = (((1f - hitNormal.y) * hitNormal.z * (1.3f - slideFriction)) * gravity * Time.deltaTime * 10);
+            }
         }
+        else if (hitNormal == Vector3.zero)
+        {
+            print("readyToMove");
+            //MoveCharacter(1);
+        }
+        hitNormal = Vector3.zero;
+
+
     }
     void MoveCharacter()
     {
@@ -100,9 +113,26 @@ public class PlayerControler : MonoBehaviour
             {
                 moveVector += transform.forward * walkForce * Time.deltaTime * Mathf.Abs(Input.GetAxis("Vertical"));
             }
-            if (Input.GetAxis("Horizontal") != 0 && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Punching")
+            else if (Input.GetAxis("Horizontal") != 0 && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Punching")
             {
                 moveVector += transform.forward * walkForce * Time.deltaTime * Mathf.Abs(Input.GetAxis("Horizontal"));
+            }
+        }
+    }
+    void MoveCharacter(float force)
+    {
+        if (canMove == true)
+        {
+            moveVector.x = 0;
+            moveVector.z = 0;
+
+            if (Input.GetAxis("Vertical") != 0 && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Punching")
+            {
+                moveVector += transform.forward * force * Time.deltaTime * Mathf.Abs(Input.GetAxis("Vertical"));
+            }
+            else if (Input.GetAxis("Horizontal") != 0 && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Punching")
+            {
+                moveVector += transform.forward * force * Time.deltaTime * Mathf.Abs(Input.GetAxis("Horizontal"));
             }
         }
     }
@@ -178,14 +208,14 @@ public class PlayerControler : MonoBehaviour
     bool GroundCheck()
     {
         RaycastHit hit;
-        float distance1 = 0.1f;
-        float distance2 = 4f;
-        Vector3 dir = new Vector3(0, -1);
+        float distance = 2.75f;
+
+        Vector3 dir = new Vector3(0, -distance, 0);
         Vector3 startPosition = transform.position;
         startPosition.y += 2f;
-        Debug.DrawRay(startPosition, dir, Color.red);
+        Debug.DrawRay(startPosition, dir, Color.red, 1);
 
-        if (Physics.Raycast(startPosition, dir, out hit, distance1) || Physics.Raycast(startPosition, dir, out hit, distance2))
+        if (Physics.Raycast(startPosition, dir, out hit, distance))
         {
             isGrounded = true;
         }
