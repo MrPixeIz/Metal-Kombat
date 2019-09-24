@@ -101,8 +101,7 @@ public class EnnemiDetectionScript : MonoBehaviour
 
     public void Patrol(GameObject gameObject)
     {
-        print(gameObject.name);
-        // print(DistanceEndPatrol + ", " + DistanceStartPatrol);
+
         MoveTo(gameObject.transform);
     }
 
@@ -129,7 +128,7 @@ public class EnnemiDetectionScript : MonoBehaviour
         if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 5))
         {
             Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.red);
-            print(ReachPatrol.FindObjectOfType<GameObject>().gameObject);
+
             if (patrolTarget == endPatrolObject)
             {
                 SetPatrol(startPatrolObject);
@@ -146,7 +145,7 @@ public class EnnemiDetectionScript : MonoBehaviour
     {
         if (DistancePlayer < soundRange)
         {
-            print(sounds);
+
             sounds.PlaySound(audioClip);
         }
     }
