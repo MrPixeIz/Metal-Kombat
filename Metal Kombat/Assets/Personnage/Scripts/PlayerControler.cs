@@ -61,6 +61,7 @@ public class PlayerControler : MonoBehaviour
             {
                 Attack();
             }
+            
             MoveCharacter();
         }
         else
@@ -81,22 +82,23 @@ public class PlayerControler : MonoBehaviour
 
     void Slide()
     {
-        print(hitNormal);
+        print(Vector3.Angle(Vector3.up, hitNormal));
         print(moveVector);
         if (hitNormal != Vector3.zero)
         {
             if (verticalVel < 0 && Vector3.Angle(Vector3.up, hitNormal) >= slopeLimit)
             {
-                print("Slide");
+                //print("Slide");
                 verticalVel = 0;
                 moveVector.x = (((1f - hitNormal.y) * hitNormal.x * (1.3f - slideFriction)) * gravity * Time.deltaTime * 10);
                 moveVector.z = (((1f - hitNormal.y) * hitNormal.z * (1.3f - slideFriction)) * gravity * Time.deltaTime * 10);
             }
         }
-        else if (hitNormal == Vector3.zero)
+        else if (hitNormal == Vector3.zero && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Fall A Loop")
         {
-            print("readyToMove");
-            //MoveCharacter(1);
+            print("cacou");
+            MoveCharacter(30);
+
         }
         hitNormal = Vector3.zero;
 
@@ -121,20 +123,20 @@ public class PlayerControler : MonoBehaviour
     }
     void MoveCharacter(float force)
     {
-        if (canMove == true)
-        {
+
             moveVector.x = 0;
             moveVector.z = 0;
 
-            if (Input.GetAxis("Vertical") != 0 && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Punching")
-            {
-                moveVector += transform.forward * force * Time.deltaTime * Mathf.Abs(Input.GetAxis("Vertical"));
-            }
-            else if (Input.GetAxis("Horizontal") != 0 && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Punching")
-            {
-                moveVector += transform.forward * force * Time.deltaTime * Mathf.Abs(Input.GetAxis("Horizontal"));
-            }
-        }
+        moveVector += transform.forward * force * Time.deltaTime * Mathf.Abs(10);
+
+        moveVector += transform.forward * force * Time.deltaTime * Mathf.Abs(10);
+
+
+        moveVector += transform.forward * force * Time.deltaTime * Mathf.Abs(-20);
+
+        moveVector += transform.forward * force * Time.deltaTime * Mathf.Abs(-20);
+
+
     }
     void Jump()
     {
