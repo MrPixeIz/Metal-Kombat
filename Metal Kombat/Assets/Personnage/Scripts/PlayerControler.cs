@@ -228,8 +228,8 @@ public class PlayerControler : MonoBehaviour
         bool hitDetected = false;
         RaycastHit objectHit;
         Debug.DrawRay(raycastObject.transform.position + new Vector3(0, 5, 0), fwd * 3, Color.green, 2);
-        //Physics.Raycast(raycastObject.transform.position, fwd, out objectHit, 7
-        //Physics.SphereCast(transform.position + new Vector3(0, controller.height / 2, 0), controller.height / 2, transform.forward, out objectHit, 10)
+        //Physics.SphereCast(transform.position + new Vector3(0, controller.height / 2, 0), 3, transform.forward, out objectHit,10)
+        //Physics.Raycast(raycastObject.transform.position + new Vector3(0, 5, 0), fwd, out objectHit, 3)
         if (Physics.Raycast(raycastObject.transform.position + new Vector3(0, 5, 0), fwd, out objectHit, 3))
         {
 
