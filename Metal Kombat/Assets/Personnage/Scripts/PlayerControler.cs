@@ -5,19 +5,31 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerControler : MonoBehaviour
 {
+
+    //    private CharacterController controller;
+    //    public bool isGrounded;
+    //    private Animator anim;
+    //private bool isCrouched = false;
+    // private bool canMove = true;
+    //    private int walkForce = 1500;
+    // private Vector3 moveVector;
+
+    private MainPlayer player;
+
+
     public GameObject raycastObject;
     public float inputX;
-    public bool isGrounded;
+    
     public float inputZ;
     public float allowPlayerRotation;
     public float desiredRotationSpeed;
 
-    private Animator anim;
+
     private Camera cam;
-    private CharacterController controller;
+    
     private float gravity = 65.0f;
     private float jumpForce = 20.0f;
-    private bool isCrouched = false;
+    
     private float crouchStartTime;
     private bool isCrouching = false;
     private Sounds sounds;
@@ -26,15 +38,14 @@ public class PlayerControler : MonoBehaviour
     private float delayBeforeNextFire = 0;
     private float verticalVel = 0;
     private Vector3 fwd;
-    private bool canMove = true;
-    private int walkForce = 1500;
-    private Vector3 moveVector;
+   
+   
     private float slopeLimit = 50;
     private float slideFriction = 0f;
 
     void Start()
     {
-        anim = this.GetComponent<Animator>();
+        //anim = this.GetComponent<Animator>();
         cam = Camera.main;
         controller = this.GetComponent<CharacterController>();
         sounds = GetComponentInChildren<Sounds>();
@@ -42,27 +53,27 @@ public class PlayerControler : MonoBehaviour
 
     void Update()
     {
-        moveVector.y = verticalVel;
+        player.ChangeValueMoveVectorY(verticalVel);
         InputMagnitude();
 
         if (GroundCheck())
         {
-            anim.SetBool("isFalling", false);
+            player.Anim.SetBool("isFalling", false);
             delayBeforeNextFire -= Time.deltaTime;
-            if (Input.GetButtonDown("Jump") && isCrouched == false)
+            if (Input.GetButtonDown("Jump") && player.IsCrouched == false)
             {
-                Jump();
+                player.Jump();
             }
             if (Input.GetKeyDown(KeyCode.C))
             {
-                Crouch();
+                player.Crouch();
             }
             if (Input.GetAxis("Fire1") != 0)
             {
-                Attack();
+                player.Attack(delayBeforeNextFire);
             }
 
-            MoveCharacter();
+            player.Move();
         }
         else
         {
@@ -89,8 +100,8 @@ public class PlayerControler : MonoBehaviour
             {
 
                 verticalVel = 0;
-                moveVector.x = (((1f - hitNormal.y) * hitNormal.x * (1.3f - slideFriction)) * gravity * Time.deltaTime * 10);
-                moveVector.z = (((1f - hitNormal.y) * hitNormal.z * (1.3f - slideFriction)) * gravity * Time.deltaTime * 10);
+                player.MoveVector.x = (((1f - hitNormal.y) * hitNormal.x * (1.3f - slideFriction)) * gravity * Time.deltaTime * 10);
+                player.MoveVector.z = (((1f - hitNormal.y) * hitNormal.z * (1.3f - slideFriction)) * gravity * Time.deltaTime * 10);
             }
         }
         else if (hitNormal == Vector3.zero && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Fall A Loop")
@@ -101,72 +112,36 @@ public class PlayerControler : MonoBehaviour
 
 
     }
-    void MoveCharacter()
-    {
-        if (canMove == true)
-        {
-            moveVector.x = 0;
-            moveVector.z = 0;
-
-            if (Input.GetAxis("Vertical") != 0 && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Punching")
-            {
-                moveVector += transform.forward * walkForce * Time.deltaTime * Mathf.Abs(Input.GetAxis("Vertical"));
-            }
-            else if (Input.GetAxis("Horizontal") != 0 && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Punching")
-            {
-                moveVector += transform.forward * walkForce * Time.deltaTime * Mathf.Abs(Input.GetAxis("Horizontal"));
-            }
-        }
-    }
+    
     void MoveCharacter(float force)
     {
 
         moveVector.x = 0;
         moveVector.z = 0;
 
-        moveVector += transform.forward * force * Time.deltaTime * Mathf.Abs(10);
+        player.MoveVector += transform.forward * force * Time.deltaTime * Mathf.Abs(10);
 
-        moveVector += transform.forward * force * Time.deltaTime * Mathf.Abs(10);
+        player.MoveVector += transform.forward * force * Time.deltaTime * Mathf.Abs(10);
 
-        moveVector += transform.forward * force * Time.deltaTime * Mathf.Abs(-20);
+        player.MoveVector += transform.forward * force * Time.deltaTime * Mathf.Abs(-20);
 
-        moveVector += transform.forward * force * Time.deltaTime * Mathf.Abs(-20);
+        player.MoveVector += transform.forward * force * Time.deltaTime * Mathf.Abs(-20);
 
 
     }
     void Jump()
     {
         verticalVel = jumpForce;
-        anim.SetTrigger("isJumping");
+        player.Anim.SetTrigger("isJumping");
     }
-    void Crouch()
-    {
-        if (canMove == true)
-        {
-            canMove = false;
-        }
-        else
-        {
-            canMove = true;
-        }
-        if (isCrouched)
-        {
-            isCrouched = false;
-        }
-        else
-        {
-            isCrouched = true;
-        }
-        anim.SetBool("isCrouched", isCrouched);
-        float crouchStartTime = Time.time;
-    }
+    
     void Attack()
     {
 
         if (delayBeforeNextFire <= 0)
         {
             fwd = raycastObject.transform.TransformDirection(Vector3.forward);
-            anim.SetTrigger("isPunching");
+            player.Anim.SetTrigger("isPunching");
             delayBeforeNextFire = fireDelay;
         }
 
