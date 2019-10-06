@@ -4,13 +4,16 @@ using UnityEngine;
 
 public class MainPlayer : Personnage
 {
-    CharacterController controller;
+    public CharacterController controller;
     bool isGrounded;
-    Animator anim;
+    public Animator anim;
     bool isCrouched;
     bool canMove;
     int walkForce;
     Vector3 moveVector;
+    Vector3 fwd;
+    public GameObject raycastObject;
+    private float delayBeforeNextFire = 0;
 
     public bool IsGrounded
     {
@@ -47,24 +50,43 @@ public class MainPlayer : Personnage
         get { return moveVector; }
         set { moveVector = value; }
     }
-
-
+    public Vector3 Fwd
+    {
+        get { return fwd; }
+        set { fwd = value; }
+    }
+    public GameObject RaycastObject
+    {
+        get { return raycastObject; }
+        set { raycastObject = value; }
+    }
+    public float DelayBeforeNextFire
+    {
+        get { return delayBeforeNextFire;}
+        set { delayBeforeNextFire = value; }
+    }
 
     public MainPlayer()
     {
-        anim = this.GetComponent<Animator>();
-        controller = this.GetComponent<CharacterController>();
+
         isCrouched = false;
         canMove = true;
         walkForce = 1500;
         isGrounded = false;
         moveVector = new Vector3();
     }
+    void Start()
+    {
+        anim = this.GetComponent<Animator>();
+        controller = this.GetComponent<CharacterController>();
 
-    public void Attack(int delayBeforeNextFire)
+    }
+
+    public void Attack()
     {
         if (delayBeforeNextFire <= 0)
         {
+            float fireDelay = 0.5f;
             fwd = raycastObject.transform.TransformDirection(Vector3.forward);
             anim.SetTrigger("isPunching");
             delayBeforeNextFire = fireDelay;
@@ -81,11 +103,11 @@ public class MainPlayer : Personnage
             moveVector.x = 0;
             moveVector.z = 0;
 
-            if (Input.GetAxis("Vertical") != 0 && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Punching")
+            if (Input.GetAxis("Vertical") != 0 && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Punching" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Mma Idle (1)")
             {
                 moveVector += transform.forward * walkForce * Time.deltaTime * Mathf.Abs(Input.GetAxis("Vertical"));
             }
-            else if (Input.GetAxis("Horizontal") != 0 && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Punching")
+            else if (Input.GetAxis("Horizontal") != 0 && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Punching" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Mma Idle (1)")
             {
                 moveVector += transform.forward * walkForce * Time.deltaTime * Mathf.Abs(Input.GetAxis("Horizontal"));
             }
@@ -95,8 +117,12 @@ public class MainPlayer : Personnage
     {
 
     }
-    public void Jump()
+    public float Jump()
     {
+        float jumpForce = 20;
+     
+        anim.SetTrigger("isJumping");
+        return jumpForce;
     }
     public void Crouch()
     {
@@ -142,5 +168,13 @@ public class MainPlayer : Personnage
     public void ChangeValueMoveVectorZ(float z)
     {
         moveVector.z = z;
+    }
+    public void SetFloatZ(float inputZ)
+    {
+        anim.SetFloat("InputZ", inputZ, 0.0f, Time.deltaTime * 2f);
+    }
+    public void SetFloatX(float inputX)
+    {
+        anim.SetFloat("InputZ", inputX, 0.0f, Time.deltaTime * 2f);
     }
 }

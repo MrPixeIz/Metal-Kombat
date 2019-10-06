@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -442,6 +442,11 @@ Prefab:
       propertyPath: m_Radius
       value: 2.2
       objectReference: {fileID: 0}
+    - target: {fileID: 114158582629759876, guid: 7e041577ee955244fba5f718058f7a8c,
+        type: 2}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 795112415}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7e041577ee955244fba5f718058f7a8c, type: 2}
   m_IsPrefabAsset: 0
@@ -6795,6 +6800,35 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f41bceb1b4b686d4c985972670f50bec, type: 2}
   m_IsPrefabAsset: 0
+--- !u!1 &795112410 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1175378452451754, guid: 7e041577ee955244fba5f718058f7a8c,
+    type: 2}
+  m_PrefabInternal: {fileID: 71367382}
+--- !u!143 &795112413 stripped
+CharacterController:
+  m_CorrespondingSourceObject: {fileID: 143576497677880486, guid: 7e041577ee955244fba5f718058f7a8c,
+    type: 2}
+  m_PrefabInternal: {fileID: 71367382}
+--- !u!95 &795112414 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 95694156195562336, guid: 7e041577ee955244fba5f718058f7a8c,
+    type: 2}
+  m_PrefabInternal: {fileID: 71367382}
+--- !u!114 &795112415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 795112410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30a9465b4056b654abfcf2ff8f14e9de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controller: {fileID: 795112413}
+  anim: {fileID: 795112414}
+  raycastObject: {fileID: 795112410}
 --- !u!4 &795939206 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4766682346171988, guid: f41bceb1b4b686d4c985972670f50bec,
