@@ -14,6 +14,7 @@ public class MainPlayer : Personnage
     Vector3 fwd;
     public GameObject raycastObject;
     private float delayBeforeNextFire = 0;
+    private bool hasAGun = true;
 
     public bool IsGrounded
     {
@@ -65,6 +66,11 @@ public class MainPlayer : Personnage
         get { return delayBeforeNextFire;}
         set { delayBeforeNextFire = value; }
     }
+    public bool HasAGun
+    {
+        get { return hasAGun; }
+        set { hasAGun = value; }
+    }
 
     public MainPlayer()
     {
@@ -88,8 +94,16 @@ public class MainPlayer : Personnage
         if (delayBeforeNextFire <= 0)
         {
             float fireDelay = 0.5f;
+            if (HasAGun)
+            {
+                anim.SetTrigger("isShooting");
+            }
+            else
+            {
             fwd = raycastObject.transform.TransformDirection(Vector3.forward);
             anim.SetTrigger("isPunching");
+            }
+            
             delayBeforeNextFire = fireDelay;
         }
     }
