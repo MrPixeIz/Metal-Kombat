@@ -69,7 +69,7 @@ public class PlayerControler : MonoBehaviour
 
         if (hitNormal != Vector3.zero)
         {
-            float slopeLimit = 80;
+            float slopeLimit = 50;
             if (verticalVel < 0 && Vector3.Angle(Vector3.up, hitNormal) >= slopeLimit)
             {
                 float slideFriction = 0f;

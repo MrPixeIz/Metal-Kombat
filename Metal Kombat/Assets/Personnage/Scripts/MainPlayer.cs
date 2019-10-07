@@ -74,6 +74,7 @@ public class MainPlayer : Personnage
         walkForce = 1500;
         isGrounded = false;
         moveVector = new Vector3();
+        
     }
     void Start()
     {
@@ -124,26 +125,7 @@ public class MainPlayer : Personnage
         anim.SetTrigger("isJumping");
         return jumpForce;
     }
-   public void Slide()
-    {
-
-        if (hitNormal != Vector3.zero)
-        {
-            float slopeLimit = 80;
-            if (verticalVel < 0 && Vector3.Angle(Vector3.up, hitNormal) >= slopeLimit)
-            {
-                float slideFriction = 0f;
-                verticalVel = 0;
-                player.ChangeValueMoveVectorX(((1f - hitNormal.y) * hitNormal.x * (1.3f - slideFriction)) * gravity * Time.deltaTime * 5);
-                player.ChangeValueMoveVectorZ(((1f - hitNormal.y) * hitNormal.z * (1.3f - slideFriction)) * gravity * Time.deltaTime * 5);
-            }
-        }
-        else if (hitNormal == Vector3.zero && player.Anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Fall A Loop")
-        {
-            MoveCharacter(10);
-        }
-        hitNormal = Vector3.zero;
-    }
+   
     public void Crouch()
     {
         if (canMove == true)
