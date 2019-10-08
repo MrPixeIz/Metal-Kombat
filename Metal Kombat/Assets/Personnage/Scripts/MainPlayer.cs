@@ -15,7 +15,8 @@ public class MainPlayer : Personnage
     public GameObject raycastObject;
     private float delayBeforeNextFire = 0;
     private bool hasAGun = true;
-
+    //onAminationIK
+    //camera.screenpointtoray
     public bool IsGrounded
     {
         get { return isGrounded; }
@@ -63,7 +64,7 @@ public class MainPlayer : Personnage
     }
     public float DelayBeforeNextFire
     {
-        get { return delayBeforeNextFire;}
+        get { return delayBeforeNextFire; }
         set { delayBeforeNextFire = value; }
     }
     public bool HasAGun
@@ -80,7 +81,7 @@ public class MainPlayer : Personnage
         walkForce = 1500;
         isGrounded = false;
         moveVector = new Vector3();
-        
+
     }
     void Start()
     {
@@ -91,19 +92,25 @@ public class MainPlayer : Personnage
 
     public void Attack()
     {
+
         if (delayBeforeNextFire <= 0)
         {
+
             float fireDelay = 0.5f;
             if (HasAGun)
             {
+                Camera cam = Camera.main;
+
                 anim.SetTrigger("isShooting");
+                fwd = raycastObject.transform.TransformDirection(cam.transform.position);
+                Debug.DrawRay(raycastObject.transform.position + new Vector3(0, 5, 0), fwd, Color.green, 5);
             }
             else
             {
-            fwd = raycastObject.transform.TransformDirection(Vector3.forward);
-            anim.SetTrigger("isPunching");
+                fwd = raycastObject.transform.TransformDirection(Vector3.forward);
+                anim.SetTrigger("isPunching");
             }
-            
+
             delayBeforeNextFire = fireDelay;
         }
     }
@@ -135,11 +142,11 @@ public class MainPlayer : Personnage
     public float Jump()
     {
         float jumpForce = 20;
-     
+
         anim.SetTrigger("isJumping");
         return jumpForce;
     }
-   
+
     public void Crouch()
     {
         if (canMove == true)
