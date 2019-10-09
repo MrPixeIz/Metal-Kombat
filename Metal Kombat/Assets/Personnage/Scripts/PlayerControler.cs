@@ -16,6 +16,7 @@ public class PlayerControler : MonoBehaviour
     private Vector3 hitNormal;
     private float verticalVel = 0;
     private bool ikActive = false;
+    private Vector3 targetingVector= new Vector3(0,0,1);
     void Start()
     {
 
@@ -44,11 +45,8 @@ public class PlayerControler : MonoBehaviour
             }
             if (Input.GetAxis("Fire1") != 0)
             {
-                ikActive = true;
-                Ray ray = cam.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0));
-                Debug.DrawRay(ray.origin, ray.direction * 50, Color.yellow,10);
-               
-                player.Attack();
+                ShootGun();
+                
             }
 
             player.Move();
@@ -196,9 +194,9 @@ public class PlayerControler : MonoBehaviour
     }
     void OnAnimatorIK()
     {
-        
-        Transform rightHandObj = null;
-        Transform lookObj = null;
+
+        Vector3 rightHandObj = new Vector3(0,1,1);
+        Vector3 lookObj = targetingVector;
         if (player.Anim)
         {
 
@@ -210,7 +208,7 @@ public class PlayerControler : MonoBehaviour
                 if (lookObj != null)
                 {
                     player.Anim.SetLookAtWeight(1);
-                    player.Anim.SetLookAtPosition(lookObj.position);
+                    player.Anim.SetLookAtPosition(lookObj);
                 }
 
                 // Set the right hand target position and rotation, if one has been assigned
@@ -235,4 +233,21 @@ public class PlayerControler : MonoBehaviour
         }
     }
 
+
+    void ShootGun() {
+        ikActive = true;
+        Ray ray = cam.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0));
+        RaycastHit objectHit;
+        if(Physics.Raycast(ray, out objectHit)) {
+            Vector3 bulletImpactLocation = objectHit.point;
+            targetingVector = (bulletImpactLocation - new Vector3(0, 1, 1));
+        }
+       
+        /*if (objectobjectHitHit != null) {
+
+        }*/
+        Debug.DrawRay(ray.origin, ray.direction * 50, Color.yellow, 10);
+
+        player.Attack();
+    }
 }
