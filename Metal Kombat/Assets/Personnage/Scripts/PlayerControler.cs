@@ -15,7 +15,7 @@ public class PlayerControler : MonoBehaviour
     private Sounds sounds;
     private Vector3 hitNormal;
     private float verticalVel = 0;
-
+    private bool ikActive = false;
     void Start()
     {
 
@@ -44,6 +44,10 @@ public class PlayerControler : MonoBehaviour
             }
             if (Input.GetAxis("Fire1") != 0)
             {
+                ikActive = true;
+                Ray ray = cam.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0));
+                Debug.DrawRay(ray.origin, ray.direction * 50, Color.yellow,10);
+               
                 player.Attack();
             }
 
@@ -189,6 +193,46 @@ public class PlayerControler : MonoBehaviour
             sounds.PlaySound(clipAudio);
         }
 
+    }
+    void OnAnimatorIK()
+    {
+        
+        Transform rightHandObj = null;
+        Transform lookObj = null;
+        if (player.Anim)
+        {
+
+            //if the IK is active, set the position and rotation directly to the goal. 
+            if (ikActive)
+            {
+                
+                // Set the look target position, if one has been assigned
+                if (lookObj != null)
+                {
+                    player.Anim.SetLookAtWeight(1);
+                    player.Anim.SetLookAtPosition(lookObj.position);
+                }
+
+                // Set the right hand target position and rotation, if one has been assigned
+                if (rightHandObj != null)
+                {
+
+                    player.Anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
+                    player.Anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 1);
+                    player.Anim.SetIKPosition(AvatarIKGoal.RightHand, player.transform.position);
+                    player.Anim.SetIKRotation(AvatarIKGoal.RightHand, cam.transform.rotation);
+                }
+
+            }
+
+            //if the IK is not active, set the position and rotation of the hand and head back to the original position
+            else
+            {
+                player.Anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 0);
+                player.Anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 0);
+                player.Anim.SetLookAtWeight(0);
+            }
+        }
     }
 
 }

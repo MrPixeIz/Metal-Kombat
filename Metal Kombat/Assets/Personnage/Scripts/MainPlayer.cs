@@ -200,4 +200,5 @@ public class MainPlayer : Personnage
     {
         anim.SetFloat("InputZ", inputX, 0.0f, Time.deltaTime * 2f);
     }
+   
 }
