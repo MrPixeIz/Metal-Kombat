@@ -16,9 +16,10 @@ public class PlayerControler : MonoBehaviour
     private Vector3 hitNormal;
     private float verticalVel = 0;
     private bool ikActive = false;
-    private Vector3 targetingVector= new Vector3(0,0,1);
-    void Start()
-    {
+    private Vector3 targetingVector = new Vector3(0, 0, 1);
+    private Vector3 lookAt = new Vector3(0, 8, 5);
+    public GameObject gun;
+    void Start() {
 
         player = GetComponent<MainPlayer>();
         print(player);
@@ -26,33 +27,26 @@ public class PlayerControler : MonoBehaviour
         sounds = GetComponentInChildren<Sounds>();
     }
 
-    void Update()
-    {
+    void Update() {
         player.ChangeValueMoveVectorY(verticalVel);
         InputMagnitude();
 
-        if (GroundCheck())
-        {
+        if (GroundCheck()) {
             player.Anim.SetBool("isFalling", false);
             player.DelayBeforeNextFire -= Time.deltaTime;
-            if (Input.GetButtonDown("Jump") && player.IsCrouched == false)
-            {
+            if (Input.GetButtonDown("Jump") && player.IsCrouched == false) {
                 verticalVel = player.Jump();
             }
-            if (Input.GetKeyDown(KeyCode.C))
-            {
+            if (Input.GetKeyDown(KeyCode.C)) {
                 player.Crouch();
             }
-            if (Input.GetAxis("Fire1") != 0)
-            {
-                ShootGun();
-                
-            }
+
+            ShootGun();
+
+
 
             player.Move();
-        }
-        else
-        {
+        } else {
             player.Anim.SetBool("isFalling", true);
             verticalVel -= gravity * Time.deltaTime;
             Slide();
@@ -61,34 +55,27 @@ public class PlayerControler : MonoBehaviour
         player.Controller.Move(player.MoveVector * Time.deltaTime);
     }
 
-    void OnControllerColliderHit(ControllerColliderHit hit)
-    {
+    void OnControllerColliderHit(ControllerColliderHit hit) {
         hitNormal = hit.normal;
     }
 
-    void Slide()
-    {
+    void Slide() {
 
-        if (hitNormal != Vector3.zero)
-        {
+        if (hitNormal != Vector3.zero) {
             float slopeLimit = 50;
-            if (verticalVel < 0 && Vector3.Angle(Vector3.up, hitNormal) >= slopeLimit)
-            {
+            if (verticalVel < 0 && Vector3.Angle(Vector3.up, hitNormal) >= slopeLimit) {
                 float slideFriction = 0f;
                 verticalVel = 0;
                 player.ChangeValueMoveVectorX(((1f - hitNormal.y) * hitNormal.x * (1.3f - slideFriction)) * gravity * Time.deltaTime * 5);
                 player.ChangeValueMoveVectorZ(((1f - hitNormal.y) * hitNormal.z * (1.3f - slideFriction)) * gravity * Time.deltaTime * 5);
             }
-        }
-        else if (hitNormal == Vector3.zero && player.Anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Fall A Loop")
-        {
+        } else if (hitNormal == Vector3.zero && player.Anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Fall A Loop") {
             MoveCharacter(10);
         }
         hitNormal = Vector3.zero;
     }
 
-    void MoveCharacter(float force)
-    {
+    void MoveCharacter(float force) {
 
         player.ChangeValueMoveVectorX(0);
         player.ChangeValueMoveVectorZ(0);
@@ -103,8 +90,7 @@ public class PlayerControler : MonoBehaviour
 
 
     }
-    void PlayerMoveAndRotation()
-    {
+    void PlayerMoveAndRotation() {
         inputX = Input.GetAxis("Horizontal");
         inputZ = Input.GetAxis("Vertical");
         var camera = Camera.main;
@@ -119,8 +105,7 @@ public class PlayerControler : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(desiredMoveDirection), desiredRotationSpeed);
     }
 
-    void InputMagnitude()
-    {
+    void InputMagnitude() {
         inputX = Input.GetAxis("Horizontal");
         inputZ = Input.GetAxis("Vertical");
         player.SetFloatZ(inputZ);
@@ -129,14 +114,12 @@ public class PlayerControler : MonoBehaviour
 
         //Déplacer le joueur     
         player.Anim.SetFloat("InputMagnitude", speed, 0.0f, Time.deltaTime);
-        if (speed > allowPlayerRotation)
-        {
+        if (speed > allowPlayerRotation) {
             PlayerMoveAndRotation();
         }
     }
 
-    bool GroundCheck()
-    {
+    bool GroundCheck() {
         RaycastHit hit;
         float distance = 2.75f;
 
@@ -145,87 +128,74 @@ public class PlayerControler : MonoBehaviour
         startPosition.y += 2f;
         //Debug.DrawRay(startPosition, dir, Color.red, 1);
 
-        if (Physics.Raycast(startPosition, dir, out hit, distance))
-        {
+        if (Physics.Raycast(startPosition, dir, out hit, distance)) {
             player.IsGrounded = true;
-        }
-        else
-        {
+        } else {
             player.IsGrounded = false;
         }
         return player.IsGrounded;
     }
-    bool HitCheck()
-    {
+    bool HitCheck() {
         bool hitDetected = false;
         RaycastHit objectHit;
         Debug.DrawRay(player.RaycastObject.transform.position + new Vector3(0, 5, 0), player.Fwd * 3, Color.green, 2);
         //Physics.Raycast(raycastObject.transform.position, fwd, out objectHit, 7
         //Physics.SphereCast(transform.position + new Vector3(0, controller.height / 2, 0), controller.height / 2, transform.forward, out objectHit, 10)
-        if (Physics.Raycast(player.RaycastObject.transform.position + new Vector3(0, 5, 0), player.Fwd, out objectHit, 3))
-        {
+        if (Physics.Raycast(player.RaycastObject.transform.position + new Vector3(0, 5, 0), player.Fwd, out objectHit, 3)) {
 
 
             hitDetected = true;
-        }
-        else
-        {
+        } else {
             hitDetected = false;
 
         }
         return hitDetected;
     }
 
-    public void PlaySound(AudioClip clipAudio)
-    {
-        if (player.IsGrounded)
-        {
+    public void PlaySound(AudioClip clipAudio) {
+        if (player.IsGrounded) {
             sounds.PlaySound(clipAudio);
         }
     }
-    public void Punch(AudioClip clipAudio)
-    {
+    public void Punch(AudioClip clipAudio) {
 
-        if (HitCheck())
-        {
+        if (HitCheck()) {
             sounds.PlaySound(clipAudio);
         }
 
     }
-    void OnAnimatorIK()
-    {
+    void OnAnimatorIK() {
 
-        Vector3 rightHandObj = new Vector3(0,1,1);
+        Vector3 rightShoulderLocation = new Vector3(0.5f, 7.5f, 0) + player.transform.position;
         Vector3 lookObj = targetingVector;
-        if (player.Anim)
-        {
+        if (player.Anim) {
 
             //if the IK is active, set the position and rotation directly to the goal. 
-            if (ikActive)
-            {
-                
+            if (ikActive) {
+
                 // Set the look target position, if one has been assigned
-                if (lookObj != null)
-                {
+                if (lookObj != null) {
                     player.Anim.SetLookAtWeight(1);
-                    player.Anim.SetLookAtPosition(lookObj);
+                    player.Anim.SetLookAtPosition(lookAt);
                 }
 
                 // Set the right hand target position and rotation, if one has been assigned
-                if (rightHandObj != null)
-                {
+                if (rightShoulderLocation != null) {
 
                     player.Anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
                     player.Anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 1);
-                    player.Anim.SetIKPosition(AvatarIKGoal.RightHand, player.transform.position);
-                    player.Anim.SetIKRotation(AvatarIKGoal.RightHand, cam.transform.rotation);
+                    Vector3 gunPosition = targetingVector.normalized * 3 + rightShoulderLocation;
+                    player.Anim.SetIKPosition(AvatarIKGoal.RightHand, gunPosition);
+                    print("targetingVector" + targetingVector);
+                    Quaternion gunRotation = Quaternion.LookRotation(targetingVector, Vector3.up);
+                    print("QuaternionRotation" + gunRotation);
+                    player.Anim.SetIKRotation(AvatarIKGoal.RightHand, gunRotation);
                 }
 
             }
 
             //if the IK is not active, set the position and rotation of the hand and head back to the original position
-            else
-            {
+            else {
                 player.Anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 0);
                 player.Anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 0);
                 player.Anim.SetLookAtWeight(0);
@@ -235,19 +205,27 @@ public class PlayerControler : MonoBehaviour
 
 
     void ShootGun() {
-        ikActive = true;
-        Ray ray = cam.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0));
-        RaycastHit objectHit;
-        if(Physics.Raycast(ray, out objectHit)) {
-            Vector3 bulletImpactLocation = objectHit.point;
-            targetingVector = (bulletImpactLocation - new Vector3(0, 1, 1));
+        if (Input.GetAxis("Fire1") != 0) {
+            ikActive = true;
+            Ray ray = cam.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0));
+            RaycastHit objectHit;
+            if (Physics.Raycast(ray, out objectHit)) {
+                Vector3 bulletImpactLocation = objectHit.point;
+                targetingVector = (bulletImpactLocation - (gameObject.transform.position + new Vector3(0.5f, 7.5f, 0)));
+                Debug.DrawRay(gameObject.transform.position + new Vector3(0.5f, 7.5f, 0), targetingVector, Color.blue, 10);
+                lookAt = bulletImpactLocation;
+            }
+
+            /*if (objectobjectHitHit != null) {
+
+            }*/
+            Debug.DrawRay(ray.origin, ray.direction * 50, Color.yellow, 10);
+
+
+
+            player.Attack();
+        } else {
+            ikActive = false;
         }
-       
-        /*if (objectobjectHitHit != null) {
-
-        }*/
-        Debug.DrawRay(ray.origin, ray.direction * 50, Color.yellow, 10);
-
-        player.Attack();
     }
 }
