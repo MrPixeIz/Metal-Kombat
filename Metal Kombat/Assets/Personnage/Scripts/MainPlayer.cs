@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class MainPlayer : Personnage
 {
-    public CharacterController controller;
-    bool isGrounded;
+    
+   
     public Animator anim;
+    public bool allowPlayerRotation= true;
     bool isCrouched;
     bool canMove;
     int walkForce;
     Vector3 moveVector;
     Vector3 fwd;
-    public GameObject raycastObject;
+    
     private float delayBeforeNextFire = 0;
     private bool hasAGun = true;
   
@@ -75,11 +76,7 @@ public class MainPlayer : Personnage
         get { return fwd; }
         set { fwd = value; }
     }
-    public GameObject RaycastObject
-    {
-        get { return raycastObject; }
-        set { raycastObject = value; }
-    }
+   
     public float DelayBeforeNextFire
     {
         get { return delayBeforeNextFire; }
@@ -105,6 +102,7 @@ public class MainPlayer : Personnage
     {
         anim = this.GetComponent<Animator>();
         controller = this.GetComponent<CharacterController>();
+        cam = Camera.main;
 
     }
 
@@ -156,30 +154,52 @@ public class MainPlayer : Personnage
     {
 
     }
-    public void Move()
+    public void ApplyMoveInput()
     {
-        if (canMove == true)
-        {
-            moveVector.x = 0;
-            moveVector.z = 0;
+        if (isGrounded) {
+            velocity.x = 0;
+            velocity.z = 0;
+            if (canMove == true) {
+                if (Input.GetAxis("Vertical") != 0 && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Punching" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Mma Idle (1)" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Shooting" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Standing To Crouched") {
+                    velocity += transform.forward * walkForce * Time.deltaTime * Mathf.Abs(Input.GetAxis("Vertical"));
+                } else if (Input.GetAxis("Horizontal") != 0 && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Punching" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Mma Idle (1)" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Shooting" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Standing To Crouched") {
+                    velocity += transform.forward * walkForce * Time.deltaTime * Mathf.Abs(Input.GetAxis("Horizontal"));
+                }
+            }
+            if (Input.GetButtonDown("Jump") && IsCrouched == false) {
+                velocity.y = Jump();
+            }
+            if (Input.GetKeyDown(KeyCode.C)) {
+                Crouch();
+            }
 
-            if (Input.GetAxis("Vertical") != 0 && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Punching" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Mma Idle (1)" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Shooting" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Standing To Crouched")
-            {
-                moveVector += transform.forward * walkForce * Time.deltaTime * Mathf.Abs(Input.GetAxis("Vertical"));
+            if (Input.GetAxis("Fire1") != 0 && IsCrouched == false) {
+                Attack();
             }
-            else if (Input.GetAxis("Horizontal") != 0 && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Punching" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Mma Idle (1)" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Shooting" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Standing To Crouched")
-            {
-                moveVector += transform.forward * walkForce * Time.deltaTime * Mathf.Abs(Input.GetAxis("Horizontal"));
-            }
+        }     
+    }
+
+    private void ApplyAnimation() {
+        if (isGrounded) {
+            Anim.SetBool("isFalling", false);
+        } else {
+            Anim.SetBool("isFalling", true);
         }
     }
+
+    public void ResetMoveVector() {
+        moveVector.x = 0;
+        moveVector.z = 0;
+    }
+
+  
     public void TakeDammage()
     {
 
     }
     public float Jump()
     {
-        float jumpForce = 20;
+        float jumpForce =25;
 
         anim.SetTrigger("isJumping");
         return jumpForce;
@@ -239,4 +259,46 @@ public class MainPlayer : Personnage
         anim.SetFloat("InputZ", inputX, 0.0f, Time.deltaTime * 2f);
     }
 
+    protected override void ApplyMovement() {
+        ApplyMoveInput();
+        SetAnimationCharacterSpeed();
+        RotatePlayerAccordingToCamera();
+    }
+
+  
+
+    void PlayerMoveAndRotation() {
+        float inputX = Input.GetAxis("Horizontal");
+        float inputZ = Input.GetAxis("Vertical");
+        var camera = Camera.main;
+        var foward = cam.transform.forward;
+        var right = cam.transform.right;
+        foward.y = 0f;
+        right.y = 0f;
+        foward.Normalize();
+        right.Normalize();
+
+        Vector3 desiredMoveDirection = foward * inputZ + right * inputX;
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(desiredMoveDirection), DESIREDROTATIONSPEED);
+    }
+    void RotatePlayerAccordingToCamera() {
+
+        if ((new Vector2(velocity.z, velocity.x)).magnitude>0 && allowPlayerRotation) {
+            PlayerMoveAndRotation();
+        }
+    }
+
+    void SetAnimationCharacterSpeed() {
+        float speed = new Vector2(velocity.z, velocity.x).sqrMagnitude;  
+        anim.SetFloat("InputMagnitude", speed, 0.0f, Time.deltaTime);   
+    }
+
+    protected override void OnUpdate() {
+        ProcessFireDelay();
+        ApplyAnimation();
+    }
+
+    private void ProcessFireDelay() {
+        DelayBeforeNextFire -= Time.deltaTime;
+    }
 }

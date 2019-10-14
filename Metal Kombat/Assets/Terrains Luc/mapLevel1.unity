@@ -38,13 +38,13 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4465782, g: 0.49641252, b: 0.5748167, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 11
-  m_GIWorkflowMode: 0
+  m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -497,7 +497,8 @@ Prefab:
       propertyPath: clampAngleY
       value: 50
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 114158582629759876, guid: 7e041577ee955244fba5f718058f7a8c, type: 2}
   m_SourcePrefab: {fileID: 100100000, guid: 7e041577ee955244fba5f718058f7a8c, type: 2}
   m_IsPrefabAsset: 0
 --- !u!4 &74794491 stripped
@@ -6964,6 +6965,18 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4395690294780250, guid: 7e041577ee955244fba5f718058f7a8c,
     type: 2}
   m_PrefabInternal: {fileID: 71367382}
+--- !u!135 &795112412
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 795112410}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Radius: 2.3
+  m_Center: {x: 0, y: 2.51, z: 0}
 --- !u!143 &795112413 stripped
 CharacterController:
   m_CorrespondingSourceObject: {fileID: 143576497677880486, guid: 7e041577ee955244fba5f718058f7a8c,
@@ -6985,10 +6998,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30a9465b4056b654abfcf2ff8f14e9de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gun: {fileID: 0}
+  raycastObject: {fileID: 795112410}
   controller: {fileID: 795112413}
   anim: {fileID: 795112414}
-  raycastObject: {fileID: 795112410}
-  ikActive: 1
+  allowPlayerRotation: 1
 --- !u!4 &795939206 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4766682346171988, guid: f41bceb1b4b686d4c985972670f50bec,

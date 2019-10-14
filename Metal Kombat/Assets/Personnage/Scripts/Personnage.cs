@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Personnage : MonoBehaviour
+[RequireComponent(typeof(CharacterController))]
+public abstract class Personnage : Physic
 {
+    public const float DESIREDROTATIONSPEED = 50;
     int pointsDeVie;
+    public GameObject raycastObject;
+    public CharacterController controller;
     public int PointsDeVie
     {
         get { return pointsDeVie; }
@@ -18,6 +22,10 @@ public class Personnage : MonoBehaviour
     public Personnage(int inPointsDeVie)
     {
         pointsDeVie = inPointsDeVie;
+    }
+
+    void Start() {
+        controller = GetComponent<CharacterController>();
     }
 
     public void Attack()
@@ -37,6 +45,31 @@ public class Personnage : MonoBehaviour
 
     }
 
+    protected override void ApplyVelocity() {
+        ApplyMovement();
+        controller.Move(velocity * Time.deltaTime);
+    }
 
+    public GameObject RaycastObject {
+        get { return raycastObject; }
+        set { raycastObject = value; }
+    }
 
+    bool MeleeHitCheck() {
+        bool hitDetected = false;
+        RaycastHit objectHit;
+        //Debug.DrawRay(player.RaycastObject.transform.position + new Vector3(0, 5, 0), player.Fwd * 3, Color.green, 2);
+        //Physics.Raycast(raycastObject.transform.position, fwd, out objectHit, 7
+        //Physics.SphereCast(transform.position + new Vector3(0, controller.height / 2, 0), controller.height / 2, transform.forward, out objectHit, 10)
+        if (Physics.Raycast(RaycastObject.transform.position + new Vector3(0, 5, 0),
+            gameObject.transform.forward, out objectHit, 3)) {
+            hitDetected = true;
+        } else {
+            hitDetected = false;
+
+        }
+        return hitDetected;
+    }
+
+    protected abstract void ApplyMovement();
 }
