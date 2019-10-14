@@ -7,8 +7,9 @@ public class ThirdPersonCameraController : MonoBehaviour
 {
     public float cameraMoveSpeed=120.0f;
     public GameObject cameraFollowObject;
-    Vector3 followPosition;
-    public float clampAngle = 80.0f;
+
+    public float clampAngleX = 50.0f;
+    public float clampAngleY = 90.0f;
     public float inputSensitivity = 150.0f;
     public GameObject cameraObject;
     public GameObject playerObject;
@@ -31,7 +32,7 @@ public class ThirdPersonCameraController : MonoBehaviour
         rotX = rot.x;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-
+        
     }
 
     void Update()
@@ -41,7 +42,8 @@ public class ThirdPersonCameraController : MonoBehaviour
 
         rotY += mouseX * inputSensitivity * Time.deltaTime;
         rotX+= mouseY * inputSensitivity * Time.deltaTime;
-        rotX = Mathf.Clamp(rotX, -clampAngle, clampAngle);
+        rotX = Mathf.Clamp(rotX, -clampAngleX, clampAngleX);
+        //rotY = Mathf.Clamp(rotY, -clampAngleY, clampAngleY);
         Quaternion localRotation = Quaternion.Euler(rotX, rotY, 0.0f);
         transform.rotation = localRotation;
     }

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.4465782, g: 0.49641252, b: 0.5748167, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -453,11 +453,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4707951935456288, guid: 7e041577ee955244fba5f718058f7a8c, type: 2}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4743681887493388, guid: 7e041577ee955244fba5f718058f7a8c, type: 2}
       propertyPath: m_RootOrder
-      value: 5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4982133584826456, guid: 7e041577ee955244fba5f718058f7a8c, type: 2}
       propertyPath: m_RootOrder
@@ -465,7 +465,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4860185358834292, guid: 7e041577ee955244fba5f718058f7a8c, type: 2}
       propertyPath: m_RootOrder
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 95694156195562336, guid: 7e041577ee955244fba5f718058f7a8c,
         type: 2}
@@ -481,6 +481,21 @@ Prefab:
     - target: {fileID: 4310563193379352, guid: 7e041577ee955244fba5f718058f7a8c, type: 2}
       propertyPath: m_LocalPosition.x
       value: -3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114084615186187674, guid: 7e041577ee955244fba5f718058f7a8c,
+        type: 2}
+      propertyPath: clampAngle
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 114084615186187674, guid: 7e041577ee955244fba5f718058f7a8c,
+        type: 2}
+      propertyPath: clampAngleX
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 114084615186187674, guid: 7e041577ee955244fba5f718058f7a8c,
+        type: 2}
+      propertyPath: clampAngleY
+      value: 50
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7e041577ee955244fba5f718058f7a8c, type: 2}
@@ -6973,6 +6988,7 @@ MonoBehaviour:
   controller: {fileID: 795112413}
   anim: {fileID: 795112414}
   raycastObject: {fileID: 795112410}
+  ikActive: 1
 --- !u!4 &795939206 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4766682346171988, guid: f41bceb1b4b686d4c985972670f50bec,
@@ -8094,6 +8110,10 @@ Prefab:
     - target: {fileID: 4601210679091464, guid: f69f383e5bc65e741b4997620a89ff43, type: 2}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -3.8806124
+      objectReference: {fileID: 0}
+    - target: {fileID: 1671631416202924, guid: f69f383e5bc65e741b4997620a89ff43, type: 2}
+      propertyPath: m_TagString
+      value: Ennemi
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f69f383e5bc65e741b4997620a89ff43, type: 2}

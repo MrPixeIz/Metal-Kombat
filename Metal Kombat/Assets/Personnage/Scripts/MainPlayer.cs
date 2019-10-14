@@ -15,12 +15,30 @@ public class MainPlayer : Personnage
     public GameObject raycastObject;
     private float delayBeforeNextFire = 0;
     private bool hasAGun = true;
-    //onAminationIK
-    //camera.screenpointtoray
+  
+    private Camera cam;
+    private Vector3 targetingVector = new Vector3(0, 0, 1);
+    private Vector3 lookAt = new Vector3(0, 8, 5);
     public bool IsGrounded
     {
         get { return isGrounded; }
         set { isGrounded = value; }
+    }
+    
+    public Vector3 TargetingVector
+    {
+        get { return targetingVector; }
+        set { targetingVector = value; }
+    }
+    public Vector3 LookAt
+    {
+        get { return lookAt; }
+        set { lookAt = value; }
+    }
+    public Camera Cam
+    {
+        get { return cam; }
+        set { cam = value; }
     }
     public CharacterController Controller
     {
@@ -102,8 +120,8 @@ public class MainPlayer : Personnage
                 Camera cam = Camera.main;
 
                 anim.SetTrigger("isShooting");
-                fwd = raycastObject.transform.TransformDirection(cam.transform.position);
-                Debug.DrawRay(raycastObject.transform.position + new Vector3(0, 5, 0), fwd, Color.green, 5);
+
+                ShootGun();
             }
             else
             {
@@ -112,6 +130,26 @@ public class MainPlayer : Personnage
             }
 
             delayBeforeNextFire = fireDelay;
+        }
+    }
+    void ShootGun()
+    {  
+        Ray ray = cam.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0));
+        RaycastHit objectHit;
+        if (Physics.Raycast(ray, out objectHit))
+        {
+            Vector3 bulletImpactLocation = objectHit.point;
+            targetingVector = (bulletImpactLocation - (gameObject.transform.position + new Vector3(0.5f, 7.5f, 0)));
+            Debug.DrawRay(gameObject.transform.position + new Vector3(0.5f, 7.5f, 0), targetingVector, Color.blue, 10);
+            lookAt = bulletImpactLocation;
+            if (objectHit.transform.tag == "Ennemi")
+            {
+                print("Toucher");
+            }
+            else 
+            {
+                print("Manquer");
+            }
         }
     }
     public void Die()
@@ -125,11 +163,11 @@ public class MainPlayer : Personnage
             moveVector.x = 0;
             moveVector.z = 0;
 
-            if (Input.GetAxis("Vertical") != 0 && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Punching" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Mma Idle (1)")
+            if (Input.GetAxis("Vertical") != 0 && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Punching" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Mma Idle (1)" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Shooting" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Standing To Crouched")
             {
                 moveVector += transform.forward * walkForce * Time.deltaTime * Mathf.Abs(Input.GetAxis("Vertical"));
             }
-            else if (Input.GetAxis("Horizontal") != 0 && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Punching" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Mma Idle (1)")
+            else if (Input.GetAxis("Horizontal") != 0 && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Punching" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Mma Idle (1)" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Shooting" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Standing To Crouched")
             {
                 moveVector += transform.forward * walkForce * Time.deltaTime * Mathf.Abs(Input.GetAxis("Horizontal"));
             }
@@ -200,5 +238,5 @@ public class MainPlayer : Personnage
     {
         anim.SetFloat("InputZ", inputX, 0.0f, Time.deltaTime * 2f);
     }
-   
+
 }
