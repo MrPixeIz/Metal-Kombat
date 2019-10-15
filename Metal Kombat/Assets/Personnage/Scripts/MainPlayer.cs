@@ -5,10 +5,9 @@ using UnityEngine;
 public class MainPlayer : Personnage
 {
     
-   
+    public bool ikActive = false;
     public Animator anim;
     public bool allowPlayerRotation= true;
-    bool isCrouched;
     bool canMove;
     int walkForce;
     Vector3 moveVector;
@@ -20,73 +19,8 @@ public class MainPlayer : Personnage
     private Camera cam;
     private Vector3 targetingVector = new Vector3(0, 0, 1);
     private Vector3 lookAt = new Vector3(0, 8, 5);
-    public bool IsGrounded
-    {
-        get { return isGrounded; }
-        set { isGrounded = value; }
-    }
-    
-    public Vector3 TargetingVector
-    {
-        get { return targetingVector; }
-        set { targetingVector = value; }
-    }
-    public Vector3 LookAt
-    {
-        get { return lookAt; }
-        set { lookAt = value; }
-    }
-    public Camera Cam
-    {
-        get { return cam; }
-        set { cam = value; }
-    }
-    public CharacterController Controller
-    {
-        get { return controller; }
-        set { controller = value; }
-    }
-    public Animator Anim
-    {
-        get { return anim; }
-        set { anim = value; }
-    }
-    public bool IsCrouched
-    {
-        get { return isCrouched; }
-        set { isCrouched = value; }
-    }
-    public bool CanMove
-    {
-        get { return canMove; }
-        set { canMove = value; }
-    }
-    public int WalkForce
-    {
-        get { return walkForce; }
-        set { walkForce = value; }
-    }
-    public Vector3 MoveVector
-    {
-        get { return moveVector; }
-        set { moveVector = value; }
-    }
-    public Vector3 Fwd
-    {
-        get { return fwd; }
-        set { fwd = value; }
-    }
    
-    public float DelayBeforeNextFire
-    {
-        get { return delayBeforeNextFire; }
-        set { delayBeforeNextFire = value; }
-    }
-    public bool HasAGun
-    {
-        get { return hasAGun; }
-        set { hasAGun = value; }
-    }
+
 
     public MainPlayer()
     {
@@ -103,17 +37,18 @@ public class MainPlayer : Personnage
         anim = this.GetComponent<Animator>();
         controller = this.GetComponent<CharacterController>();
         cam = Camera.main;
+        sounds = GetComponentInChildren<Sounds>();
 
     }
 
-    public void Attack()
+    protected override void Attack()
     {
 
         if (delayBeforeNextFire <= 0)
         {
 
             float fireDelay = 0.5f;
-            if (HasAGun)
+            if (hasAGun)
             {
                 Camera cam = Camera.main;
 
@@ -150,11 +85,11 @@ public class MainPlayer : Personnage
             }
         }
     }
-    public void Die()
+    protected override void Die()
     {
 
     }
-    public void ApplyMoveInput()
+    protected override void ApplyMoveInput()
     {
         if (isGrounded) {
             velocity.x = 0;
@@ -166,14 +101,14 @@ public class MainPlayer : Personnage
                     velocity += transform.forward * walkForce * Time.deltaTime * Mathf.Abs(Input.GetAxis("Horizontal"));
                 }
             }
-            if (Input.GetButtonDown("Jump") && IsCrouched == false) {
+            if (Input.GetButtonDown("Jump") && isCrouched == false) {
                 velocity.y = Jump();
             }
-            if (Input.GetKeyDown(KeyCode.C)) {
+            /*if (Input.GetKeyDown(KeyCode.C)) {
                 Crouch();
-            }
+            }*/
 
-            if (Input.GetAxis("Fire1") != 0 && IsCrouched == false) {
+            if (Input.GetAxis("Fire1") != 0 && isCrouched == false) {
                 Attack();
             }
         }     
@@ -181,9 +116,9 @@ public class MainPlayer : Personnage
 
     private void ApplyAnimation() {
         if (isGrounded) {
-            Anim.SetBool("isFalling", false);
+            anim.SetBool("isFalling", false);
         } else {
-            Anim.SetBool("isFalling", true);
+            anim.SetBool("isFalling", true);
         }
     }
 
@@ -192,8 +127,8 @@ public class MainPlayer : Personnage
         moveVector.z = 0;
     }
 
-  
-    public void TakeDammage()
+
+    protected override void TakeDammage()
     {
 
     }
@@ -226,39 +161,7 @@ public class MainPlayer : Personnage
         anim.SetBool("isCrouched", isCrouched);
         float crouchStartTime = Time.time;
     }
-    public float MoveVectorY()
-    {
-        return moveVector.y;
-    }
-    public float MoveVectorX()
-    {
-        return moveVector.x;
-    }
-    public float MoveVectorZ()
-    {
-        return moveVector.z;
-    }
-    public void ChangeValueMoveVectorY(float y)
-    {
-        moveVector.y = y;
-    }
-    public void ChangeValueMoveVectorX(float x)
-    {
-        moveVector.x = x;
-    }
-    public void ChangeValueMoveVectorZ(float z)
-    {
-        moveVector.z = z;
-    }
-    public void SetFloatZ(float inputZ)
-    {
-        anim.SetFloat("InputZ", inputZ, 0.0f, Time.deltaTime * 2f);
-    }
-    public void SetFloatX(float inputX)
-    {
-        anim.SetFloat("InputZ", inputX, 0.0f, Time.deltaTime * 2f);
-    }
-
+    
     protected override void ApplyMovement() {
         ApplyMoveInput();
         SetAnimationCharacterSpeed();
@@ -299,6 +202,66 @@ public class MainPlayer : Personnage
     }
 
     private void ProcessFireDelay() {
-        DelayBeforeNextFire -= Time.deltaTime;
+        delayBeforeNextFire -= Time.deltaTime;
+    }
+    void OnAnimatorIK()
+    {
+
+        Vector3 rightShoulderLocation = new Vector3(0.5f, 7.5f, 0) + transform.position;
+        Vector3 lookObj = targetingVector;
+        if (anim)
+        {
+
+            //if the IK is active, set the position and rotation directly to the goal. 
+            if (ikActive)
+            {
+
+                // Set the look target position, if one has been assigned
+                if (lookObj != null)
+                {
+                    anim.SetLookAtWeight(1);
+                    anim.SetLookAtPosition(lookAt);
+                }
+
+                // Set the right hand target position and rotation, if one has been assigned
+                if (rightShoulderLocation != null)
+                {
+
+                    anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
+                    anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 1);
+                    Vector3 gunPosition = targetingVector.normalized * 3 + rightShoulderLocation;
+                   anim.SetIKPosition(AvatarIKGoal.RightHand, gunPosition);
+
+                    Quaternion gunRotation = Quaternion.LookRotation(targetingVector, Vector3.up);
+
+                   anim.SetIKRotation(AvatarIKGoal.RightHand, gunRotation);
+                }
+
+            }
+
+            //if the IK is not active, set the position and rotation of the hand and head back to the original position
+            else
+            {
+                anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 0);
+                anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 0);
+                anim.SetLookAtWeight(0);
+            }
+        }
+    }
+    public void PlaySound(AudioClip clipAudio)
+    {
+        if (isGrounded)
+        {
+            sounds.PlaySound(clipAudio);
+        }
+    }
+    public void Punch(AudioClip clipAudio)
+    {
+
+        if (MeleeHitCheck())
+        {
+            sounds.PlaySound(clipAudio);
+        }
+
     }
 }
