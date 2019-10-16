@@ -94,7 +94,7 @@ public abstract class Physic : MonoBehaviour
         {
             hitNormal = hit.normal;
             Debug.DrawLine(hit.point, (hit.point + hit.normal * 6), Color.cyan);
-            print(hitNormal);
+            
             if (Vector3.Angle(Vector3.up, hitNormal) <= SLOPELIMIT)
             {
                 if (!isCrouched)

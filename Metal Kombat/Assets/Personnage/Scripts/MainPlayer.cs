@@ -8,7 +8,7 @@ public class MainPlayer : Personnage
     public bool ikActive = false;
     public Animator anim;
     public bool allowPlayerRotation= true;
-    bool canMove;
+    bool canMove =true;
     int walkForce;
     Vector3 moveVector;
     Vector3 fwd;
@@ -19,9 +19,6 @@ public class MainPlayer : Personnage
     private Camera cam;
     private Vector3 targetingVector = new Vector3(0, 0, 1);
     private Vector3 lookAt = new Vector3(0, 8, 5);
-   
-
-
     public MainPlayer()
     {
 
@@ -94,6 +91,7 @@ public class MainPlayer : Personnage
         if (isGrounded) {
             velocity.x = 0;
             velocity.z = 0;
+          
             if (canMove == true) {
                 if (Input.GetAxis("Vertical") != 0 && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Punching" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Mma Idle (1)" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Shooting" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Standing To Crouched") {
                     velocity += transform.forward * walkForce * Time.deltaTime * Mathf.Abs(Input.GetAxis("Vertical"));
@@ -107,6 +105,10 @@ public class MainPlayer : Personnage
             /*if (Input.GetKeyDown(KeyCode.C)) {
                 Crouch();
             }*/
+            if (Input.GetKeyDown(KeyCode.V))
+            {
+                TakeDammage();
+            }
 
             if (Input.GetAxis("Fire1") != 0 && isCrouched == false) {
                 Attack();
@@ -130,7 +132,16 @@ public class MainPlayer : Personnage
 
     protected override void TakeDammage()
     {
-
+        float damage = 10;
+        if (pointsDeVie - damage >= 0)
+        {
+            pointsDeVie -= damage;
+            barreDeVie.UpdateLifeBar(damage);
+        }
+        else
+        {
+            Die();
+        }
     }
     public float Jump()
     {

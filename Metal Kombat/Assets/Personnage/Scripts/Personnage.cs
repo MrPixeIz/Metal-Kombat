@@ -1,34 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
 public abstract class Personnage : Physic
 {
     public const float DESIREDROTATIONSPEED = 50;
-    int pointsDeVie;
+    protected float pointsDeVie =100;
     public GameObject raycastObject;
     public CharacterController controller;
     protected  Sounds sounds;
-    public int PointsDeVie
-    {
-        get { return pointsDeVie; }
-        set { pointsDeVie = value; }
-    }
-
-    public Personnage()
-    {
-        pointsDeVie = 0;
-    }
-    public Personnage(int inPointsDeVie)
-    {
-        pointsDeVie = inPointsDeVie;
-    }
+    protected LifeBar barreDeVie = new LifeBar();
+ 
 
     void Start()
     {
         controller = GetComponent<CharacterController>();
         
+
+
     }
 
     protected abstract void Attack();
