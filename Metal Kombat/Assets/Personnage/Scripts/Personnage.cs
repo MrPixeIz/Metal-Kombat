@@ -7,21 +7,22 @@ using UnityEngine;
 public abstract class Personnage : Physic
 {
     public const float DESIREDROTATIONSPEED = 50;
-    protected float pointsDeVie =100;
+    protected float pointsDeVie = 100;
     public GameObject raycastObject;
     public CharacterController controller;
-    protected  Sounds sounds;
-    protected LifeBar barreDeVie = new LifeBar();
- 
+    protected Sounds sounds;
+    protected LifeBar barreDeVie; //= new LifeBar();
+
 
     void Start()
     {
         controller = GetComponent<CharacterController>();
-        
-
-
+        SetupLifeBar();
+        SetOnDieEvent();
+        OnStart();
     }
-
+    protected abstract void SetupLifeBar();
+    protected abstract void OnStart();
     protected abstract void Attack();
     protected abstract void Die();
     protected abstract void ApplyMoveInput();
@@ -32,6 +33,8 @@ public abstract class Personnage : Physic
         ApplyMovement();
         controller.Move(velocity * Time.deltaTime);
     }
+
+
 
     public GameObject RaycastObject
     {
@@ -59,6 +62,19 @@ public abstract class Personnage : Physic
         return hitDetected;
     }
 
-    
-   
+    private void SetOnDieEvent()
+    {
+        barreDeVie.SetOnDieListenner(GetOnDieEvent());
+    }
+
+    protected abstract OnDieHook GetOnDieEvent();
+
+    public interface OnDieEvent
+    {
+        void OnDieEvent();
+    }
+    protected abstract class OnDieHook : OnDieEvent
+    {
+        public abstract void OnDieEvent();
+    };
 }
