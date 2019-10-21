@@ -81,28 +81,26 @@ public class EnnemiDetectionScript : MonoBehaviour
     #endregion
 
     #region Move
-    void MoveTo(Transform pGameObject)
+    void MoveTo(Transform pGameObject, float pSpeed)
     {
         CharacterController controller = this.GetComponent<CharacterController>();
 
-        speed = 3f;
-
-        anim.SetFloat("InputMagnitude", speed, 0.0f, Time.deltaTime);
+        anim.SetFloat("InputMagnitude", pSpeed, 0.0f, Time.deltaTime);
         var forward = transform.TransformDirection(Vector3.forward);
-        controller.SimpleMove(forward * speed);
+        controller.SimpleMove(forward * pSpeed);
         Vector3 lookat = new Vector3(pGameObject.transform.position.x, gameObject.transform.position.y, pGameObject.transform.position.z);
         transform.LookAt(lookat);
     }
 
     void Chase()
     {
-        MoveTo(playerTarget);
+        MoveTo(playerTarget, pSpeed:9f);
     }
 
     public void Patrol(GameObject gameObject)
     {
 
-        MoveTo(gameObject.transform);
+        MoveTo(gameObject.transform, pSpeed:3f);
     }
 
     public void SetPatrol(GameObject newPatrolTarget)
