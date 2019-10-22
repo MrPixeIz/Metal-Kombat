@@ -11,17 +11,10 @@ public class EnnemiDetectionScript : MonoBehaviour
     public GameObject endPatrolObject;
 
     private float DistancePlayer;
-    private float DistanceEndPatrol;
-    private float DistanceStartPatrol;
     private float chaseRange = 30;
     private float attackRange = 5;
     private float soundRange = 60;
-    private float speed;
-    private Transform startPatrol;
-    private Transform endPatrol;
     private GameObject patrolTarget;
-    private float switchToRange = 4;
-    private RaycastHit hit;
     private SoundsEnnemis sounds;
 
     void Start()
@@ -33,12 +26,8 @@ public class EnnemiDetectionScript : MonoBehaviour
 
     void Update()
     {
-        startPatrol = GameObject.Find("StartPatrol").transform;
-        endPatrol = GameObject.Find("EndPatrol").transform;
         playerTarget = GameObject.Find("Player").transform;
         DistancePlayer = Vector3.Distance(playerTarget.position, transform.position);
-        DistanceStartPatrol = Vector3.Distance(startPatrol.position, transform.position);
-        DistanceEndPatrol = Vector3.Distance(endPatrol.position, transform.position);
 
         VerifyIfHitSomething();
 
@@ -51,7 +40,6 @@ public class EnnemiDetectionScript : MonoBehaviour
         if (DistancePlayer > chaseRange)
         {
             ResetBool();
-            //Idle();
             Patrol(patrolTarget);
         }
 
@@ -69,6 +57,8 @@ public class EnnemiDetectionScript : MonoBehaviour
 
     void Attack()
     {
+        Vector3 lookat = new Vector3(playerTarget.transform.position.x, gameObject.transform.position.y, playerTarget.transform.position.z);
+        transform.LookAt(lookat);
         anim.SetBool("isPunching", true);
         IdlePunching();
     }
@@ -94,13 +84,19 @@ public class EnnemiDetectionScript : MonoBehaviour
 
     void Chase()
     {
-        MoveTo(playerTarget, pSpeed:9f);
+        if(anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "IdlePunching")
+        {
+            MoveTo(playerTarget, pSpeed:9f);
+        }
+        
     }
 
     public void Patrol(GameObject gameObject)
     {
-
-        MoveTo(gameObject.transform, pSpeed:3f);
+        if (anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "IdlePunching")
+        {
+            MoveTo(gameObject.transform, pSpeed: 3f);
+        }
     }
 
     public void SetPatrol(GameObject newPatrolTarget)
@@ -123,6 +119,7 @@ public class EnnemiDetectionScript : MonoBehaviour
     #region Events
     void VerifyIfHitSomething()
     {
+        RaycastHit hit;
         if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 5))
         {
             Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.red);
