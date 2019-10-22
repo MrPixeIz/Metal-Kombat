@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class MainPlayer : Personnage
 {
     private const float PLAYERMAXSTARTINGLIFE = 100;
-    public bool ikActive = false;
+    private bool ikActive = false;
     public Animator anim;
     public bool allowPlayerRotation = true;
     bool canMove = true;
@@ -21,6 +21,9 @@ public class MainPlayer : Personnage
     private Camera cam;
     private Vector3 targetingVector = new Vector3(0, 0, 1);
     private Vector3 lookAt = new Vector3(0, 8, 5);
+    private float timeForIkActive = 0;
+    private RaycastHit objectHit;
+    private AudioClip ShootSoundclip;
     public MainPlayer()
     {
 
@@ -38,6 +41,7 @@ public class MainPlayer : Personnage
         anim = this.GetComponent<Animator>();
         cam = Camera.main;
         sounds = GetComponentInChildren<Sounds>();
+        ShootSoundclip = Resources.Load<AudioClip>("Personnage/Sons/gun");
     }
 
     protected override void SetupLifeBar()
@@ -59,9 +63,12 @@ public class MainPlayer : Personnage
             {
                 Camera cam = Camera.main;
 
-                anim.SetTrigger("isShooting");
-
+                //anim.SetTrigger("isShooting");
+                ikActive = true;
+                timeForIkActive = 1;
                 ShootGun();
+               
+                PlaySound(ShootSoundclip);
             }
             else
             {
@@ -74,27 +81,41 @@ public class MainPlayer : Personnage
     }
     void ShootGun()
     {
+        UpdateViserHitLocation();
+        
+        if (objectHit.transform.tag == "Ennemi")
+        {
+            
+            print("Toucher");
+        }
+        else
+        {
+            print("Manquer");
+        }
+
+    }
+    private void UpdateViserHitLocation()
+    {
+
         Ray ray = cam.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0));
-        RaycastHit objectHit;
+
         if (Physics.Raycast(ray, out objectHit))
         {
             Vector3 bulletImpactLocation = objectHit.point;
             targetingVector = (bulletImpactLocation - (gameObject.transform.position + new Vector3(0.5f, 7.5f, 0)));
             Debug.DrawRay(gameObject.transform.position + new Vector3(0.5f, 7.5f, 0), targetingVector, Color.blue, 10);
             lookAt = bulletImpactLocation;
-            if (objectHit.transform.tag == "Ennemi")
-            {
-                print("Toucher");
-            }
-            else
-            {
-                print("Manquer");
-            }
+            
         }
+        Vector3 newLookAt = lookAt;
+        newLookAt.y = 0;
+        transform.LookAt(newLookAt);
+
     }
     protected override void Die()
     {
         print("MAIN PLAYER DIE");
+        //anim.SetTrigger("isDying");
     }
     protected override void ApplyMoveInput()
     {
@@ -240,8 +261,21 @@ public class MainPlayer : Personnage
     {
         ProcessFireDelay();
         ApplyAnimation();
+        PlaceGun();
     }
-
+    private void PlaceGun()
+    {
+        if (ikActive)
+        {
+            UpdateViserHitLocation();
+          
+            timeForIkActive -= Time.deltaTime;
+            if (timeForIkActive <= 0)
+            {
+                ikActive = false;
+            }
+        }
+    }
     private void ProcessFireDelay()
     {
         delayBeforeNextFire -= Time.deltaTime;
@@ -294,6 +328,7 @@ public class MainPlayer : Personnage
     {
         if (isGrounded)
         {
+            
             sounds.PlaySound(clipAudio);
         }
     }

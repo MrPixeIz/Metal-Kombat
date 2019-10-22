@@ -449,7 +449,7 @@ Prefab:
       objectReference: {fileID: 795112415}
     - target: {fileID: 4751280517334420, guid: 7e041577ee955244fba5f718058f7a8c, type: 2}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4707951935456288, guid: 7e041577ee955244fba5f718058f7a8c, type: 2}
       propertyPath: m_RootOrder
@@ -461,7 +461,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4982133584826456, guid: 7e041577ee955244fba5f718058f7a8c, type: 2}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4860185358834292, guid: 7e041577ee955244fba5f718058f7a8c, type: 2}
       propertyPath: m_RootOrder
@@ -476,7 +476,8 @@ Prefab:
         animation clip 'Walking (2)'\n\tFrom animation clip 'Running'\n\tFrom animation
         clip 'Jump (2)'\n\tFrom animation clip 'Punching'\n\tFrom animation clip 'Fall
         A Loop'\n\tFrom animation clip 'Standing To Crouched'\n\tFrom animation clip
-        'Mma Idle (1)'\n\tFrom animation clip 'Shooting'"
+        'Mma Idle (1)'\n\tFrom animation clip 'Shooting'\n\tFrom animation clip 'Dying
+        Backwards'\n\tand more ..."
       objectReference: {fileID: 0}
     - target: {fileID: 4310563193379352, guid: 7e041577ee955244fba5f718058f7a8c, type: 2}
       propertyPath: m_LocalPosition.x
@@ -847,7 +848,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4331435324981868, guid: 406db275118fc844b93d8f0238c8fcc6, type: 2}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4663746253990810, guid: 406db275118fc844b93d8f0238c8fcc6, type: 2}
       propertyPath: m_LocalPosition.z
@@ -7070,7 +7071,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   raycastObject: {fileID: 795112410}
   controller: {fileID: 795112413}
-  ikActive: 0
   anim: {fileID: 795112414}
   allowPlayerRotation: 1
 --- !u!4 &795939206 stripped
@@ -7571,7 +7571,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4190042425306024, guid: f69f383e5bc65e741b4997620a89ff43, type: 2}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 114694212785792274, guid: f69f383e5bc65e741b4997620a89ff43,
         type: 2}
@@ -8324,7 +8324,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &917938067 stripped
 Transform:
@@ -11958,7 +11958,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -13308,7 +13308,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1001 &1609803231
 Prefab:
