@@ -12,7 +12,7 @@ public abstract class Personnage : Physic
     public CharacterController controller;
     protected Sounds sounds;
     protected LifeBar barreDeVie; //= new LifeBar();
-
+    protected Animator anim;
 
     void Start()
     {

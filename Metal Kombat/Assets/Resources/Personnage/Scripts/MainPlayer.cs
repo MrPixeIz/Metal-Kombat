@@ -5,31 +5,27 @@ using UnityEngine.UI;
 
 public class MainPlayer : Personnage
 {
-    private const float PLAYERMAXSTARTINGLIFE = 100;
+    
     private bool ikActive = false;
-    public Animator anim;
-    public bool allowPlayerRotation = true;
-    bool canMove = true;
-    int walkForce;
     Vector3 moveVector;
-    Vector3 fwd;
-
     private float delayBeforeNextFire = 0;
     private bool hasAGun = true;
     private OnDieMainPlayerHook onDieMainPlayerHook;
-
     private Camera cam;
     private Vector3 targetingVector = new Vector3(0, 0, 1);
     private Vector3 lookAt = new Vector3(0, 8, 5);
     private float timeForIkActive = 0;
     private RaycastHit objectHit;
     private AudioClip ShootSoundclip;
+
+    //bool canMove = true;
+    //Vector3 fwd;
     public MainPlayer()
     {
 
         isCrouched = false;
-        canMove = true;
-        walkForce = 1500;
+        //canMove = true;
+        
         isGrounded = false;
         moveVector = new Vector3();
 
@@ -46,6 +42,7 @@ public class MainPlayer : Personnage
 
     protected override void SetupLifeBar()
     {
+        const float PLAYERMAXSTARTINGLIFE = 100;
         Image barreVie = GameObject.FindGameObjectWithTag("viePleine").GetComponent<Image>();
         barreDeVie = new LifeBar(barreVie, PLAYERMAXSTARTINGLIFE);
         onDieMainPlayerHook = new OnDieMainPlayerHook(this);
@@ -67,13 +64,14 @@ public class MainPlayer : Personnage
                 ikActive = true;
                 timeForIkActive = 1;
                 ShootGun();
-               
+
                 PlaySound(ShootSoundclip);
             }
             else
             {
-                fwd = raycastObject.transform.TransformDirection(Vector3.forward);
+                //fwd = raycastObject.transform.TransformDirection(Vector3.forward);
                 anim.SetTrigger("isPunching");
+
             }
 
             delayBeforeNextFire = fireDelay;
@@ -81,11 +79,11 @@ public class MainPlayer : Personnage
     }
     void ShootGun()
     {
+
         UpdateViserHitLocation();
-        
         if (objectHit.transform.tag == "Ennemi")
         {
-            
+
             print("Toucher");
         }
         else
@@ -105,7 +103,7 @@ public class MainPlayer : Personnage
             targetingVector = (bulletImpactLocation - (gameObject.transform.position + new Vector3(0.5f, 7.5f, 0)));
             Debug.DrawRay(gameObject.transform.position + new Vector3(0.5f, 7.5f, 0), targetingVector, Color.blue, 10);
             lookAt = bulletImpactLocation;
-            
+
         }
         Vector3 newLookAt = lookAt;
         newLookAt.y = 0;
@@ -123,35 +121,35 @@ public class MainPlayer : Personnage
         {
             velocity.x = 0;
             velocity.z = 0;
-
-            if (canMove == true)
+            int walkForce=1500;
+            /*if (canMove == true)
+            {*/
+            if (Input.GetAxis("Vertical") != 0 && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Punching" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Mma Idle (1)" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Shooting" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Standing To Crouched")
             {
-                if (Input.GetAxis("Vertical") != 0 && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Punching" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Mma Idle (1)" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Shooting" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Standing To Crouched")
-                {
-                    velocity += transform.forward * walkForce * Time.deltaTime * Mathf.Abs(Input.GetAxis("Vertical"));
-                }
-                else if (Input.GetAxis("Horizontal") != 0 && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Punching" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Mma Idle (1)" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Shooting" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Standing To Crouched")
-                {
-                    velocity += transform.forward * walkForce * Time.deltaTime * Mathf.Abs(Input.GetAxis("Horizontal"));
-                }
+                velocity += transform.forward * walkForce * Time.deltaTime * Mathf.Abs(Input.GetAxis("Vertical"));
             }
-            if (Input.GetButtonDown("Jump") && isCrouched == false)
+            else if (Input.GetAxis("Horizontal") != 0 && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Punching" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Mma Idle (1)" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Shooting" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Standing To Crouched")
             {
-                velocity.y = Jump();
-            }
-            /*if (Input.GetKeyDown(KeyCode.C)) {
-                Crouch();
-            }*/
-            if (Input.GetKeyDown(KeyCode.V))
-            {
-                TakeDammage();
-            }
-
-            if (Input.GetAxis("Fire1") != 0 && isCrouched == false)
-            {
-                Attack();
+                velocity += transform.forward * walkForce * Time.deltaTime * Mathf.Abs(Input.GetAxis("Horizontal"));
             }
         }
+        if (Input.GetButtonDown("Jump") && isCrouched == false)
+        {
+            velocity.y = Jump();
+        }
+        /*if (Input.GetKeyDown(KeyCode.C)) {
+            Crouch();
+        }*/
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            TakeDammage();
+        }
+
+        if (Input.GetAxis("Fire1") != 0 && isCrouched == false)
+        {
+            Attack();
+        }
+        /*}*/
     }
 
     private void ApplyAnimation()
@@ -196,7 +194,7 @@ public class MainPlayer : Personnage
         return jumpForce;
     }
 
-    public void Crouch()
+    /*public void Crouch()
     {
         if (canMove == true)
         {
@@ -216,7 +214,7 @@ public class MainPlayer : Personnage
         }
         anim.SetBool("isCrouched", isCrouched);
         float crouchStartTime = Time.time;
-    }
+    }*/
 
     protected override void ApplyMovement()
     {
@@ -245,7 +243,7 @@ public class MainPlayer : Personnage
     void RotatePlayerAccordingToCamera()
     {
 
-        if ((new Vector2(velocity.z, velocity.x)).magnitude > 0 && allowPlayerRotation)
+        if ((new Vector2(velocity.z, velocity.x)).magnitude > 0)
         {
             PlayerMoveAndRotation();
         }
@@ -268,7 +266,7 @@ public class MainPlayer : Personnage
         if (ikActive)
         {
             UpdateViserHitLocation();
-          
+
             timeForIkActive -= Time.deltaTime;
             if (timeForIkActive <= 0)
             {
@@ -328,7 +326,7 @@ public class MainPlayer : Personnage
     {
         if (isGrounded)
         {
-            
+
             sounds.PlaySound(clipAudio);
         }
     }
