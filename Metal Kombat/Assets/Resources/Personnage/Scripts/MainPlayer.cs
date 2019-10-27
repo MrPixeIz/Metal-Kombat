@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class MainPlayer : Personnage
 {
@@ -113,6 +114,7 @@ public class MainPlayer : Personnage
     protected override void Die()
     {
         print("MAIN PLAYER DIE");
+        SceneManager.LoadScene("mapLevel1");
         //anim.SetTrigger("isDying");
     }
     protected override void ApplyMoveInput()
