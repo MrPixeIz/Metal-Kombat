@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class EnnemiDetectionScript : MonoBehaviour, iDamageable
 {
 
     public Animator anim;
-    public Transform playerTarget;
+    public GameObject playerTarget;
     public GameObject startPatrolObject;
     public GameObject endPatrolObject;
 
@@ -18,7 +19,7 @@ public class EnnemiDetectionScript : MonoBehaviour, iDamageable
     private Sounds sounds;
     private float pointsDeVie = 100;
     iDamageable damageable;
-
+    EnemiesHitPointManager enemiesHitPointManager;
     public int DamageAmount
     {
         get
@@ -37,25 +38,30 @@ public class EnnemiDetectionScript : MonoBehaviour, iDamageable
         anim = this.GetComponent<Animator>();
         patrolTarget = GameObject.Find("EndPatrol");
         sounds = GetComponentInChildren<Sounds>();
+        enemiesHitPointManager = GetComponentInChildren<EnemiesHitPointManager>();
+
     }
 
     void Update()
     {
-        playerTarget = GameObject.Find("Player").transform;
-        DistancePlayer = Vector3.Distance(playerTarget.position, transform.position);
+        playerTarget = GameObject.Find("Player");
+        DistancePlayer = Vector3.Distance(playerTarget.transform.position, transform.position);
 
-        VerifyIfHitSomething();
 
-        if (DistancePlayer <= chaseRange && DistancePlayer >= attackRange)
+        if (pointsDeVie == 100)
         {
-            ResetBool();
-            Chase();
-        }
+            VerifyIfHitSomething();
+            if (DistancePlayer <= chaseRange && DistancePlayer >= attackRange)
+            {
+                ResetBool();
+                Chase();
+            }
 
-        if (DistancePlayer > chaseRange)
-        {
-            ResetBool();
-            Patrol(patrolTarget);
+            if (DistancePlayer > chaseRange)
+            {
+                ResetBool();
+                Patrol(patrolTarget);
+            }
         }
 
         if (DistancePlayer <= attackRange)
@@ -99,11 +105,11 @@ public class EnnemiDetectionScript : MonoBehaviour, iDamageable
 
     void Chase()
     {
-        if(anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "IdlePunching")
+        if (anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "IdlePunching")
         {
-            MoveTo(playerTarget, pSpeed:9f);
+            MoveTo(playerTarget.transform, pSpeed: 9f);
         }
-        
+
     }
 
     public void Patrol(GameObject gameObject)
@@ -164,13 +170,22 @@ public class EnnemiDetectionScript : MonoBehaviour, iDamageable
     {
         if (pointsDeVie > 0)
         {
+            enemiesHitPointManager.ModifyHealthWithValue(dammageAmount);
             pointsDeVie -= dammageAmount;
+            MoveTo(playerTarget.transform, pSpeed: 9f);
         }
         else
         {
             Die();
         }
-        
+
+    }
+
+    public void GiveDammage()
+    {
+
+        iDamageable dammagePlayer = playerTarget.GetComponent<iDamageable>();
+        dammagePlayer.TakeDammageInt(DamageAmount);
     }
     private void Die()
     {

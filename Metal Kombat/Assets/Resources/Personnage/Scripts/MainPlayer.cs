@@ -24,7 +24,7 @@ public class MainPlayer : Personnage, iDamageable
     {
         get
         {
-            return 5;
+            return 50;
         }
 
         set
@@ -96,15 +96,20 @@ public class MainPlayer : Personnage, iDamageable
     {
 
         UpdateViserHitLocation();
-        if (objectHit.transform.tag == "Ennemi")
+        iDamageable ennemi = objectHit.collider.gameObject.GetComponent<iDamageable>();
+        if(ennemi != null)
         {
-            iDamageable ennemi= objectHit.collider.gameObject.GetComponent<iDamageable>();
             ennemi.TakeDammageInt(DamageAmount);
         }
-        else
-        {
-            print("Manquer");
-        }
+    
+        //if (objectHit.transform.tag == "Ennemi")
+        //{
+            
+        //}
+        //else
+        //{
+        //    print("Manquer");
+        //}
 
     }
     private void UpdateViserHitLocation()
@@ -158,7 +163,7 @@ public class MainPlayer : Personnage, iDamageable
         }*/
         if (Input.GetKeyDown(KeyCode.V))
         {
-            damageable.TakeDammageInt();
+            //damageable.TakeDammageInt();
         }
 
         if (Input.GetAxis("Fire1") != 0 && isCrouched == false)
@@ -361,7 +366,7 @@ public class MainPlayer : Personnage, iDamageable
         return onDieMainPlayerHook;
     }
 
-    void iDamageable.TakeDammageInt()
+    void iDamageable.TakeDammageInt(int dammage)
     {
         TakeDammage();
     }
