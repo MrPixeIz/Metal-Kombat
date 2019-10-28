@@ -63,12 +63,19 @@ public class EnnemiDetectionScript : MonoBehaviour, iDamageable
                 Patrol(patrolTarget);
             }
         }
+        else
+        {
+            ResetBool();
+            Chase();
+        }
 
         if (DistancePlayer <= attackRange)
         {
             Attack();
         }
+
     }
+    
 
     #region Movement
     public void Idle()
