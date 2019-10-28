@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ChangeLightColor : MonoBehaviour {
 
-
     public Renderer renderer;
 
     // Use this for initialization

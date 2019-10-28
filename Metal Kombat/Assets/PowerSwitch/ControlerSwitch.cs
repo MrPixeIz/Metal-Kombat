@@ -12,16 +12,15 @@ public class ControlerSwitch : MonoBehaviour {
     private bool EndGame = false;
     private float timeLeft = 5.0f;
 
-    // Use this for initialization
     void Start () {
 
         animation = this.GetComponentInChildren<Animator>();
+
         AudioSource[] audios = GetComponents<AudioSource>();
         electricSound = audios[0];
         soundSwitch = audios[1];
 
         changelightColor = GetComponentInChildren<ChangeLightColor>();
-
     }
 
     void Update()
@@ -34,14 +33,12 @@ public class ControlerSwitch : MonoBehaviour {
                 SceneManager.LoadScene(1);
             }
         }
-
     }
 
     void OnTriggerEnter()
     {
        animation.SetTrigger("TriggerSwitch");      
-       soundSwitch.Play();
-      
+       soundSwitch.Play();  
     }
 
     public void TurnLight()
