@@ -22,7 +22,7 @@ public class Sounds : MonoBehaviour {
         audiosource.clip = clipAudio;
         audiosource.volume = Random.Range(0.4f, 0.5f);
         audiosource.pitch = Random.Range(0.9f, 1.3f);
-        audiosource.Play();
+        audiosource.PlayOneShot(clipAudio);
     }
     
 }

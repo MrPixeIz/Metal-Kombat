@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 2bea8b5ccc5f30640936514a8b959642
+guid: 86cbcf60c5b259b4aa2b63955af6748a
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
@@ -135,7 +135,7 @@ ModelImporter:
     400126: mixamorig:Spine1
     400128: mixamorig:Spine2
     400130: //RootNode
-    7400000: IdlePunching
+    7400000: Running
     9500000: //RootNode
   externalObjects: {}
   materials:
@@ -166,10 +166,10 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: IdlePunching
+      name: Running
       takeName: mixamo.com
       firstFrame: 0
-      lastFrame: 66
+      lastFrame: 21
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

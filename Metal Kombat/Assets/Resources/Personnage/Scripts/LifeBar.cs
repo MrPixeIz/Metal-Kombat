@@ -19,6 +19,13 @@ public class LifeBar : MonoBehaviour
         currentLife = maxLife;
 
     }
+    public LifeBar(float inMaxlife)
+    {
+        
+        maxLife = inMaxlife;
+        currentLife = maxLife;
+
+    }
 
     public void SetOnDieListenner(Personnage.OnDieEvent onDieEvent)
     {

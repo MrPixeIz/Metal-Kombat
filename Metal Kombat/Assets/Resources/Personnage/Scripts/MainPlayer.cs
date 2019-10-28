@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class MainPlayer : Personnage
+public class MainPlayer : Personnage, iDamageable
 {
     
     private bool ikActive = false;
@@ -18,6 +18,20 @@ public class MainPlayer : Personnage
     private float timeForIkActive = 0;
     private RaycastHit objectHit;
     private AudioClip ShootSoundclip;
+    iDamageable damageable;
+
+    public int DamageAmount
+    {
+        get
+        {
+            return 5;
+        }
+
+        set
+        {
+            DamageAmount = value;
+        }
+    }
 
     //bool canMove = true;
     //Vector3 fwd;
@@ -84,8 +98,8 @@ public class MainPlayer : Personnage
         UpdateViserHitLocation();
         if (objectHit.transform.tag == "Ennemi")
         {
-
-            print("Toucher");
+            iDamageable ennemi= objectHit.collider.gameObject.GetComponent<iDamageable>();
+            ennemi.TakeDammageInt(DamageAmount);
         }
         else
         {
@@ -144,7 +158,7 @@ public class MainPlayer : Personnage
         }*/
         if (Input.GetKeyDown(KeyCode.V))
         {
-            TakeDammage();
+            damageable.TakeDammageInt();
         }
 
         if (Input.GetAxis("Fire1") != 0 && isCrouched == false)
@@ -345,6 +359,11 @@ public class MainPlayer : Personnage
     protected override OnDieHook GetOnDieEvent()
     {
         return onDieMainPlayerHook;
+    }
+
+    void iDamageable.TakeDammageInt()
+    {
+        TakeDammage();
     }
 
     protected class OnDieMainPlayerHook : OnDieHook
