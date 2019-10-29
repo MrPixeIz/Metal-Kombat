@@ -14,11 +14,9 @@ public class EnnemiDetectionScript : MonoBehaviour, iDamageable
     private float DistancePlayer;
     private float chaseRange = 30;
     private float attackRange = 5;
-    private float soundRange = 60;
     private GameObject patrolTarget;
     private Sounds sounds;
     private float pointsDeVie = 100;
-    iDamageable damageable;
     EnemiesHitPointManager enemiesHitPointManager;
     public int DamageAmount
     {
@@ -166,11 +164,13 @@ public class EnnemiDetectionScript : MonoBehaviour, iDamageable
 
     public void PlaySoundEnnemis(AudioClip audioClip)
     {
-        if (DistancePlayer < soundRange)
-        {
 
+        if (DistancePlayer < 60)
+        {
             sounds.PlaySound(audioClip);
         }
+            
+        
     }
 
     public void TakeDammageInt(int dammageAmount)

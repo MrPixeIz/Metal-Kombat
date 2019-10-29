@@ -18,7 +18,6 @@ public class MainPlayer : Personnage, iDamageable
     private float timeForIkActive = 0;
     private RaycastHit objectHit;
     private AudioClip ShootSoundclip;
-    iDamageable damageable;
 
     public int DamageAmount
     {
@@ -154,7 +153,7 @@ public class MainPlayer : Personnage, iDamageable
                 velocity += transform.forward * walkForce * Time.deltaTime * Mathf.Abs(Input.GetAxis("Horizontal"));
             }
         }
-        if (Input.GetButtonDown("Jump") && isCrouched == false)
+        if (Input.GetButtonDown("Jump") && isGrounded)
         {
             velocity.y = Jump();
         }
