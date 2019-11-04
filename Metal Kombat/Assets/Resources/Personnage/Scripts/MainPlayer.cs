@@ -24,7 +24,7 @@ public class MainPlayer : Personnage, iDamageable
     {
         get
         {
-            return 50;
+            return 25;
         }
 
         set
@@ -101,16 +101,6 @@ public class MainPlayer : Personnage, iDamageable
         {
             ennemi.TakeDammageInt(DamageAmount);
         }
-    
-        //if (objectHit.transform.tag == "Ennemi")
-        //{
-            
-        //}
-        //else
-        //{
-        //    print("Manquer");
-        //}
-
     }
     private void UpdateViserHitLocation()
     {
@@ -126,13 +116,12 @@ public class MainPlayer : Personnage, iDamageable
 
         }
         Vector3 newLookAt = lookAt;
-        newLookAt.y = 0;
+        newLookAt.y = transform.position.y;
         transform.LookAt(newLookAt);
 
     }
     protected override void Die()
     {
-        print("MAIN PLAYER DIE");
         SceneManager.LoadScene("mapLevel1");
         //anim.SetTrigger("isDying");
     }
@@ -154,7 +143,7 @@ public class MainPlayer : Personnage, iDamageable
                 velocity += transform.forward * walkForce * Time.deltaTime * Mathf.Abs(Input.GetAxis("Horizontal"));
             }
         }
-        if (Input.GetButtonDown("Jump") && isCrouched == false)
+        if (Input.GetButtonDown("Jump") && isGrounded == true)
         {
             velocity.y = Jump();
         }
@@ -166,7 +155,7 @@ public class MainPlayer : Personnage, iDamageable
             //damageable.TakeDammageInt();
         }
 
-        if (Input.GetAxis("Fire1") != 0 && isCrouched == false)
+        if (Input.GetAxis("Fire1") != 0)
         {
             Attack();
         }

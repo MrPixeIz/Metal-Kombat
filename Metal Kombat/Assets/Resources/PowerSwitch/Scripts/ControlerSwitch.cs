@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-public class ControlerSwitch : MonoBehaviour {
+public class ControlerSwitch : MonoBehaviour
+{
 
     private Animator animation;
     private AudioSource electricSound;
@@ -11,14 +13,19 @@ public class ControlerSwitch : MonoBehaviour {
     private ChangeLightColor changelightColor;
     private bool EndGame = false;
     private float timeLeft = 5.0f;
+    private DisplayEndMessage displayEndMessage;
 
-    void Start () {
+    void Start()
+    {
 
         animation = this.GetComponentInChildren<Animator>();
 
         AudioSource[] audios = GetComponents<AudioSource>();
         electricSound = audios[0];
         soundSwitch = audios[1];
+        displayEndMessage = GetComponentInChildren<DisplayEndMessage>();
+      
+       
 
         changelightColor = GetComponentInChildren<ChangeLightColor>();
     }
@@ -37,15 +44,16 @@ public class ControlerSwitch : MonoBehaviour {
 
     void OnTriggerEnter()
     {
-       animation.SetTrigger("TriggerSwitch");      
-       soundSwitch.Play();  
+        animation.SetTrigger("TriggerSwitch");
+        soundSwitch.Play();
     }
 
     public void TurnLight()
     {
-       electricSound.Play();
-       changelightColor.ChangeLightColorSwitch();
-       EndGame = true;
+        electricSound.Play();
+        changelightColor.ChangeLightColorSwitch();
+        displayEndMessage.DisplayMessage();
+        EndGame = true;
     }
 
 }

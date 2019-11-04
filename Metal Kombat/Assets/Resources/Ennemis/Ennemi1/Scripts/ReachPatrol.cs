@@ -9,7 +9,7 @@ public class ReachPatrol : MonoBehaviour {
 
     public void OnTriggerEnter(Collider otherObject)
     {
-        if (gameObject.name == "StartPatrol")
+        if (gameObject.name == startPatrol.name)
         {
             otherObject.GetComponent<EnnemiDetectionScript>().SetPatrol(endPatrol);
         }

@@ -12,7 +12,7 @@ public class EnnemiDetectionScript : MonoBehaviour, iDamageable
     public GameObject endPatrolObject;
 
     private float DistancePlayer;
-    private float chaseRange = 30;
+    private float chaseRange = 60;
     private float attackRange = 5;
     private float soundRange = 60;
     private GameObject patrolTarget;
@@ -24,7 +24,7 @@ public class EnnemiDetectionScript : MonoBehaviour, iDamageable
     {
         get
         {
-            return 5;
+            return 10;
         }
 
         set
@@ -36,7 +36,7 @@ public class EnnemiDetectionScript : MonoBehaviour, iDamageable
     void Start()
     {
         anim = this.GetComponent<Animator>();
-        patrolTarget = GameObject.Find("EndPatrol");
+        patrolTarget = startPatrolObject;
         sounds = GetComponentInChildren<Sounds>();
         enemiesHitPointManager = GetComponentInChildren<EnemiesHitPointManager>();
 
@@ -114,7 +114,7 @@ public class EnnemiDetectionScript : MonoBehaviour, iDamageable
     {
         if (anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "IdlePunching")
         {
-            MoveTo(playerTarget.transform, pSpeed: 9f);
+            MoveTo(playerTarget.transform, pSpeed: 15f);
         }
 
     }

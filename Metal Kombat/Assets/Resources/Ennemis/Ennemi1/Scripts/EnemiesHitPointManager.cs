@@ -4,25 +4,16 @@ using UnityEngine;
 
 public class EnemiesHitPointManager : MonoBehaviour {
 
-    GameObject lifeBar;
-    GameObject enemieNPC;
-    public float HitPoint = 100;
-    public float MaxHitPoint = 100;
-    public float playerDamage = 1;
+    public GameObject lifeBar;
+    public GameObject enemieNPC;
+    private float HitPoint = 100;
+    private float MaxHitPoint = 100;
+    private float playerDamage = 1;
 
 	// Use this for initialization
 	void Start () {
-        lifeBar = GameObject.Find("LifeBar");
-        enemieNPC = GameObject.Find("vanguard_t_choonyung@Holding Idle (1)");
     }
-    // Update is called once per frame
-    //void Update()
-    //{
-    //    if (Input.GetAxis("Fire3") != 0)
-    //    {
-    //        ModifyHealthWithValue(1);
-    //    }
-    //}
+   
     public void ModifyHealthWithValue(float deltaModifier)
     {
         HitPoint -= deltaModifier;
@@ -40,7 +31,7 @@ public class EnemiesHitPointManager : MonoBehaviour {
     {
         float fillAmountPercent = (HitPoint / MaxHitPoint);
         print("fillAmountPercent " + fillAmountPercent);
-        lifeBar.transform.localScale = new Vector3(fillAmountPercent, 0.2222222f, 0.01f);
+        lifeBar.transform.localScale = new Vector3(fillAmountPercent, 0.1f, 0.01f);
     }
     void DieEvent()
     {
