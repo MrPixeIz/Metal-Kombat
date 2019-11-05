@@ -10,7 +10,7 @@ public class MainPlayer : Personnage, iDamageable
     private bool ikActive = false;
     Vector3 moveVector;
     private float delayBeforeNextFire = 0;
-    private bool hasAGun = true;
+    private bool hasAGun = false; //pour commencer avec ses points
     private OnDieMainPlayerHook onDieMainPlayerHook;
     private Camera cam;
     private Vector3 targetingVector = new Vector3(0, 0, 1);
@@ -19,6 +19,7 @@ public class MainPlayer : Personnage, iDamageable
     private RaycastHit objectHit;
     private AudioClip ShootSoundclip;
     iDamageable damageable;
+    GameObject pistol;
 
     public int DamageAmount
     {
@@ -49,6 +50,9 @@ public class MainPlayer : Personnage, iDamageable
 
     protected override void OnStart()
     {
+        pistol = GameObject.FindGameObjectWithTag("PistolInHand");
+        pistol.SetActive(false);
+
         anim = this.GetComponent<Animator>();
         cam = Camera.main;
         sounds = GetComponentInChildren<Sounds>();
@@ -372,5 +376,14 @@ public class MainPlayer : Personnage, iDamageable
         {
             mainPlayer.Die();
         }
+    }
+
+    // ajout pour changer le mode attaque
+    public void ChangeModeAttaque()
+    {
+        hasAGun = true;
+        
+        pistol.SetActive(true);
+        
     }
 }
