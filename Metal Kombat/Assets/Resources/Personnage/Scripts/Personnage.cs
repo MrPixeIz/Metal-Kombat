@@ -53,6 +53,11 @@ public abstract class Personnage : Physic
         if (Physics.Raycast(RaycastObject.transform.position + new Vector3(0, 5, 0),
             gameObject.transform.forward, out objectHit, 3))
         {
+            iDamageable ennemi = objectHit.collider.gameObject.GetComponent<iDamageable>();
+            if (ennemi != null)
+            {
+                ennemi.TakeDammageInt(10);
+            }
             hitDetected = true;
         }
         else
