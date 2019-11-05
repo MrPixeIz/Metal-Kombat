@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class MainPlayer : Personnage, iDamageable
 {
-    
+
     private bool ikActive = false;
     Vector3 moveVector;
     private float delayBeforeNextFire = 0;
@@ -16,9 +16,8 @@ public class MainPlayer : Personnage, iDamageable
     private Vector3 targetingVector = new Vector3(0, 0, 1);
     private Vector3 lookAt = new Vector3(0, 8, 5);
     private float timeForIkActive = 0;
-    private RaycastHit objectHit;
     private AudioClip ShootSoundclip;
-    iDamageable damageable;
+    private float overheatValue = 0;
 
     public int DamageAmount
     {
@@ -40,7 +39,7 @@ public class MainPlayer : Personnage, iDamageable
 
         isCrouched = false;
         //canMove = true;
-        
+
         isGrounded = false;
         moveVector = new Vector3();
 
@@ -53,8 +52,33 @@ public class MainPlayer : Personnage, iDamageable
         cam = Camera.main;
         sounds = GetComponentInChildren<Sounds>();
         ShootSoundclip = Resources.Load<AudioClip>("Personnage/Sons/gun");
-    }
+        SetupGunBar();
 
+    }
+    private void SetupGunBar()
+    {
+        Image gunBar = GameObject.FindGameObjectWithTag("gunPlein").GetComponent<Image>();
+        barreGun = new GunBar(gunBar);
+        onDieMainPlayerHook = new OnDieMainPlayerHook(this);
+    }
+    private void DecreaseGunBar()
+    {
+        if (barreGun.currentNumber < 0)
+            barreGun.currentNumber = 0;
+        if (barreGun.currentNumber > 0)
+        {
+            barreGun.ModifyGunBarWithValue(-0.05f);
+        }
+    }
+    private void IncreaseGunBar()
+    {
+        float currentNumber = barreGun.ModifyGunBarWithValue(10);
+        if (currentNumber >= 100)
+        {
+            print(currentNumber);
+            overheatValue = 100;
+        }
+    }
     protected override void SetupLifeBar()
     {
         const float PLAYERMAXSTARTINGLIFE = 100;
@@ -78,7 +102,17 @@ public class MainPlayer : Personnage, iDamageable
                 //anim.SetTrigger("isShooting");
                 ikActive = true;
                 timeForIkActive = 1;
-                ShootGun();
+                if (barreGun.currentNumber < 100)
+                {
+                    ShootGun();
+                    ShootSoundclip = Resources.Load<AudioClip>("Personnage/Sons/gunAlien");
+                }
+                else
+                {
+                    overheatValue = 100;
+                    ShootSoundclip = Resources.Load<AudioClip>("Personnage/Sons/gunAlienOverheat");
+                }
+
 
                 PlaySound(ShootSoundclip);
             }
@@ -94,30 +128,39 @@ public class MainPlayer : Personnage, iDamageable
     }
     void ShootGun()
     {
+        RaycastHit raycastHit;
+        bool hit= UpdateViserHitLocation(out raycastHit);
 
-        UpdateViserHitLocation();
-        iDamageable ennemi = objectHit.collider.gameObject.GetComponent<iDamageable>();
-        if(ennemi != null)
-        {
-            ennemi.TakeDammageInt(DamageAmount);
+        if (hit) {
+            iDamageable ennemi = raycastHit.collider.gameObject.GetComponent<iDamageable>();
+            if (ennemi != null) {
+                ennemi.TakeDammageInt(DamageAmount);
+            }
         }
+           
+       
+        IncreaseGunBar();
     }
-    private void UpdateViserHitLocation()
+    private bool UpdateViserHitLocation(out RaycastHit raycast)
     {
-
+       
         Ray ray = cam.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0));
-
-        if (Physics.Raycast(ray, out objectHit))
+        bool hit = false;
+        if (Physics.Raycast(ray, out raycast))
         {
-            Vector3 bulletImpactLocation = objectHit.point;
+            Vector3 bulletImpactLocation = raycast.point;
             targetingVector = (bulletImpactLocation - (gameObject.transform.position + new Vector3(0.5f, 7.5f, 0)));
             Debug.DrawRay(gameObject.transform.position + new Vector3(0.5f, 7.5f, 0), targetingVector, Color.blue, 10);
             lookAt = bulletImpactLocation;
-
+            hit = true;
         }
+
+
         Vector3 newLookAt = lookAt;
         newLookAt.y = transform.position.y;
         transform.LookAt(newLookAt);
+
+        return hit;
 
     }
     protected override void Die()
@@ -131,7 +174,7 @@ public class MainPlayer : Personnage, iDamageable
         {
             velocity.x = 0;
             velocity.z = 0;
-            int walkForce=1500;
+            int walkForce = 1500;
             /*if (canMove == true)
             {*/
             if (Input.GetAxis("Vertical") != 0 && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Punching" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Mma Idle (1)" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Shooting" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Standing To Crouched")
@@ -270,12 +313,22 @@ public class MainPlayer : Personnage, iDamageable
         ProcessFireDelay();
         ApplyAnimation();
         PlaceGun();
+        if (overheatValue <= 0)
+        {
+            DecreaseGunBar();
+        }
+        else
+        {
+            overheatValue -= 1;
+        }
+
     }
     private void PlaceGun()
     {
         if (ikActive)
         {
-            UpdateViserHitLocation();
+            RaycastHit raycastHit;
+            UpdateViserHitLocation(out raycastHit);
 
             timeForIkActive -= Time.deltaTime;
             if (timeForIkActive <= 0)

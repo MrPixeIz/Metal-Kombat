@@ -13,6 +13,7 @@ public abstract class Personnage : Physic
     protected Sounds sounds;
     protected LifeBar barreDeVie; //= new LifeBar();
     protected Animator anim;
+    protected GunBar barreGun;
 
     void Start()
     {

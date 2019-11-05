@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Ground
   - Wall
+  - viePleine
+  - Ennemi
+  - gunPlein
   layers:
   - Default
   - TransparentFX
