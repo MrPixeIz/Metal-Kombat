@@ -3,28 +3,32 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class EnnemiDetectionScript : MonoBehaviour, iDamageable
+public class EnnemiDetectionScript : EnnemiMovement, iDamageable
 {
-
-    public Animator anim;
-    public GameObject playerTarget;
-    public GameObject startPatrolObject;
-    public GameObject endPatrolObject;
+    public bool isAPuncher;
+    public GameObject gun;
 
     private float DistancePlayer;
     private float chaseRange = 60;
-    private float attackRange = 5;
+    private float meleeAttackRange = 5;
+    private float gunAttackRange = 30;
     private float soundRange = 60;
-    private GameObject patrolTarget;
     private Sounds sounds;
     private float pointsDeVie = 100;
-    iDamageable damageable;
-    EnemiesHitPointManager enemiesHitPointManager;
+    private EnemiesHitPointManager enemiesHitPointManager;
+
     public int DamageAmount
     {
         get
         {
-            return 10;
+            if(isAPuncher)
+            {
+                return 10;
+            }
+            else
+            {
+                return 20;
+            }
         }
 
         set
@@ -33,30 +37,49 @@ public class EnnemiDetectionScript : MonoBehaviour, iDamageable
         }
     }
 
-    void Start()
+
+    protected override void OnStart()
     {
         anim = this.GetComponent<Animator>();
-        patrolTarget = startPatrolObject;
         sounds = GetComponentInChildren<Sounds>();
         enemiesHitPointManager = GetComponentInChildren<EnemiesHitPointManager>();
-
+        if (isAPuncher)
+        {
+            anim.SetBool("isAPuncher", isAPuncher);
+            gun.SetActive(false);
+        }
+        else
+        {
+            anim.SetBool("isAShooter", !isAPuncher);
+            gun.SetActive(true);
+        }
     }
 
-    void Update()
+    protected override void OnUpdate()
     {
         playerTarget = GameObject.Find("Player");
         DistancePlayer = Vector3.Distance(playerTarget.transform.position, transform.position);
 
-
         if (pointsDeVie == 100)
         {
             VerifyIfHitSomething();
-            if (DistancePlayer <= chaseRange && DistancePlayer >= attackRange)
+            if(isAPuncher)
             {
-                ResetBool();
-                Chase();
+                if (DistancePlayer <= chaseRange && DistancePlayer >= meleeAttackRange)
+                {
+                    ResetBool();
+                    Chase();
+                }
             }
-
+            else
+            {
+                if (DistancePlayer <= chaseRange && DistancePlayer > gunAttackRange)
+                {
+                    ResetBool();
+                    Chase();
+                }
+            }
+            
             if (DistancePlayer > chaseRange)
             {
                 ResetBool();
@@ -69,80 +92,18 @@ public class EnnemiDetectionScript : MonoBehaviour, iDamageable
             Chase();
         }
 
-        if (DistancePlayer <= attackRange)
+        if (DistancePlayer <= meleeAttackRange && isAPuncher)
         {
             Attack();
         }
 
-    }
-    
-
-    #region Movement
-    public void Idle()
-    {
-        anim.SetFloat("InputMagnitude", 0, 0.0f, Time.deltaTime);
-    }
-
-    void Attack()
-    {
-        Vector3 lookat = new Vector3(playerTarget.transform.position.x, gameObject.transform.position.y, playerTarget.transform.position.z);
-        transform.LookAt(lookat);
-        anim.SetBool("isPunching", true);
-        IdlePunching();
-    }
-
-    void IdlePunching()
-    {
-        anim.SetBool("isIdlePunching", true);
-    }
-
-    #endregion
-
-    #region Move
-    void MoveTo(Transform pGameObject, float pSpeed)
-    {
-        CharacterController controller = this.GetComponent<CharacterController>();
-
-        anim.SetFloat("InputMagnitude", pSpeed, 0.0f, Time.deltaTime);
-        var forward = transform.TransformDirection(Vector3.forward);
-        controller.SimpleMove(forward * pSpeed);
-        Vector3 lookat = new Vector3(pGameObject.transform.position.x, gameObject.transform.position.y, pGameObject.transform.position.z);
-        transform.LookAt(lookat);
-    }
-
-    void Chase()
-    {
-        if (anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "IdlePunching")
+        if (DistancePlayer <= gunAttackRange && !isAPuncher)
         {
-            MoveTo(playerTarget.transform, pSpeed: 15f);
-        }
-
-    }
-
-    public void Patrol(GameObject gameObject)
-    {
-        if (anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "IdlePunching")
-        {
-            MoveTo(gameObject.transform, pSpeed: 3f);
+            Shoot();
         }
     }
 
-    public void SetPatrol(GameObject newPatrolTarget)
-    {
-        patrolTarget = newPatrolTarget;
-    }
 
-    #endregion
-
-    #region SetBool
-
-    void ResetBool()
-    {
-        anim.SetBool("isPunching", false);
-        anim.SetBool("isIdlePunching", false);
-    }
-
-    #endregion
 
     #region Events
     void VerifyIfHitSomething()
@@ -164,11 +125,30 @@ public class EnnemiDetectionScript : MonoBehaviour, iDamageable
         }
     }
 
+    public void VerifyIfBulletHit()
+    {
+        RaycastHit objectHit;
+        Vector3 targetingVector = new Vector3(0,0,1);
+
+        if (Physics.Raycast(transform.position, playerTarget.transform.position, out objectHit))
+        {
+            Vector3 bulletImpactLocation = objectHit.point;
+            targetingVector = (bulletImpactLocation - (gameObject.transform.position + new Vector3(0.5f, 7.5f, 0)));
+            Debug.DrawRay(gameObject.transform.position + new Vector3(0.5f, 7.5f, 0), targetingVector, Color.blue, 10);
+            iDamageable player = objectHit.collider.gameObject.GetComponent<iDamageable>();
+            if (player != null)
+            {
+                player.TakeDammageInt(DamageAmount);
+            }
+        }
+
+        
+    }
+
     public void PlaySoundEnnemis(AudioClip audioClip)
     {
         if (DistancePlayer < soundRange)
         {
-
             sounds.PlaySound(audioClip);
         }
     }
@@ -190,7 +170,6 @@ public class EnnemiDetectionScript : MonoBehaviour, iDamageable
 
     public void GiveDammage()
     {
-
         iDamageable dammagePlayer = playerTarget.GetComponent<iDamageable>();
         dammagePlayer.TakeDammageInt(DamageAmount);
     }
