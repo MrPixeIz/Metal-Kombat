@@ -10,7 +10,7 @@ public class MainPlayer : Personnage, iDamageable
     private bool ikActive = false;
     Vector3 moveVector;
     private float delayBeforeNextFire = 0;
-    private bool hasAGun = true;
+    private bool hasAGun = false;
     private OnDieMainPlayerHook onDieMainPlayerHook;
     private Camera cam;
     private Vector3 targetingVector = new Vector3(0, 0, 1);

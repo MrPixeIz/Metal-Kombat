@@ -48,7 +48,7 @@ public abstract class Personnage : Physic
         bool hitDetected = false;
         RaycastHit objectHit;
         //Debug.DrawRay(player.RaycastObject.transform.position + new Vector3(0, 5, 0), player.Fwd * 3, Color.green, 2);
-        //Physics.Raycast(raycastObject.transform.position, fwd, out objectHit, 7
+        Physics.Raycast(raycastObject.transform.position, gameObject.transform.forward, out objectHit, 7);
         //Physics.SphereCast(transform.position + new Vector3(0, controller.height / 2, 0), controller.height / 2, transform.forward, out objectHit, 10)
         if (Physics.Raycast(RaycastObject.transform.position + new Vector3(0, 5, 0),
             gameObject.transform.forward, out objectHit, 3))
