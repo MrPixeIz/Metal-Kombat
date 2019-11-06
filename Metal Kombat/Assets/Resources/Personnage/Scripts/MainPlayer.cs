@@ -10,7 +10,7 @@ public class MainPlayer : Personnage, iDamageable
     private bool ikActive = false;
     Vector3 moveVector;
     private float delayBeforeNextFire = 0;
-    private bool hasAGun = false;
+    private bool hasAGun = true;
     private OnDieMainPlayerHook onDieMainPlayerHook;
     private Camera cam;
     private Vector3 targetingVector = new Vector3(0, 0, 1);
@@ -67,16 +67,16 @@ public class MainPlayer : Personnage, iDamageable
             barreGun.currentNumber = 0;
         if (barreGun.currentNumber > 0)
         {
-            barreGun.ModifyGunBarWithValue(-0.05f);
+            barreGun.ModifyGunBarWithValue(-0.5f);
         }
     }
     private void IncreaseGunBar()
     {
-        float currentNumber = barreGun.ModifyGunBarWithValue(10);
+        float currentNumber = barreGun.ModifyGunBarWithValue(30);
         if (currentNumber >= 100)
         {
             print(currentNumber);
-            overheatValue = 100;
+            overheatValue = 50;
         }
     }
     protected override void SetupLifeBar()
@@ -109,12 +109,17 @@ public class MainPlayer : Personnage, iDamageable
                 }
                 else
                 {
-                    overheatValue = 100;
+                    overheatValue = 50;
                     ShootSoundclip = Resources.Load<AudioClip>("Personnage/Sons/gunAlienOverheat");
                 }
 
 
                 PlaySound(ShootSoundclip);
+                if(overheatValue>0)
+                {
+                    ShootSoundclip = Resources.Load<AudioClip>("Personnage/Sons/gunAlienOverheat");
+                    PlaySound(ShootSoundclip);
+                }
             }
             else
             {
