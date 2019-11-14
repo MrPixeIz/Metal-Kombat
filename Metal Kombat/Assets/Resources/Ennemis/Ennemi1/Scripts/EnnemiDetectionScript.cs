@@ -88,8 +88,11 @@ public class EnnemiDetectionScript : EnnemiMovement, iDamageable
         }
         else
         {
-            ResetBool();
-            Chase();
+            if(isAPuncher)
+            {
+                ResetBool();
+                Chase();
+            }
         }
 
         if (DistancePlayer <= meleeAttackRange && isAPuncher)
@@ -127,22 +130,21 @@ public class EnnemiDetectionScript : EnnemiMovement, iDamageable
 
     public void VerifyIfBulletHit()
     {
+        Ray sight = new Ray();
+        sight.origin = new Vector3(transform.position.x, transform.position.y + 6.5f, transform.position.z);
+        sight.direction = transform.forward;
         RaycastHit objectHit;
-        Vector3 targetingVector = new Vector3(0,0,1);
+        Vector3 fwd = transform.TransformDirection(Vector3.forward);
 
-        if (Physics.Raycast(transform.position, playerTarget.transform.position, out objectHit))
+        if (Physics.Raycast(sight, out objectHit))
         {
-            Vector3 bulletImpactLocation = objectHit.point;
-            targetingVector = (bulletImpactLocation - (gameObject.transform.position + new Vector3(0.5f, 7.5f, 0)));
-            Debug.DrawRay(gameObject.transform.position + new Vector3(0.5f, 7.5f, 0), targetingVector, Color.blue, 10);
-            iDamageable player = objectHit.collider.gameObject.GetComponent<iDamageable>();
-            if (player != null)
+            Debug.DrawLine(sight.origin, objectHit.point, Color.red,10);
+            if (objectHit.collider.tag == "Player")
             {
-                player.TakeDammageInt(DamageAmount);
+                iDamageable playerDamage = objectHit.collider.gameObject.GetComponent<iDamageable>();
+                playerDamage.TakeDammageInt(DamageAmount);
             }
         }
-
-        
     }
 
     public void PlaySoundEnnemis(AudioClip audioClip)

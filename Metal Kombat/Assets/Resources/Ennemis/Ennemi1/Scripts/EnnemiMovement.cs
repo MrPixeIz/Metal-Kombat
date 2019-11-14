@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class EnnemiMovement : MonoBehaviour {
+public abstract class EnnemiMovement : MonoBehaviour
+{
 
     public GameObject startPatrolObject;
     public GameObject endPatrolObject;
@@ -11,14 +12,18 @@ public abstract class EnnemiMovement : MonoBehaviour {
     protected GameObject playerTarget;
     protected GameObject patrolTarget;
 
+    private int timeBeforeLookAt = 30;
+
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         patrolTarget = startPatrolObject;
         OnStart();
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update()
+    {
         OnUpdate();
     }
 
@@ -46,8 +51,14 @@ public abstract class EnnemiMovement : MonoBehaviour {
 
     protected void Shoot()
     {
-        Vector3 lookat = new Vector3(playerTarget.transform.position.x, gameObject.transform.position.y, playerTarget.transform.position.z);
-        transform.LookAt(lookat);
+        timeBeforeLookAt--;
+        print(timeBeforeLookAt);
+        if(timeBeforeLookAt == 0)
+        {
+            Vector3 lookat = new Vector3(playerTarget.transform.position.x, gameObject.transform.position.y, playerTarget.transform.position.z);
+            transform.LookAt(lookat);
+            timeBeforeLookAt = 30;
+        }
         anim.SetBool("isShooting", true);
         IdleShooting();
     }
