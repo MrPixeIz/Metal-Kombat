@@ -76,7 +76,7 @@ public class MainPlayer : Personnage, iDamageable
         if (currentNumber >= 100)
         {
             print(currentNumber);
-            overheatValue = 50;
+            overheatValue = 100;
         }
     }
     protected override void SetupLifeBar()
@@ -109,7 +109,7 @@ public class MainPlayer : Personnage, iDamageable
                 }
                 else
                 {
-                    overheatValue = 50;
+                    overheatValue = 100;
                     ShootSoundclip = Resources.Load<AudioClip>("Personnage/Sons/gunAlienOverheat");
                 }
 
