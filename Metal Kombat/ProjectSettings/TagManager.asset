@@ -9,6 +9,7 @@ TagManager:
   - viePleine
   - Ennemi
   - PistolInHand
+  - point
   layers:
   - Default
   - TransparentFX

@@ -16768,7 +16768,7 @@ GameObject:
   - component: {fileID: 1842962770}
   m_Layer: 5
   m_Name: point
-  m_TagString: Untagged
+  m_TagString: point
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -18747,6 +18747,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   raycastObject: {fileID: 2037142929}
   controller: {fileID: 2037142933}
+  targetGun: {fileID: 0}
 --- !u!135 &2037142932
 SphereCollider:
   m_ObjectHideFlags: 0

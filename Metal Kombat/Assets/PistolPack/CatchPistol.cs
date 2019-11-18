@@ -22,7 +22,7 @@ public class CatchPistol : MonoBehaviour {
         {
             mainPlayer = other.gameObject.GetComponent<MainPlayer>();
             Destroy(gameObject);
-            mainPlayer.ChangeModeAttaque();
+            mainPlayer.AddModeAttaque();
         }
 
     }

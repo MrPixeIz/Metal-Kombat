@@ -19,7 +19,10 @@ public class MainPlayer : Personnage, iDamageable
     private RaycastHit objectHit;
     private AudioClip ShootSoundclip;
     iDamageable damageable;
+    public Image targetGun;
     GameObject pistol;
+    GameObject pistolBelt;
+    private bool hasArmeInInventory = false;
 
     public int DamageAmount
     {
@@ -50,8 +53,15 @@ public class MainPlayer : Personnage, iDamageable
 
     protected override void OnStart()
     {
+
+        targetGun = GameObject.FindGameObjectWithTag("point").GetComponent<Image>();
+        targetGun.enabled = false;
+
         pistol = GameObject.FindGameObjectWithTag("PistolInHand");
         pistol.SetActive(false);
+
+        pistolBelt = GameObject.FindGameObjectWithTag("GunBelt");
+        pistolBelt.SetActive(false);
 
         anim = this.GetComponent<Animator>();
         cam = Camera.main;
@@ -154,10 +164,30 @@ public class MainPlayer : Personnage, iDamageable
         /*if (Input.GetKeyDown(KeyCode.C)) {
             Crouch();
         }*/
-        if (Input.GetKeyDown(KeyCode.V))
+
+        //-----------------------------------------------------------------------------Luc---------------------------------------------------------------------
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            //damageable.TakeDammageInt();
+            if (hasArmeInInventory == true)
+            {
+                if (hasAGun == true)
+                {
+                    hasAGun = false;
+                    targetGun.enabled = false;
+                    pistol.SetActive(false);
+                    pistolBelt.SetActive(true);
+                }
+                else
+                {
+                    hasAGun = true;
+                    targetGun.enabled = true;
+                    pistol.SetActive(true);
+                    pistolBelt.SetActive(false);
+                }
+
+            }
         }
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------
 
         if (Input.GetAxis("Fire1") != 0)
         {
@@ -378,12 +408,27 @@ public class MainPlayer : Personnage, iDamageable
         }
     }
 
+
+
     // ajout pour changer le mode attaque
-    public void ChangeModeAttaque()
+    public void AddModeAttaque()
     {
+
+        CheckIfGunInventory();
         hasAGun = true;
-        
-        pistol.SetActive(true);
-        
+        targetGun.enabled = true;
+        pistol.SetActive(true);       
     }
+
+    private void CheckIfGunInventory()
+    {
+        if (hasArmeInInventory == false)
+        {
+            hasArmeInInventory = true;
+        }
+
+    }
+
+
+
 }
