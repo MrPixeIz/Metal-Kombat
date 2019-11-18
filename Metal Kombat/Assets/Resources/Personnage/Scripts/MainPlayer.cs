@@ -160,6 +160,10 @@ public class MainPlayer : Personnage, iDamageable
             Attack();
         }
         /*}*/
+        if (Input.GetAxis("Fire3") !=0)
+        {
+         //   GameObject LightningFX = Instantiate(lightningFXSphere, transform.position, transform.rotation);
+        }
     }
 
     private void ApplyAnimation()
