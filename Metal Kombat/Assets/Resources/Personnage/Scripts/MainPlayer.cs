@@ -10,7 +10,7 @@ public class MainPlayer : Personnage, iDamageable
     private bool ikActive = false;
     Vector3 moveVector;
     private float delayBeforeNextFire = 0;
-    private bool hasAGun = true;
+    private bool hasAGun = false;
     private OnDieMainPlayerHook onDieMainPlayerHook;
     private Camera cam;
     private Vector3 targetingVector = new Vector3(0, 0, 1);
@@ -24,12 +24,7 @@ public class MainPlayer : Personnage, iDamageable
         get
         {
             return 25;
-        }
-
-        set
-        {
-            DamageAmount = value;
-        }
+        }  
     }
 
     //bool canMove = true;
@@ -104,8 +99,11 @@ public class MainPlayer : Personnage, iDamageable
                 timeForIkActive = 1;
                 if (barreGun.currentNumber < 100)
                 {
-                    ShootGun();
-                    ShootSoundclip = Resources.Load<AudioClip>("Personnage/Sons/gunAlien");
+                    if (isGrounded)
+                    {
+                        ShootGun();
+                        ShootSoundclip = Resources.Load<AudioClip>("Personnage/Sons/gunAlien");
+                    }
                 }
                 else
                 {
@@ -115,7 +113,7 @@ public class MainPlayer : Personnage, iDamageable
 
 
                 PlaySound(ShootSoundclip);
-                if(overheatValue>0)
+                if (overheatValue > 0)
                 {
                     ShootSoundclip = Resources.Load<AudioClip>("Personnage/Sons/gunAlienOverheat");
                     PlaySound(ShootSoundclip);
@@ -134,28 +132,26 @@ public class MainPlayer : Personnage, iDamageable
     void ShootGun()
     {
         RaycastHit raycastHit;
-        bool hit= UpdateViserHitLocation(out raycastHit);
-
-        if (hit) {
+        bool hit = UpdateViserHitLocation(out raycastHit);
+        if (hit)
+        {
             iDamageable ennemi = raycastHit.collider.gameObject.GetComponent<iDamageable>();
-            if (ennemi != null) {
+            if (ennemi != null)
+            {
                 ennemi.TakeDammageInt(DamageAmount);
             }
         }
-           
-       
         IncreaseGunBar();
     }
     private bool UpdateViserHitLocation(out RaycastHit raycast)
     {
-       
+
         Ray ray = cam.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0));
         bool hit = false;
         if (Physics.Raycast(ray, out raycast))
         {
             Vector3 bulletImpactLocation = raycast.point;
             targetingVector = (bulletImpactLocation - (gameObject.transform.position + new Vector3(0.5f, 7.5f, 0)));
-            Debug.DrawRay(gameObject.transform.position + new Vector3(0.5f, 7.5f, 0), targetingVector, Color.blue, 10);
             lookAt = bulletImpactLocation;
             hit = true;
         }
@@ -200,7 +196,7 @@ public class MainPlayer : Personnage, iDamageable
         }*/
         if (Input.GetKeyDown(KeyCode.V))
         {
-            //damageable.TakeDammageInt();
+            IncreaseLife();
         }
 
         if (Input.GetAxis("Fire1") != 0)
@@ -228,21 +224,15 @@ public class MainPlayer : Personnage, iDamageable
         moveVector.z = 0;
     }
 
-
+    public void IncreaseLife()
+    {
+        float vie = 10;
+        barreDeVie.AdjusteHealthBar(vie);
+    }
     protected override void TakeDammage()
     {
         float damage = 10;
         barreDeVie.ModifyHealthWithValue(-damage);
-        /*float damage = 10;
-        if (pointsDeVie - damage >= 0)
-        {
-            pointsDeVie -= damage;
-           
-        }
-        else
-        {
-            //Die();
-        }*/
     }
     public float Jump()
     {
@@ -252,36 +242,12 @@ public class MainPlayer : Personnage, iDamageable
         return jumpForce;
     }
 
-    /*public void Crouch()
-    {
-        if (canMove == true)
-        {
-            canMove = false;
-        }
-        else
-        {
-            canMove = true;
-        }
-        if (isCrouched)
-        {
-            isCrouched = false;
-        }
-        else
-        {
-            isCrouched = true;
-        }
-        anim.SetBool("isCrouched", isCrouched);
-        float crouchStartTime = Time.time;
-    }*/
-
     protected override void ApplyMovement()
     {
         ApplyMoveInput();
         SetAnimationCharacterSpeed();
         RotatePlayerAccordingToCamera();
     }
-
-
 
     void PlayerMoveAndRotation()
     {
@@ -298,6 +264,7 @@ public class MainPlayer : Personnage, iDamageable
         Vector3 desiredMoveDirection = foward * inputZ + right * inputX;
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(desiredMoveDirection), DESIREDROTATIONSPEED);
     }
+
     void RotatePlayerAccordingToCamera()
     {
 
@@ -394,7 +361,6 @@ public class MainPlayer : Personnage, iDamageable
     {
         if (isGrounded)
         {
-
             sounds.PlaySound(clipAudio);
         }
     }
