@@ -52,7 +52,6 @@ public abstract class EnnemiMovement : MonoBehaviour
     protected void Shoot()
     {
         timeBeforeLookAt--;
-        print(timeBeforeLookAt);
         if(timeBeforeLookAt == 0)
         {
             Vector3 lookat = new Vector3(playerTarget.transform.position.x, gameObject.transform.position.y, playerTarget.transform.position.z);
@@ -60,12 +59,12 @@ public abstract class EnnemiMovement : MonoBehaviour
             timeBeforeLookAt = 30;
         }
         anim.SetBool("isShooting", true);
-        IdleShooting();
+        ReShooting();
     }
 
-    protected void IdleShooting()
+    protected void ReShooting()
     {
-        anim.SetBool("isIdleShooting", true);
+        anim.SetBool("isReShooting", true);
     }
 
     #endregion
@@ -112,6 +111,7 @@ public abstract class EnnemiMovement : MonoBehaviour
         anim.SetBool("isPunching", false);
         anim.SetBool("isIdlePunching", false);
         anim.SetBool("isShooting", false);
+        anim.SetBool("isReShooting", false);
     }
 
     #endregion

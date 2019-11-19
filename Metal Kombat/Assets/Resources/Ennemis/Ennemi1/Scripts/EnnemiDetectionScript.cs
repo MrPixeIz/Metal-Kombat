@@ -7,12 +7,9 @@ public class EnnemiDetectionScript : EnnemiMovement, iDamageable
 {
     public bool isAPuncher;
     public GameObject gun;
+    public GameObject laserPrefab;
 
     private float DistancePlayer;
-    private float chaseRange = 60;
-    private float meleeAttackRange = 5;
-    private float gunAttackRange = 30;
-    private float soundRange = 60;
     private Sounds sounds;
     private float pointsDeVie = 100;
     private EnemiesHitPointManager enemiesHitPointManager;
@@ -40,6 +37,7 @@ public class EnnemiDetectionScript : EnnemiMovement, iDamageable
 
     protected override void OnStart()
     {
+        playerTarget = GameObject.Find("Player");
         anim = this.GetComponent<Animator>();
         sounds = GetComponentInChildren<Sounds>();
         enemiesHitPointManager = GetComponentInChildren<EnemiesHitPointManager>();
@@ -57,7 +55,10 @@ public class EnnemiDetectionScript : EnnemiMovement, iDamageable
 
     protected override void OnUpdate()
     {
-        playerTarget = GameObject.Find("Player");
+        float chaseRange = 60;
+        float meleeAttackRange = 5;
+        float gunAttackRange = 30;
+
         DistancePlayer = Vector3.Distance(playerTarget.transform.position, transform.position);
 
         if (pointsDeVie == 100)
@@ -139,6 +140,7 @@ public class EnnemiDetectionScript : EnnemiMovement, iDamageable
         if (Physics.Raycast(sight, out objectHit))
         {
             Debug.DrawLine(sight.origin, objectHit.point, Color.red,10);
+            ShootLaserFromTargetPosition(sight.origin);
             if (objectHit.collider.tag == "Player")
             {
                 iDamageable playerDamage = objectHit.collider.gameObject.GetComponent<iDamageable>();
@@ -147,8 +149,14 @@ public class EnnemiDetectionScript : EnnemiMovement, iDamageable
         }
     }
 
+    void ShootLaserFromTargetPosition(Vector3 targetPosition)
+    {
+        GameObject laserGO = Instantiate(laserPrefab,targetPosition,gameObject.transform.rotation);
+    }
+
     public void PlaySoundEnnemis(AudioClip audioClip)
     {
+        float soundRange = 60;
         if (DistancePlayer < soundRange)
         {
             sounds.PlaySound(audioClip);

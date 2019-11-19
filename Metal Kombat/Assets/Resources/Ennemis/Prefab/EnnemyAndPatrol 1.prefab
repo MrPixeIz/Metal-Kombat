@@ -2741,6 +2741,8 @@ MonoBehaviour:
   endPatrolObject: {fileID: 1797306086709470}
   isAPuncher: 0
   gun: {fileID: 1997272829322880}
+  laserPrefab: {fileID: 1901782714039206, guid: c74600d618350b94bbd9fd6b0d337dcc,
+    type: 2}
 --- !u!136 &136018756076085714
 CapsuleCollider:
   m_ObjectHideFlags: 1

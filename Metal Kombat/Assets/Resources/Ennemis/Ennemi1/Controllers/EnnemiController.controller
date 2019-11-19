@@ -68,7 +68,7 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: isIdleShooting
+  - m_Name: isReShooting
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -198,7 +198,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 2
-    m_ConditionEvent: isIdleShooting
+    m_ConditionEvent: isReShooting
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1102548011483637510}
@@ -222,7 +222,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: isIdleShooting
+    m_ConditionEvent: isReShooting
     m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: isShooting
@@ -273,7 +273,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: isIdleShooting
+    m_ConditionEvent: isReShooting
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1102085526756196926}
@@ -445,7 +445,7 @@ AnimatorState:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: IdleShooting
+  m_Name: ReShooting
   m_Speed: 0.5
   m_CycleOffset: 0
   m_Transitions:
