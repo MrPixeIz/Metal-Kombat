@@ -429,6 +429,11 @@ public class MainPlayer : Personnage, iDamageable
 
     }
 
+    public void IncreaseLife(float ValueHealthKit)
+    {    
+        barreDeVie.AdjusteHealthBar(ValueHealthKit);
+    }
+
 
 
 }

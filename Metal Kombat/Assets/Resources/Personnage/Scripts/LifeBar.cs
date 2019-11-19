@@ -55,4 +55,16 @@ public class LifeBar : MonoBehaviour
             barreVie.color = new Color32(255, 0, 0, 255);
         }
     }
+
+    public void AdjusteHealthBar(float vie)
+    {
+
+        currentLife += vie;
+        if (currentLife > 100)
+        {
+            currentLife = 100;
+        }
+        SetLifeBarColor();
+
+    }
 }
