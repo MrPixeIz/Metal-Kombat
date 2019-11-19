@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class CatchMedKit : MonoBehaviour {
 
-    private MainPlayer mainPlayer;
+    private float timeBeforeDestroy = 0.6f;
     private float ValueHealthKit = 30;
+
+    private MainPlayer mainPlayer;
+    public AudioSource soundCatchMedKit;
 
     void Start()
     {
         mainPlayer = GetComponent<MainPlayer>();
+        soundCatchMedKit = GetComponent<AudioSource>();
     }
 
     void OnTriggerEnter(Collider other)
@@ -17,8 +21,9 @@ public class CatchMedKit : MonoBehaviour {
 
         if (other.name == "Player")
         {
+            soundCatchMedKit.Play();
             mainPlayer = other.gameObject.GetComponent<MainPlayer>();
-            Destroy(gameObject);
+            Destroy(gameObject, timeBeforeDestroy);
             mainPlayer.IncreaseLife(ValueHealthKit);
         }
 
