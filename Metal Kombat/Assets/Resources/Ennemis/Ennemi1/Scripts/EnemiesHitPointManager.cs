@@ -9,12 +9,11 @@ public class EnemiesHitPointManager : MonoBehaviour {
     private float HitPoint = 100;
     private float MaxHitPoint = 100;
     private float playerDamage = 1;
-    GameObject NPCPosition;
-    GameObject instance;
-    public GameObject lightning;
+    public GameObject ennemi;
+    public ParticleSystem DieFX;
+
 	// Use this for initialization
 	void Start () {
-       // NPCPosition = 
     }
    
     public void ModifyHealthWithValue(float deltaModifier)
@@ -22,9 +21,7 @@ public class EnemiesHitPointManager : MonoBehaviour {
         HitPoint -= deltaModifier;
         print("hitpoint " + HitPoint);
         //Possibilite de ne pas entrer dans le if currentLife == 0, imprecision float
-        print(enemieNPC.transform.position);
-        instance = Instantiate(lightning, enemieNPC.transform.position, enemieNPC.transform.rotation) as GameObject;
-        
+ 
         if (HitPoint <= 0)
         {
            
@@ -42,6 +39,8 @@ public class EnemiesHitPointManager : MonoBehaviour {
     }
     void DieEvent()
     {
+        ParticleSystem instance = Instantiate(DieFX, ennemi.transform.position + new Vector3(0,6,0), ennemi.transform.rotation);
+
         Object.Destroy(enemieNPC);
     }
 }

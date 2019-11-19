@@ -2440,7 +2440,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lifeBar: {fileID: 1205043203736804}
   enemieNPC: {fileID: 1516402590360440}
-  lightning: {fileID: 1745342419705106, guid: 42abd74f95e03df4cba391bbfbeecd8b, type: 2}
+  ennemi: {fileID: 1417617768833820}
+  DieFX: {fileID: 198823798710631068, guid: 858d350a4693bc74c8e00a3a334a6650, type: 2}
 --- !u!114 &114419696441265020
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2469,6 +2470,9 @@ MonoBehaviour:
   playerTarget: {fileID: 0}
   startPatrolObject: {fileID: 1498466129613846}
   endPatrolObject: {fileID: 1797306086709470}
+  audioClip: {fileID: 8300000, guid: 1a4301f0712e67146b407caa847b0003, type: 3}
+  audiosource: {fileID: 82746836803530196}
+  lightning: {fileID: 1682597695508088, guid: 1e26a09b747f871469521f8954a9b298, type: 2}
 --- !u!136 &136018756076085714
 CapsuleCollider:
   m_ObjectHideFlags: 1

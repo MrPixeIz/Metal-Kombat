@@ -65,11 +65,9 @@
 			scrollValueZERO += fixed2(scrollValueZERO, 0);
 			scrollValueZERO = _Time * _Speed / 1.33f;
 
-
-			//fixed2 scrolledUV = IN.uv_MainTex + fixed2(scrollValue, 0);
-			fixed2 scrolledUV2 = IN.uv_MainTex + fixed2(scrollValue, 0);
-			fixed2 scrolledUVS2 = IN.uv_SecondTex + fixed2(0, scrollValue2);
-			fixed2 scrolledUVT2 = IN.uv_ThirdTex - fixed2(scrollValue, 0);
+			fixed2 scrolledUV2 = IN.uv_MainTex + fixed2(scrollValue, 0); //déplacemenet droit
+			fixed2 scrolledUVS2 = IN.uv_SecondTex + fixed2(0, scrollValue2); //déplacemenet haut en bas
+			fixed2 scrolledUVT2 = IN.uv_ThirdTex - fixed2(scrollValue, 0);//déplacemenet gauche
 			fixed2 scrolledUScopeT2 = IN.uv_ScopeTex + fixed2(0, 0);
 
 
@@ -80,11 +78,11 @@
 
 			fixed4 c4 = tex2D(_ScopeTex, IN.uv_ScopeTex);
 			fixed3 c5 = c.rgb + c2.rgb + c3.rgb;
-			o.Albedo = c5;
+			o.Albedo = pow(c5,0.8f) + pow(c5.b*3, 0.2f);
 			// Metallic and smoothness come from slider variables
 			o.Metallic = _Metallic;
 			o.Smoothness = _Glossiness;
-			o.Alpha = min(c5.r + c5.g + c5.b, 1 - c4.a);
+			o.Alpha = min((c5.r + c5.g + c5.b), 1 - c4.a);
 			
 		}
 		ENDCG

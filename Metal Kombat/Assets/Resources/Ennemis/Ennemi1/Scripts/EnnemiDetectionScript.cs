@@ -20,6 +20,12 @@ public class EnnemiDetectionScript : MonoBehaviour, iDamageable
     private float pointsDeVie = 100;
     iDamageable damageable;
     EnemiesHitPointManager enemiesHitPointManager;
+
+    public AudioClip audioClip;
+    public AudioSource audiosource;
+    GameObject instance;
+    public GameObject lightning;
+
     public int DamageAmount
     {
         get
@@ -35,16 +41,17 @@ public class EnnemiDetectionScript : MonoBehaviour, iDamageable
 
     void Start()
     {
+        audiosource.clip = audioClip;
         anim = this.GetComponent<Animator>();
         patrolTarget = startPatrolObject;
         sounds = GetComponentInChildren<Sounds>();
         enemiesHitPointManager = GetComponentInChildren<EnemiesHitPointManager>();
-
+        playerTarget = GameObject.Find("Player");
     }
 
     void Update()
     {
-        playerTarget = GameObject.Find("Player");
+
         DistancePlayer = Vector3.Distance(playerTarget.transform.position, transform.position);
 
 
@@ -75,7 +82,7 @@ public class EnnemiDetectionScript : MonoBehaviour, iDamageable
         }
 
     }
-    
+
 
     #region Movement
     public void Idle()
@@ -180,12 +187,24 @@ public class EnnemiDetectionScript : MonoBehaviour, iDamageable
             enemiesHitPointManager.ModifyHealthWithValue(dammageAmount);
             pointsDeVie -= dammageAmount;
             MoveTo(playerTarget.transform, pSpeed: 9f);
-        }
-        else
-        {
-            Die();
+            lightningFX();
+
         }
 
+
+    }
+    private void lightningFX()
+    {
+        instance = Instantiate(lightning, this.transform.position + new Vector3(0, 5, 0), new Quaternion(90, 0, 0, 0)) as GameObject;
+        PlaySound(audioClip);
+
+    }
+    public void PlaySound(AudioClip clipAudio)
+    {
+        //audiosource.clip = clipAudio;
+        audiosource.volume = Random.Range(0.4f, 0.5f);
+        audiosource.pitch = Random.Range(0.9f, 1.3f);
+        audiosource.PlayOneShot(clipAudio);
     }
 
     public void GiveDammage()
@@ -194,10 +213,7 @@ public class EnnemiDetectionScript : MonoBehaviour, iDamageable
         iDamageable dammagePlayer = playerTarget.GetComponent<iDamageable>();
         dammagePlayer.TakeDammageInt(DamageAmount);
     }
-    private void Die()
-    {
 
-    }
     #endregion
 
 
