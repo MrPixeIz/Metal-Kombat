@@ -6,29 +6,27 @@ using UnityEngine.SceneManagement;
 
 public class MainPlayer : Personnage, iDamageable
 {
-
+    public Image targetGun;
     private bool ikActive = false;
-    Vector3 moveVector;
-    private float delayBeforeNextFire = 0;
-    private bool hasAGun = false;
     private OnDieMainPlayerHook onDieMainPlayerHook;
-    private Camera cam;
-    private Vector3 targetingVector = new Vector3(0, 0, 1);
+    private float delayBeforeNextFire = 0;   
     private Vector3 lookAt = new Vector3(0, 8, 5);
     private float timeForIkActive = 0;
     private AudioClip ShootSoundclip;
-    private float overheatValue = 0;
+    private int overheatValue;
+    GameObject pistol;
+    GameObject pistolBelt;
+    GameObject gunBar;
+    GameObject gunIcon;
+    Vector3 moveVector;
 
     public int DamageAmount
     {
         get
         {
             return 25;
-        }  
+        }
     }
-
-    //bool canMove = true;
-    //Vector3 fwd;
     public MainPlayer()
     {
 
@@ -43,12 +41,29 @@ public class MainPlayer : Personnage, iDamageable
 
     protected override void OnStart()
     {
+
+        targetGun = GameObject.FindGameObjectWithTag("point").GetComponent<Image>();
+        targetGun.enabled = false;
+
+        pistol = GameObject.FindGameObjectWithTag("PistolInHand");
+        pistol.SetActive(false);
+
+        pistolBelt = GameObject.FindGameObjectWithTag("GunBelt");
+        pistolBelt.SetActive(false);
+
+        
+
         anim = this.GetComponent<Animator>();
         cam = Camera.main;
         sounds = GetComponentInChildren<Sounds>();
         ShootSoundclip = Resources.Load<AudioClip>("Personnage/Sons/gun");
         SetupGunBar();
 
+        gunBar = GameObject.FindGameObjectWithTag("GunBar");
+        gunBar.SetActive(false);
+
+        gunIcon = GameObject.FindGameObjectWithTag("GunIcon");
+        gunIcon.SetActive(false);
     }
     private void SetupGunBar()
     {
@@ -70,7 +85,7 @@ public class MainPlayer : Personnage, iDamageable
         float currentNumber = barreGun.ModifyGunBarWithValue(30);
         if (currentNumber >= 100)
         {
-            print(currentNumber);
+            
             overheatValue = 100;
         }
     }
@@ -194,9 +209,32 @@ public class MainPlayer : Personnage, iDamageable
         /*if (Input.GetKeyDown(KeyCode.C)) {
             Crouch();
         }*/
-        if (Input.GetKeyDown(KeyCode.V))
+
+        //-----------------------------------------------------------------------------Luc---------------------------------------------------------------------
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            IncreaseLife();
+            if (hasArmeInInventory == true)
+            {
+                if (hasAGun == true)
+                {
+                    hasAGun = false;
+                    targetGun.enabled = false;
+                    pistol.SetActive(false);
+                    pistolBelt.SetActive(true);
+                    gunIcon.SetActive(false);
+                    gunBar.SetActive(false);
+                }
+                else
+                {
+                    hasAGun = true;
+                    targetGun.enabled = true;
+                    pistol.SetActive(true);
+                    pistolBelt.SetActive(false);
+                    gunIcon.SetActive(true);
+                    gunBar.SetActive(true);
+                }
+
+            }
         }
 
         if (Input.GetAxis("Fire1") != 0)
@@ -397,4 +435,35 @@ public class MainPlayer : Personnage, iDamageable
             mainPlayer.Die();
         }
     }
+
+
+
+    // ajout pour changer le mode attaque
+    public void AddModeAttaque()
+    {
+
+        CheckIfGunInventory();
+        hasAGun = true;
+        targetGun.enabled = true;
+        pistol.SetActive(true);
+        gunIcon.SetActive(true);
+        gunBar.SetActive(true);
+    }
+
+    private void CheckIfGunInventory()
+    {
+        if (hasArmeInInventory == false)
+        {
+            hasArmeInInventory = true;
+        }
+
+    }
+
+    public void IncreaseLife(float ValueHealthKit)
+    {
+        barreDeVie.AdjusteHealthBar(ValueHealthKit);
+    }
+
+
+
 }

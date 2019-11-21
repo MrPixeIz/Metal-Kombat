@@ -14,7 +14,11 @@ public abstract class Personnage : Physic
     protected LifeBar barreDeVie; //= new LifeBar();
     protected Animator anim;
     protected GunBar barreGun;
-
+    protected Camera cam;
+    protected bool hasAGun = false;
+    iDamageable damageable;
+    protected Vector3 targetingVector = new Vector3(0, 0, 1);
+    protected bool hasArmeInInventory = false;
     void Start()
     {
         controller = GetComponent<CharacterController>();

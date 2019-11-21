@@ -17,7 +17,7 @@ public class EnemiesHitPointManager : MonoBehaviour {
     public void ModifyHealthWithValue(float deltaModifier)
     {
         HitPoint -= deltaModifier;
-        print("hitpoint " + HitPoint);
+        
         //Possibilite de ne pas entrer dans le if currentLife == 0, imprecision float
         if (HitPoint <= 0)
         {
@@ -30,7 +30,7 @@ public class EnemiesHitPointManager : MonoBehaviour {
     private void SetLifeBarColor()
     {
         float fillAmountPercent = (HitPoint / MaxHitPoint);
-        print("fillAmountPercent " + fillAmountPercent);
+    
         lifeBar.transform.localScale = new Vector3(fillAmountPercent, 0.1f, 0.01f);
     }
     void DieEvent()

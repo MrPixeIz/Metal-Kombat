@@ -9,6 +9,11 @@ TagManager:
   - viePleine
   - Ennemi
   - gunPlein
+  - GunBelt
+  - point
+  - PistolInHand
+  - GunIcon
+  - GunBar
   layers:
   - Default
   - TransparentFX

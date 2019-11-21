@@ -60,7 +60,7 @@ public class LifeBar : MonoBehaviour
     {
         float fillAmountPercent = (currentLife / maxLife);
         barreVie.fillAmount = fillAmountPercent;
-        print(fillAmountPercent);
+        
         if (fillAmountPercent <= REDLIFEBARTHRESHOLD)
         {
             barreVie.color = new Color32(255, 0, 0, 255);
