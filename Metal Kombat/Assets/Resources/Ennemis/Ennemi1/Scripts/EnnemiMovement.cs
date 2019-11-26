@@ -56,7 +56,7 @@ public abstract class EnnemiMovement : Physic
         timeBeforeLookAt--;
         if(timeBeforeLookAt == 0)
         {
-            Vector3 lookat = new Vector3(playerTarget.transform.position.x, gameObject.transform.position.y, playerTarget.transform.position.z);
+            Vector3 lookat = new Vector3(playerTarget.transform.position.x, playerTarget.transform.position.y, playerTarget.transform.position.z);
             transform.LookAt(lookat);
             timeBeforeLookAt = 30;
         }
