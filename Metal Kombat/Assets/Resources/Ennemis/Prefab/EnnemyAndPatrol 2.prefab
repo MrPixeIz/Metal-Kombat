@@ -1404,7 +1404,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1268244315912388}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -101.7, y: 21.506458, z: -312.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4352429186134750}
@@ -1574,7 +1574,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1284892869714394}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 229.40674, y: 0, z: 418.56036}
+  m_LocalPosition: {x: 292.47, y: -19.66, z: 486.31}
   m_LocalScale: {x: 4.5, y: 4.5, z: 4.5}
   m_Children:
   - {fileID: 4637949106450340}
@@ -1671,7 +1671,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1217671690902882}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.79, y: 1.17, z: 30.65}
+  m_LocalPosition: {x: 68.25, y: -19.02, z: 65.66}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4352429186134750}
@@ -1946,7 +1946,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1647040976822386}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.79, y: 1.42, z: -58.9}
+  m_LocalPosition: {x: 2.79, y: -19.3, z: -22.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4352429186134750}
@@ -2714,8 +2714,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6aa004b3c0d63cb46b235632ab7719a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startPatrolObject: {fileID: 0}
-  endPatrolObject: {fileID: 0}
   endPatrol: {fileID: 1217671690902882}
   startPatrol: {fileID: 1647040976822386}
 --- !u!114 &114471443734585620
@@ -2729,8 +2727,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6aa004b3c0d63cb46b235632ab7719a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startPatrolObject: {fileID: 0}
-  endPatrolObject: {fileID: 0}
   endPatrol: {fileID: 1217671690902882}
   startPatrol: {fileID: 1647040976822386}
 --- !u!114 &114913522035903868
@@ -2744,8 +2740,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6aa004b3c0d63cb46b235632ab7719a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startPatrolObject: {fileID: 0}
-  endPatrolObject: {fileID: 0}
   endPatrol: {fileID: 1217671690902882}
   startPatrol: {fileID: 1647040976822386}
 --- !u!136 &136896472532413606

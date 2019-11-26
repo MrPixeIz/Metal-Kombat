@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ReachPatrol : EnnemiMovement {
+public class ReachPatrol : MonoBehaviour {
 
     public GameObject endPatrol;
     public GameObject startPatrol;
@@ -11,19 +11,15 @@ public class ReachPatrol : EnnemiMovement {
     {
         if (gameObject.name == startPatrol.name)
         {
-            otherObject.GetComponent<ReachPatrol>().SetPatrol(endPatrol);
+            if(otherObject.name != "Player")
+                otherObject.GetComponent<EnnemiDetectionScript>().SetPatrol(endPatrol);
         }
         else
         {
-            otherObject.GetComponent<ReachPatrol>().SetPatrol(startPatrol);
+            if (otherObject.name != "Player")
+                otherObject.GetComponent<EnnemiDetectionScript>().SetPatrol(startPatrol);
         }
     }
 
-    protected override void OnStart()
-    {
-    }
-
-    protected override void OnUpdate()
-    {
-    }
+ 
 }

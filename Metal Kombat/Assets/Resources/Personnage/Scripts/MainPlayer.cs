@@ -191,8 +191,7 @@ public class MainPlayer : Personnage, iDamageable
             velocity.x = 0;
             velocity.z = 0;
             int walkForce = 1500;
-            /*if (canMove == true)
-            {*/
+            
             if (Input.GetAxis("Vertical") != 0 && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Punching" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Mma Idle (1)" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Shooting" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Standing To Crouched")
             {
                 velocity += transform.forward * walkForce * Time.deltaTime * Mathf.Abs(Input.GetAxis("Vertical"));
@@ -206,9 +205,7 @@ public class MainPlayer : Personnage, iDamageable
         {
             velocity.y = Jump();
         }
-        /*if (Input.GetKeyDown(KeyCode.C)) {
-            Crouch();
-        }*/
+        
 
         //-----------------------------------------------------------------------------Luc---------------------------------------------------------------------
         if (Input.GetKeyDown(KeyCode.E))
