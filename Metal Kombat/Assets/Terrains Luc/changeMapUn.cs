@@ -9,7 +9,7 @@ public class changeMapUn : MonoBehaviour
 
     void OnTriggerEnter()
     {
-        //DontDestroyOnLoad(GameObject.Find("Personnage"));
+        DontDestroyOnLoad(GameObject.Find("Personnage"));
         SceneManager.LoadScene(3);
     }
 
