@@ -30,7 +30,7 @@ public class MainPlayer : Personnage, iDamageable
     public MainPlayer()
     {
 
-        isCrouched = false;
+
         //canMove = true;
 
         isGrounded = false;

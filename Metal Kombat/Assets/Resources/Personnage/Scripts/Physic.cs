@@ -10,7 +10,7 @@ public abstract class Physic : MonoBehaviour
     protected Vector3 velocity = new Vector3(0, 0, 0);
     protected bool isGrounded;
     protected Vector3 hitNormal;
-    protected bool isCrouched;
+
     void Start()
     {
     }
@@ -34,18 +34,13 @@ public abstract class Physic : MonoBehaviour
         if (hitNormal != Vector3.zero)
         {
             if (!IsGoingUp() && !isGrounded)
-            {// Vector3.Angle(Vector3.up, hitNormal) >= SLOPELIMIT) {                
+            {               
                 float slideFriction = 0f;
                 velocity.y = 0;
                 velocity.x = ((1f - hitNormal.y) * hitNormal.x * (1.3f - slideFriction)) * gravity * Time.deltaTime * 25;
-                velocity.z = ((1f - hitNormal.y) * hitNormal.z * (1.3f - slideFriction)) * gravity * Time.deltaTime * 25;
-                /* player.ChangeValueMoveVectorX(((1f - hitNormal.y) * hitNormal.x * (1.3f - slideFriction)) * gravity * Time.deltaTime * 5);
-                 player.ChangeValueMoveVectorZ(((1f - hitNormal.y) * hitNormal.z * (1.3f - slideFriction)) * gravity * Time.deltaTime * 5);*/
+                velocity.z = ((1f - hitNormal.y) * hitNormal.z * (1.3f - slideFriction)) * gravity * Time.deltaTime * 25;    
             }
-        } /*else if (hitNormal == Vector3.zero ) {
-            //&& player.Anim.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Fall A Loop"
-            MoveCharacterWhenStuck(10);
-        }*/
+        } 
         hitNormal = Vector3.zero;
     }
 
@@ -72,18 +67,6 @@ public abstract class Physic : MonoBehaviour
 
     }
 
-    /*void OnCollisionEnter(Collision collision) {
-        print("COLLISION ENTER");
-        
-        hitNormal = collision.contacts[0].normal;
-    }*/
-
-
-    /* void OnControllerColliderHit(ControllerColliderHit hit)
-     {
-         hitNormal = hit.normal;
-     }*/
-
     private bool IsInContactWithSlope()
     {
         RaycastHit hit;
@@ -97,7 +80,7 @@ public abstract class Physic : MonoBehaviour
             
             if (Vector3.Angle(Vector3.up, hitNormal) <= SLOPELIMIT)
             {
-                if (!isCrouched)
+                
                     isGrounded = true;
 
             }
@@ -105,50 +88,14 @@ public abstract class Physic : MonoBehaviour
 
         return touchGround;
     }
-    /*void OnDrawGizmosSelected() {
-        // Draw a yellow sphere at the transform's position
-       
-        Gizmos.color = Color.blue;
-        Gizmos.DrawSphere(transform.position + new Vector3(0, 1.5f, 0), 1.75f);
-    }*/
-
-
-
-    /*void MoveCharacterWhenStuck(float force)
-    {
-        print("MoveCharacterWhenStuck");
-        player.ChangeValueMoveVectorX(0);
-        player.ChangeValueMoveVectorZ(0);
-
-        player.MoveVector += transform.forward * force * Time.deltaTime * Mathf.Abs(10);
-
-        player.MoveVector += transform.forward * force * Time.deltaTime * Mathf.Abs(10);
-
-        player.MoveVector += transform.forward * force * Time.deltaTime * Mathf.Abs(-20);
-
-        player.MoveVector += transform.forward * force * Time.deltaTime * Mathf.Abs(-20);
-
-
-    }*/
-
-
-
-
+    
     bool GroundCheck()
     {
         RaycastHit hit;
         float distance = 2.2f;
         Vector3 startPosition;
-        Vector3 dir = new Vector3(0, -distance, 0);
-        if (!isCrouched)
-        {
+        Vector3 dir = new Vector3(0, -distance, 0);  
             startPosition = transform.position;
-        }
-        else 
-        {
-            startPosition = transform.position + new Vector3(0, 1.8f, 0);
-        }
-
         startPosition.y += 2f;
         Debug.DrawRay(startPosition, dir, Color.red, 1);
 
