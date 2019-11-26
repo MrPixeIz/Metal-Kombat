@@ -1869,7 +1869,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1516402590360440}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -82.1, y: 0, z: -124}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4859238195155246}
@@ -2681,7 +2681,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26d83b5b85463d346bf12864695cb0d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioClip: {fileID: 0}
+  audioClip: {fileID: 8300000, guid: 1a4301f0712e67146b407caa847b0003, type: 3}
   audiosource: {fileID: 82746836803530196}
 --- !u!114 &114074608117437242
 MonoBehaviour:
@@ -2711,6 +2711,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lifeBar: {fileID: 1205043203736804}
   enemieNPC: {fileID: 1516402590360440}
+  ennemi: {fileID: 1417617768833820}
+  DieFX: {fileID: 198823798710631068, guid: 858d350a4693bc74c8e00a3a334a6650, type: 2}
 --- !u!114 &114419696441265020
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2739,10 +2741,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startPatrolObject: {fileID: 1498466129613846}
   endPatrolObject: {fileID: 1797306086709470}
-  isAPuncher: 0
+  isAPuncher: 1
   gun: {fileID: 1997272829322880}
   laserPrefab: {fileID: 1901782714039206, guid: c74600d618350b94bbd9fd6b0d337dcc,
     type: 2}
+  audioClip: {fileID: 8300000, guid: 1a4301f0712e67146b407caa847b0003, type: 3}
+  audiosource: {fileID: 82746836803530196}
+  lightning: {fileID: 1682597695508088, guid: 1e26a09b747f871469521f8954a9b298, type: 2}
 --- !u!136 &136018756076085714
 CapsuleCollider:
   m_ObjectHideFlags: 1
