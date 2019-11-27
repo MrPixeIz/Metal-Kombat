@@ -14,7 +14,6 @@ public abstract class Physic : MonoBehaviour
     void Start()
     {
     }
-
     void Update()
     {
         isGrounded = GroundCheck();
@@ -79,13 +78,10 @@ public abstract class Physic : MonoBehaviour
             Debug.DrawLine(hit.point, (hit.point + hit.normal * 6), Color.cyan);
             
             if (Vector3.Angle(Vector3.up, hitNormal) <= SLOPELIMIT)
-            {
-                
+            {          
                     isGrounded = true;
-
             }
         }
-
         return touchGround;
     }
     
@@ -95,10 +91,9 @@ public abstract class Physic : MonoBehaviour
         float distance = 2.2f;
         Vector3 startPosition;
         Vector3 dir = new Vector3(0, -distance, 0);  
-            startPosition = transform.position;
+        startPosition = transform.position;
         startPosition.y += 2f;
         Debug.DrawRay(startPosition, dir, Color.red, 1);
-
         bool isGroundeReturnValue;
         if (Physics.Raycast(startPosition, dir, out hit, distance))
         {
@@ -108,7 +103,6 @@ public abstract class Physic : MonoBehaviour
         {
             isGroundeReturnValue = false;
         }
-
         return isGroundeReturnValue;
     }
 }

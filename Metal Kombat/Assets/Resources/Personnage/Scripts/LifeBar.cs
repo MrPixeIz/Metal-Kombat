@@ -35,7 +35,6 @@ public class LifeBar : MonoBehaviour
     public void ModifyHealthWithValue(float deltaModifier)
     {
         currentLife += deltaModifier;
-        //Possibilite de ne pas entrer dans le if currentLife == 0, imprecision float
         if (currentLife <= 0)
         {
             currentLife = 0;

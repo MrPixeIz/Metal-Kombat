@@ -6,17 +6,14 @@ public class Sounds : MonoBehaviour {
 
     public AudioClip audioClip;
     public AudioSource audiosource;
-
     void Start()
     {
         audiosource.clip = audioClip;
 
     }
-
     void Update()
     {  
     }
-
     public void PlaySound(AudioClip clipAudio)
     {
         audiosource.clip = clipAudio;

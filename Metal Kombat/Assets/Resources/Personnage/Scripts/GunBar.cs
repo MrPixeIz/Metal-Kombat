@@ -5,11 +5,8 @@ using UnityEngine.UI;
 
 public class GunBar : MonoBehaviour {
 
-    private const float REDLIFEBARTHRESHOLD = 0.3f;
     public Image gunBar;
     public float currentNumber;
-    private Personnage.OnDieEvent onDie;
-    GameObject barreDeVieObject;
    
     public GunBar(Image image)
     {

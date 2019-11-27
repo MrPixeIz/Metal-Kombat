@@ -10,7 +10,6 @@ public class MainPlayer : Personnage, iDamageable
     private bool ikActive = false;
     private OnDieMainPlayerHook onDieMainPlayerHook;
     private float delayBeforeNextFire = 0;   
-    private Vector3 lookAt = new Vector3(0, 8, 5);
     private float timeForIkActive = 0;
     private AudioClip ShootSoundclip;
     private int overheatValue;
@@ -27,48 +26,37 @@ public class MainPlayer : Personnage, iDamageable
             return 25;
         }
     }
+
     public MainPlayer()
     {
-
-
-        //canMove = true;
-
         isGrounded = false;
         moveVector = new Vector3();
-
     }
-
 
     protected override void OnStart()
     {
-
         targetGun = GameObject.FindGameObjectWithTag("point").GetComponent<Image>();
         targetGun.enabled = false;
-
         pistol = GameObject.FindGameObjectWithTag("PistolInHand");
         pistol.SetActive(false);
-
         pistolBelt = GameObject.FindGameObjectWithTag("GunBelt");
         pistolBelt.SetActive(false);
-
-        
-
         anim = this.GetComponent<Animator>();
         cam = Camera.main;
         sounds = GetComponentInChildren<Sounds>();
         ShootSoundclip = Resources.Load<AudioClip>("Personnage/Sons/gun");
         SetupGunBar();
-
         gunBar = GameObject.FindGameObjectWithTag("GunBar");
         gunBar.SetActive(false);
-
         gunIcon = GameObject.FindGameObjectWithTag("GunIcon");
         gunIcon.SetActive(false);
     }
+
     private void SetupGunBar()
     {
         Image gunBar = GameObject.FindGameObjectWithTag("gunPlein").GetComponent<Image>();
         barreGun = new GunBar(gunBar);
+       
         onDieMainPlayerHook = new OnDieMainPlayerHook(this);
     }
     private void DecreaseGunBar()
@@ -80,6 +68,7 @@ public class MainPlayer : Personnage, iDamageable
             barreGun.ModifyGunBarWithValue(-0.5f);
         }
     }
+
     private void IncreaseGunBar()
     {
         float currentNumber = barreGun.ModifyGunBarWithValue(30);
@@ -89,27 +78,23 @@ public class MainPlayer : Personnage, iDamageable
             overheatValue = 100;
         }
     }
+
     protected override void SetupLifeBar()
     {
         const float PLAYERMAXSTARTINGLIFE = 100;
         Image barreVie = GameObject.FindGameObjectWithTag("viePleine").GetComponent<Image>();
         barreDeVie = new LifeBar(barreVie, PLAYERMAXSTARTINGLIFE);
         onDieMainPlayerHook = new OnDieMainPlayerHook(this);
-
     }
 
     protected override void Attack()
     {
-
         if (delayBeforeNextFire <= 0)
         {
-
             float fireDelay = 0.5f;
             if (hasAGun)
             {
                 Camera cam = Camera.main;
-
-                //anim.SetTrigger("isShooting");
                 ikActive = true;
                 timeForIkActive = 1;
                 if (barreGun.currentNumber < 100)
@@ -125,8 +110,6 @@ public class MainPlayer : Personnage, iDamageable
                     overheatValue = 100;
                     ShootSoundclip = Resources.Load<AudioClip>("Personnage/Sons/gunAlienOverheat");
                 }
-
-
                 PlaySound(ShootSoundclip);
                 if (overheatValue > 0)
                 {
@@ -136,14 +119,12 @@ public class MainPlayer : Personnage, iDamageable
             }
             else
             {
-                //fwd = raycastObject.transform.TransformDirection(Vector3.forward);
                 anim.SetTrigger("isPunching");
-
             }
-
             delayBeforeNextFire = fireDelay;
         }
     }
+
     void ShootGun()
     {
         RaycastHit raycastHit;
@@ -158,9 +139,9 @@ public class MainPlayer : Personnage, iDamageable
         }
         IncreaseGunBar();
     }
+
     private bool UpdateViserHitLocation(out RaycastHit raycast)
     {
-
         Ray ray = cam.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0));
         bool hit = false;
         if (Physics.Raycast(ray, out raycast))
@@ -170,20 +151,17 @@ public class MainPlayer : Personnage, iDamageable
             lookAt = bulletImpactLocation;
             hit = true;
         }
-
-
         Vector3 newLookAt = lookAt;
         newLookAt.y = transform.position.y;
         transform.LookAt(newLookAt);
-
         return hit;
-
     }
+
     protected override void Die()
     {
         SceneManager.LoadScene("mapLevel1");
-        //anim.SetTrigger("isDying");
     }
+
     protected override void ApplyMoveInput()
     {
         if (isGrounded)
@@ -191,11 +169,8 @@ public class MainPlayer : Personnage, iDamageable
             velocity.x = 0;
             velocity.z = 0;
             int walkForce = 1500;
-            /*if (canMove == true)
-            {*/
             if (Input.GetAxis("Vertical") != 0 && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Punching" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Mma Idle (1)" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Shooting" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Standing To Crouched")
             {
-                print ("avance");
                 velocity += transform.forward * walkForce * Time.deltaTime * Mathf.Abs(Input.GetAxis("Vertical"));
             }
             else if (Input.GetAxis("Horizontal") != 0 && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Punching" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Mma Idle (1)" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Shooting" && anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Standing To Crouched")
@@ -207,11 +182,6 @@ public class MainPlayer : Personnage, iDamageable
         {
             velocity.y = Jump();
         }
-        /*if (Input.GetKeyDown(KeyCode.C)) {
-            Crouch();
-        }*/
-
-        //-----------------------------------------------------------------------------Luc---------------------------------------------------------------------
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (hasArmeInInventory == true)
@@ -237,12 +207,10 @@ public class MainPlayer : Personnage, iDamageable
 
             }
         }
-
         if (Input.GetAxis("Fire1") != 0)
         {
             Attack();
         }
-        /*}*/
     }
 
     private void ApplyAnimation()
@@ -268,11 +236,13 @@ public class MainPlayer : Personnage, iDamageable
         float vie = 10;
         barreDeVie.AdjusteHealthBar(vie);
     }
+
     protected override void TakeDammage()
     {
         float damage = 10;
         barreDeVie.ModifyHealthWithValue(-damage);
     }
+
     public float Jump()
     {
         float jumpForce = 25;
@@ -299,16 +269,12 @@ public class MainPlayer : Personnage, iDamageable
         right.y = 0f;
         foward.Normalize();
         right.Normalize();
-
-        print(foward);
-
         Vector3 desiredMoveDirection = foward * inputZ + right * inputX;
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(desiredMoveDirection), DESIREDROTATIONSPEED);
     }
 
     void RotatePlayerAccordingToCamera()
     {
-
         if ((new Vector2(velocity.z, velocity.x)).magnitude > 0)
         {
             PlayerMoveAndRotation();
@@ -334,15 +300,14 @@ public class MainPlayer : Personnage, iDamageable
         {
             overheatValue -= 1;
         }
-
     }
+
     private void PlaceGun()
     {
         if (ikActive)
         {
             RaycastHit raycastHit;
             UpdateViserHitLocation(out raycastHit);
-
             timeForIkActive -= Time.deltaTime;
             if (timeForIkActive <= 0)
             {
@@ -350,30 +315,25 @@ public class MainPlayer : Personnage, iDamageable
             }
         }
     }
+
     private void ProcessFireDelay()
     {
         delayBeforeNextFire -= Time.deltaTime;
     }
+
     void OnAnimatorIK()
     {
-
         Vector3 rightShoulderLocation = new Vector3(0.5f, 7.5f, 0) + transform.position;
         Vector3 lookObj = targetingVector;
         if (anim)
         {
-
-            //if the IK is active, set the position and rotation directly to the goal. 
             if (ikActive)
             {
-
-                // Set the look target position, if one has been assigned
                 if (lookObj != null)
                 {
                     anim.SetLookAtWeight(1);
                     anim.SetLookAtPosition(lookAt);
                 }
-
-                // Set the right hand target position and rotation, if one has been assigned
                 if (rightShoulderLocation != null)
                 {
 
@@ -388,8 +348,6 @@ public class MainPlayer : Personnage, iDamageable
                 }
 
             }
-
-            //if the IK is not active, set the position and rotation of the hand and head back to the original position
             else
             {
                 anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 0);
@@ -398,6 +356,7 @@ public class MainPlayer : Personnage, iDamageable
             }
         }
     }
+
     public void PlaySound(AudioClip clipAudio)
     {
         if (isGrounded)
@@ -405,14 +364,13 @@ public class MainPlayer : Personnage, iDamageable
             sounds.PlaySound(clipAudio);
         }
     }
+
     public void Punch(AudioClip clipAudio)
     {
-
         if (MeleeHitCheck())
         {
             sounds.PlaySound(clipAudio);
         }
-
     }
 
     protected override OnDieHook GetOnDieEvent()
@@ -439,12 +397,8 @@ public class MainPlayer : Personnage, iDamageable
         }
     }
 
-
-
-    // ajout pour changer le mode attaque
     public void AddModeAttaque()
     {
-
         CheckIfGunInventory();
         hasAGun = true;
         targetGun.enabled = true;
@@ -459,14 +413,10 @@ public class MainPlayer : Personnage, iDamageable
         {
             hasArmeInInventory = true;
         }
-
     }
 
     public void IncreaseLife(float ValueHealthKit)
     {
         barreDeVie.AdjusteHealthBar(ValueHealthKit);
     }
-
-
-
 }
