@@ -54,7 +54,6 @@ public abstract class Physic : MonoBehaviour
         if (!isGrounded)
         {
             velocity.y -= gravity * Time.deltaTime;
-            print("Is not grounded " + gameObject.name);
         }
         else
         {

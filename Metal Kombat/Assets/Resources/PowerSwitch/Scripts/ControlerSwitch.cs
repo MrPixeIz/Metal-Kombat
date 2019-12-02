@@ -12,7 +12,7 @@ public class ControlerSwitch : MonoBehaviour
     private AudioSource soundSwitch;
     private ChangeLightColor changelightColor;
     private bool EndGame = false;
-    private float timeLeft = 5.0f;
+    private float timeLeft = 2.0f;
     private DisplayEndMessage displayEndMessage;
 
     void Start()

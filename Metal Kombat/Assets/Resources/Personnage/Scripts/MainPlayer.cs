@@ -9,7 +9,7 @@ public class MainPlayer : Personnage, iDamageable
     public Image targetGun;
     private bool ikActive = false;
     private OnDieMainPlayerHook onDieMainPlayerHook;
-    private float delayBeforeNextFire = 0;   
+    private float delayBeforeNextFire = 0;
     private float timeForIkActive = 0;
     private AudioClip ShootSoundclip;
     private int overheatValue;
@@ -56,7 +56,7 @@ public class MainPlayer : Personnage, iDamageable
     {
         Image gunBar = GameObject.FindGameObjectWithTag("gunPlein").GetComponent<Image>();
         barreGun = new GunBar(gunBar);
-       
+
         onDieMainPlayerHook = new OnDieMainPlayerHook(this);
     }
     private void DecreaseGunBar()
@@ -74,7 +74,7 @@ public class MainPlayer : Personnage, iDamageable
         float currentNumber = barreGun.ModifyGunBarWithValue(30);
         if (currentNumber >= 100)
         {
-            
+
             overheatValue = 100;
         }
     }
@@ -131,9 +131,16 @@ public class MainPlayer : Personnage, iDamageable
         bool hit = UpdateViserHitLocation(out raycastHit);
         if (hit)
         {
-            iDamageable ennemi = raycastHit.collider.gameObject.GetComponent<iDamageable>();
+            iDamageable ennemi = null;
+            if (raycastHit.collider.GetComponent<Personnage>() == null)
+            {
+
+                ennemi = raycastHit.collider.gameObject.GetComponent<iDamageable>();
+            }
+
             if (ennemi != null)
             {
+
                 ennemi.TakeDammageInt(DamageAmount);
             }
         }
@@ -187,30 +194,28 @@ public class MainPlayer : Personnage, iDamageable
             if (hasArmeInInventory == true)
             {
                 if (hasAGun == true)
-                {
-                    hasAGun = false;
-                    targetGun.enabled = false;
-                    pistol.SetActive(false);
-                    pistolBelt.SetActive(true);
-                    gunIcon.SetActive(false);
-                    gunBar.SetActive(false);
+                {                  
+                    ChangeWeapon(false);
                 }
                 else
                 {
-                    hasAGun = true;
-                    targetGun.enabled = true;
-                    pistol.SetActive(true);
-                    pistolBelt.SetActive(false);
-                    gunIcon.SetActive(true);
-                    gunBar.SetActive(true);
+                    ChangeWeapon(true);        
                 }
-
             }
         }
         if (Input.GetAxis("Fire1") != 0)
         {
             Attack();
         }
+    }
+    private void ChangeWeapon(bool value)
+    {
+        hasAGun = value;
+        targetGun.enabled = value;
+        pistol.SetActive(value);
+        pistolBelt.SetActive(!value);
+        gunIcon.SetActive(value);
+        gunBar.SetActive(value);
     }
 
     private void ApplyAnimation()
