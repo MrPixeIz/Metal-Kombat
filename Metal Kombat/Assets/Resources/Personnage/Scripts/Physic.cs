@@ -10,6 +10,7 @@ public abstract class Physic : MonoBehaviour
     protected Vector3 velocity = new Vector3(0, 0, 0);
     protected bool isGrounded;
     protected Vector3 hitNormal;
+    protected bool canslide =true;
 
     void Start()
     {
@@ -53,6 +54,7 @@ public abstract class Physic : MonoBehaviour
         if (!isGrounded)
         {
             velocity.y -= gravity * Time.deltaTime;
+            print("Is not grounded " + gameObject.name);
         }
         else
         {

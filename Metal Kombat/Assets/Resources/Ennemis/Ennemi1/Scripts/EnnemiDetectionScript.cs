@@ -41,6 +41,7 @@ public class EnnemiDetectionScript : EnnemiMovement, iDamageable
 
     protected override void OnStart()
     {
+        canslide = false;
         audiosource.clip = audioClip;
         playerTarget = GameObject.Find("Player");
         anim = this.GetComponent<Animator>();
@@ -60,6 +61,7 @@ public class EnnemiDetectionScript : EnnemiMovement, iDamageable
 
     protected override void OnUpdate()
     {
+        
         float chaseRange = 60;
         float meleeAttackRange = 5;
         float gunAttackRange = 30;

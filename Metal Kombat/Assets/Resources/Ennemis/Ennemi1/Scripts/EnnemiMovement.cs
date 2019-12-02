@@ -14,10 +14,12 @@ public abstract class EnnemiMovement : Physic
 
     private int timeBeforeLookAt = 30;
     private CharacterController controller;
+    private bool isChasing = false;
 
     // Use this for initialization
     void Start()
     {
+        
         controller = this.GetComponent<CharacterController>();
         patrolTarget = startPatrolObject;
         OnStart();
@@ -74,6 +76,8 @@ public abstract class EnnemiMovement : Physic
     #region Move
     protected void MoveTo(Transform pGameObject, float pSpeed)
     {
+        if (isChasing)
+            pGameObject = playerTarget.transform;
         if (pSpeed > 0.3f)
             pSpeed = 0.3f;
         anim.SetFloat("InputMagnitude", pSpeed, 0.0f, Time.deltaTime);
@@ -86,6 +90,7 @@ public abstract class EnnemiMovement : Physic
 
     protected void Chase()
     {
+        isChasing = true;
         if (anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "IdlePunching")
         {
             MoveTo(playerTarget.transform, pSpeed: 0.3f);
@@ -109,11 +114,11 @@ public abstract class EnnemiMovement : Physic
     #endregion
     protected override void ApplyVelocity()
     {
-
     }
     #region SetBool
     protected void ResetBool()
     {
+        isChasing = false;
         anim.SetBool("isPunching", false);
         anim.SetBool("isIdlePunching", false);
         anim.SetBool("isShooting", false);
