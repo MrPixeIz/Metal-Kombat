@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class EnnemiMovement : MonoBehaviour
+public abstract class EnnemiMovement : Physic
 {
 
     public GameObject startPatrolObject;
@@ -13,22 +13,24 @@ public abstract class EnnemiMovement : MonoBehaviour
     protected GameObject patrolTarget;
 
     private int timeBeforeLookAt = 30;
+    private CharacterController controller;
 
     // Use this for initialization
     void Start()
     {
+        controller = this.GetComponent<CharacterController>();
         patrolTarget = startPatrolObject;
         OnStart();
     }
 
     // Update is called once per frame
-    void Update()
+    /*void Update()
     {
         OnUpdate();
-    }
+    }*/
 
     protected abstract void OnStart();
-    protected abstract void OnUpdate();
+   // protected abstract void OnUpdate();
 
     #region Movement
     protected void Idle()
@@ -54,7 +56,7 @@ public abstract class EnnemiMovement : MonoBehaviour
         timeBeforeLookAt--;
         if(timeBeforeLookAt == 0)
         {
-            Vector3 lookat = new Vector3(playerTarget.transform.position.x, gameObject.transform.position.y, playerTarget.transform.position.z);
+            Vector3 lookat = new Vector3(playerTarget.transform.position.x, playerTarget.transform.position.y, playerTarget.transform.position.z);
             transform.LookAt(lookat);
             timeBeforeLookAt = 30;
         }
@@ -72,11 +74,12 @@ public abstract class EnnemiMovement : MonoBehaviour
     #region Move
     protected void MoveTo(Transform pGameObject, float pSpeed)
     {
-        CharacterController controller = this.GetComponent<CharacterController>();
-
+        if (pSpeed > 0.3f)
+            pSpeed = 0.3f;
         anim.SetFloat("InputMagnitude", pSpeed, 0.0f, Time.deltaTime);
         var forward = transform.TransformDirection(Vector3.forward);
-        controller.SimpleMove(forward * pSpeed);
+        forward += velocity;
+        controller.Move(forward * pSpeed);
         Vector3 lookat = new Vector3(pGameObject.transform.position.x, gameObject.transform.position.y, pGameObject.transform.position.z);
         transform.LookAt(lookat);
     }
@@ -85,7 +88,7 @@ public abstract class EnnemiMovement : MonoBehaviour
     {
         if (anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "IdlePunching")
         {
-            MoveTo(playerTarget.transform, pSpeed: 15f);
+            MoveTo(playerTarget.transform, pSpeed: 0.3f);
         }
 
     }
@@ -94,17 +97,20 @@ public abstract class EnnemiMovement : MonoBehaviour
     {
         if (anim.GetCurrentAnimatorClipInfo(0)[0].clip.name != "IdlePunching")
         {
-            MoveTo(gameObject.transform, pSpeed: 3f);
+            MoveTo(gameObject.transform, pSpeed: 0.1f);
         }
     }
 
-    protected void SetPatrol(GameObject newPatrolTarget)
+    public void SetPatrol(GameObject newPatrolTarget)
     {
         patrolTarget = newPatrolTarget;
     }
 
     #endregion
+    protected override void ApplyVelocity()
+    {
 
+    }
     #region SetBool
     protected void ResetBool()
     {

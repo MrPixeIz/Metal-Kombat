@@ -101,7 +101,7 @@ public class EnnemiDetectionScript : EnnemiMovement, iDamageable
             }
             else
             {
-                if(DistancePlayer > gunAttackRange)
+                if (DistancePlayer > gunAttackRange)
                 {
                     ResetBool();
                     Chase();
@@ -120,7 +120,7 @@ public class EnnemiDetectionScript : EnnemiMovement, iDamageable
         }
     }
 
-
+   
 
     #region Events
     void VerifyIfHitSomething()
