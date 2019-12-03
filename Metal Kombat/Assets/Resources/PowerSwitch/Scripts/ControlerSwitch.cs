@@ -14,6 +14,7 @@ public class ControlerSwitch : MonoBehaviour
     private bool EndGame = false;
     private float timeLeft = 5.0f;
     private DisplayEndMessage displayEndMessage;
+    private bool isTrigerEnter = false;
 
     void Start()
     {
@@ -24,9 +25,6 @@ public class ControlerSwitch : MonoBehaviour
         electricSound = audios[0];
         soundSwitch = audios[1];
         displayEndMessage = GetComponentInChildren<DisplayEndMessage>();
-      
-       
-
         changelightColor = GetComponentInChildren<ChangeLightColor>();
     }
 
@@ -44,9 +42,14 @@ public class ControlerSwitch : MonoBehaviour
 
     void OnTriggerEnter()
     {
-        animation.SetTrigger("TriggerSwitch");
-        soundSwitch.Play();
-        KillAllEnnemies();
+        if (!isTrigerEnter)
+        {
+            isTrigerEnter = true;
+            animation.SetTrigger("TriggerSwitch");
+            soundSwitch.Play();
+            KillAllEnnemies();
+        }
+
     }
 
     public void TurnLight()
@@ -58,12 +61,13 @@ public class ControlerSwitch : MonoBehaviour
     }
     private void KillAllEnnemies()
     {
+        int maxLifeEnnemies = 100;
         GameObject[] ennemies = GameObject.FindGameObjectsWithTag("Ennemi");
 
         foreach (GameObject ennemi in ennemies)
         {
-            iDamageable ennemiToKill=ennemi.GetComponent<iDamageable>();
-            ennemiToKill.TakeDammageInt(100);
+            iDamageable ennemiToKill = ennemi.GetComponent<iDamageable>();
+            ennemiToKill.TakeDammageInt(maxLifeEnnemies);
         }
     }
 
