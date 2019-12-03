@@ -12,7 +12,7 @@ public class ControlerSwitch : MonoBehaviour
     private AudioSource soundSwitch;
     private ChangeLightColor changelightColor;
     private bool EndGame = false;
-    private float timeLeft = 2.0f;
+    private float timeLeft = 5.0f;
     private DisplayEndMessage displayEndMessage;
 
     void Start()
@@ -46,6 +46,7 @@ public class ControlerSwitch : MonoBehaviour
     {
         animation.SetTrigger("TriggerSwitch");
         soundSwitch.Play();
+        KillAllEnnemies();
     }
 
     public void TurnLight()
@@ -54,6 +55,16 @@ public class ControlerSwitch : MonoBehaviour
         changelightColor.ChangeLightColorSwitch();
         displayEndMessage.DisplayMessage();
         EndGame = true;
+    }
+    private void KillAllEnnemies()
+    {
+        GameObject[] ennemies = GameObject.FindGameObjectsWithTag("Ennemi");
+
+        foreach (GameObject ennemi in ennemies)
+        {
+            iDamageable ennemiToKill=ennemi.GetComponent<iDamageable>();
+            ennemiToKill.TakeDammageInt(100);
+        }
     }
 
 }
