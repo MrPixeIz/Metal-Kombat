@@ -38,13 +38,13 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 11
-  m_GIWorkflowMode: 0
+  m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -5908,8 +5908,7 @@ Animator:
     animation clip 'Walking (2)'\n\tFrom animation clip 'Running'\n\tFrom animation
     clip 'Jump (2)'\n\tFrom animation clip 'Punching'\n\tFrom animation clip 'Fall
     A Loop'\n\tFrom animation clip 'Standing To Crouched'\n\tFrom animation clip 'Mma
-    Idle (1)'\n\tFrom animation clip 'Shooting'\n\tFrom animation clip 'Dying Backwards'\n\tand
-    more ..."
+    Idle (1)'"
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0

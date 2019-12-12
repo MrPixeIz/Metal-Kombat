@@ -70,14 +70,10 @@ public abstract class Physic : MonoBehaviour
     private bool IsInContactWithSlope()
     {
         RaycastHit hit;
-
         bool touchGround = Physics.SphereCast(transform.position + new Vector3(0, 2.5f, 0), 1.75f, Vector3.down, out hit, 1f);
-
         if (touchGround)
         {
-            hitNormal = hit.normal;
-            Debug.DrawLine(hit.point, (hit.point + hit.normal * 6), Color.cyan);
-            
+            hitNormal = hit.normal;      
             if (Vector3.Angle(Vector3.up, hitNormal) <= SLOPELIMIT)
             {          
                     isGrounded = true;

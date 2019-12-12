@@ -12,7 +12,7 @@ public class MainPlayer : Personnage, iDamageable
     private float delayBeforeNextFire = 0;
     private float timeForIkActive = 0;
     private AudioClip ShootSoundclip;
-    private int overheatValue;
+    private AudioClip ShootSoundclipOverHeat;
     GameObject pistol;
     GameObject pistolBelt;
     GameObject gunBar;
@@ -35,30 +35,44 @@ public class MainPlayer : Personnage, iDamageable
 
     protected override void OnStart()
     {
+        GetGunComponents();
+        anim = this.GetComponent<Animator>();
+        cam = Camera.main;
+        sounds = GetComponentInChildren<Sounds>();
+        SetupGunBar();
+        GetGunbarComponents();
+        SetShootSounds();
+            
+    }
+    private void SetShootSounds()
+    {
+        ShootSoundclipOverHeat = Resources.Load<AudioClip>("Personnage/Sons/gunAlienOverheat");
+        ShootSoundclip = Resources.Load<AudioClip>("Personnage/Sons/gunAlien");
+    }
+    private void GetGunComponents()
+    {
         targetGun = GameObject.FindGameObjectWithTag("point").GetComponent<Image>();
         targetGun.enabled = false;
         pistol = GameObject.FindGameObjectWithTag("PistolInHand");
         pistol.SetActive(false);
         pistolBelt = GameObject.FindGameObjectWithTag("GunBelt");
         pistolBelt.SetActive(false);
-        anim = this.GetComponent<Animator>();
-        cam = Camera.main;
-        sounds = GetComponentInChildren<Sounds>();
-        ShootSoundclip = Resources.Load<AudioClip>("Personnage/Sons/gun");
-        SetupGunBar();
-        gunBar = GameObject.FindGameObjectWithTag("GunBar");
+    }
+    private void GetGunbarComponents()
+    {
+       gunBar = GameObject.FindGameObjectWithTag("GunBar");
         gunBar.SetActive(false);
         gunIcon = GameObject.FindGameObjectWithTag("GunIcon");
-        gunIcon.SetActive(false);
+        gunIcon.SetActive(false);  
     }
 
     private void SetupGunBar()
     {
         Image gunBar = GameObject.FindGameObjectWithTag("gunPlein").GetComponent<Image>();
         barreGun = new GunBar(gunBar);
-
         onDieMainPlayerHook = new OnDieMainPlayerHook(this);
     }
+
     private void DecreaseGunBar()
     {
         if (barreGun.currentNumber < 0)
@@ -74,8 +88,7 @@ public class MainPlayer : Personnage, iDamageable
         float currentNumber = barreGun.ModifyGunBarWithValue(30);
         if (currentNumber >= 100)
         {
-
-            overheatValue = 100;
+            barreGun.TimeOverheating = 3;
         }
     }
 
@@ -89,40 +102,42 @@ public class MainPlayer : Personnage, iDamageable
 
     protected override void Attack()
     {
+        
         if (delayBeforeNextFire <= 0)
         {
             float fireDelay = 0.5f;
             if (hasAGun)
             {
-                Camera cam = Camera.main;
-                ikActive = true;
-                timeForIkActive = 1;
-                if (barreGun.currentNumber < 100)
-                {
-                    if (isGrounded)
-                    {
-                        ShootGun();
-                        ShootSoundclip = Resources.Load<AudioClip>("Personnage/Sons/gunAlien");
-                    }
-                }
-                else
-                {
-                    overheatValue = 100;
-                    ShootSoundclip = Resources.Load<AudioClip>("Personnage/Sons/gunAlienOverheat");
-                }
-                PlaySound(ShootSoundclip);
-                if (overheatValue > 0)
-                {
-                    ShootSoundclip = Resources.Load<AudioClip>("Personnage/Sons/gunAlienOverheat");
-                    PlaySound(ShootSoundclip);
-                }
+                Shoot();
             }
             else
             {
                 anim.SetTrigger("isPunching");
             }
-            delayBeforeNextFire = fireDelay;
+            delayBeforeNextFire = fireDelay;      
+            delayBeforeNextFire = fireDelay;      
         }
+    }
+    void Shoot()
+    {
+        AudioClip clipToPlay= ShootSoundclip;
+        Camera cam = Camera.main;
+        ikActive = true;
+        timeForIkActive = 1;
+        if (barreGun.currentNumber < 100)
+        {
+            if (isGrounded)
+            {
+                ShootGun();
+                clipToPlay = ShootSoundclip;
+            }
+        }
+        else
+        {
+            barreGun.TimeOverheating = 3;
+            clipToPlay = ShootSoundclipOverHeat;
+        }
+        PlaySound(clipToPlay);
     }
 
     void ShootGun()
@@ -134,13 +149,10 @@ public class MainPlayer : Personnage, iDamageable
             iDamageable ennemi = null;
             if (raycastHit.collider.GetComponent<Personnage>() == null)
             {
-
                 ennemi = raycastHit.collider.gameObject.GetComponent<iDamageable>();
             }
-
             if (ennemi != null)
             {
-
                 ennemi.TakeDammageInt(DamageAmount);
             }
         }
@@ -194,12 +206,12 @@ public class MainPlayer : Personnage, iDamageable
             if (hasArmeInInventory == true)
             {
                 if (hasAGun == true)
-                {                  
+                {
                     ChangeWeapon(false);
                 }
                 else
                 {
-                    ChangeWeapon(true);        
+                    ChangeWeapon(true);
                 }
             }
         }
@@ -251,7 +263,6 @@ public class MainPlayer : Personnage, iDamageable
     public float Jump()
     {
         float jumpForce = 25;
-
         anim.SetTrigger("isJumping");
         return jumpForce;
     }
@@ -267,7 +278,6 @@ public class MainPlayer : Personnage, iDamageable
     {
         float inputX = Input.GetAxis("Horizontal");
         float inputZ = Input.GetAxis("Vertical");
-        var camera = Camera.main;
         var foward = cam.transform.forward;
         var right = cam.transform.right;
         foward.y = 0f;
@@ -297,13 +307,13 @@ public class MainPlayer : Personnage, iDamageable
         ProcessFireDelay();
         ApplyAnimation();
         PlaceGun();
-        if (overheatValue <= 0)
+        if (barreGun.TimeOverheating <= 0)
         {
             DecreaseGunBar();
         }
         else
         {
-            overheatValue -= 1;
+            barreGun.TimeOverheating -= Time.deltaTime;
         }
     }
 
@@ -341,17 +351,13 @@ public class MainPlayer : Personnage, iDamageable
                 }
                 if (rightShoulderLocation != null)
                 {
-
                     anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
                     anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 1);
                     Vector3 gunPosition = targetingVector.normalized * 3 + rightShoulderLocation;
                     anim.SetIKPosition(AvatarIKGoal.RightHand, gunPosition);
-
                     Quaternion gunRotation = Quaternion.LookRotation(targetingVector, Vector3.up);
-
                     anim.SetIKRotation(AvatarIKGoal.RightHand, gunRotation);
                 }
-
             }
             else
             {

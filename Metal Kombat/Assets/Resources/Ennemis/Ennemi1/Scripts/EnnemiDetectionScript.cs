@@ -30,12 +30,7 @@ public class EnnemiDetectionScript : EnnemiMovement, iDamageable
             {
                 return 20;
             }
-        }
-
-        set
-        {
-            DamageAmount = value;
-        }
+        }      
     }
 
 
@@ -197,7 +192,6 @@ public class EnnemiDetectionScript : EnnemiMovement, iDamageable
     }
     public void PlaySound(AudioClip clipAudio)
     {
-        //audiosource.clip = clipAudio;
         audiosource.volume = Random.Range(0.4f, 0.5f);
         audiosource.pitch = Random.Range(0.9f, 1.3f);
         audiosource.PlayOneShot(clipAudio);

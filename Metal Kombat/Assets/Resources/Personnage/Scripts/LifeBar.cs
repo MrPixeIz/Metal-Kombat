@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
 
-public class LifeBar : MonoBehaviour
+public class LifeBar 
 {
     private const float REDLIFEBARTHRESHOLD = 0.3f;
     public Image barreVie;
@@ -21,16 +21,13 @@ public class LifeBar : MonoBehaviour
     }
     public LifeBar(float inMaxlife)
     {
-        
         maxLife = inMaxlife;
         currentLife = maxLife;
-
     }
 
     public void SetOnDieListenner(Personnage.OnDieEvent onDieEvent)
     {
         onDie = onDieEvent;
-
     }
     public void ModifyHealthWithValue(float deltaModifier)
     {
@@ -45,21 +42,19 @@ public class LifeBar : MonoBehaviour
     }
     public void AdjusteHealthBar(float vie)
     {
-        
         currentLife += vie;
         if (currentLife > 100)
         {
             currentLife = 100;
         }
         SetLifeBarColor();
-
     }
 
     private void SetLifeBarColor()
     {
         float fillAmountPercent = (currentLife / maxLife);
         barreVie.fillAmount = fillAmountPercent;
-        
+
         if (fillAmountPercent <= REDLIFEBARTHRESHOLD)
         {
             barreVie.color = new Color32(255, 0, 0, 255);
