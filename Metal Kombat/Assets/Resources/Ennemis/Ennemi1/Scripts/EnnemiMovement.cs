@@ -12,27 +12,20 @@ public abstract class EnnemiMovement : Physic
     protected GameObject playerTarget;
     protected GameObject patrolTarget;
 
-    private int timeBeforeLookAt = 30;
+    private float timeBeforeLookAt = 0.5f;
     private CharacterController controller;
     private bool isChasing = false;
 
     // Use this for initialization
     void Start()
     {
-        
+
         controller = this.GetComponent<CharacterController>();
         patrolTarget = startPatrolObject;
         OnStart();
     }
 
-    // Update is called once per frame
-    /*void Update()
-    {
-        OnUpdate();
-    }*/
-
     protected abstract void OnStart();
-   // protected abstract void OnUpdate();
 
     #region Movement
     protected void Idle()
@@ -55,12 +48,12 @@ public abstract class EnnemiMovement : Physic
 
     protected void Shoot()
     {
-        timeBeforeLookAt--;
-        if(timeBeforeLookAt == 0)
+        timeBeforeLookAt -= Time.deltaTime;
+        if (timeBeforeLookAt <= 0)
         {
             Vector3 lookat = new Vector3(playerTarget.transform.position.x, playerTarget.transform.position.y, playerTarget.transform.position.z);
             transform.LookAt(lookat);
-            timeBeforeLookAt = 30;
+            timeBeforeLookAt = 1;
         }
         anim.SetBool("isShooting", true);
         ReShooting();

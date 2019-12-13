@@ -37,7 +37,7 @@ public abstract class Personnage : Physic
 
     protected abstract void ApplyMoveInput();
 
-    protected abstract void TakeDammage();
+    protected abstract void TakeDammage(int damage);
 
     protected abstract void ApplyMovement();
 

@@ -254,10 +254,9 @@ public class MainPlayer : Personnage, iDamageable
         barreDeVie.AdjusteHealthBar(vie);
     }
 
-    protected override void TakeDammage()
+    protected override void TakeDammage(int pDamage)
     {
-        float damage = 10;
-        barreDeVie.ModifyHealthWithValue(-damage);
+        barreDeVie.ModifyHealthWithValue(-pDamage);
     }
 
     public float Jump()
@@ -391,7 +390,7 @@ public class MainPlayer : Personnage, iDamageable
 
     void iDamageable.TakeDammageInt(int dammage)
     {
-        TakeDammage();
+        TakeDammage(dammage);
     }
 
     protected class OnDieMainPlayerHook : OnDieHook

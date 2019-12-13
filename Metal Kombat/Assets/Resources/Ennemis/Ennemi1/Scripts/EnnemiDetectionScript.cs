@@ -56,7 +56,6 @@ public class EnnemiDetectionScript : EnnemiMovement, iDamageable
 
     protected override void OnUpdate()
     {
-        
         float chaseRange = 60;
         float meleeAttackRange = 5;
         float gunAttackRange = 30;
@@ -68,19 +67,11 @@ public class EnnemiDetectionScript : EnnemiMovement, iDamageable
             VerifyIfHitSomething();
             if (isAPuncher)
             {
-                if (DistancePlayer <= chaseRange && DistancePlayer >= meleeAttackRange)
-                {
-                    ResetBool();
-                    Chase();
-                }
+                VerifyDistanceForChase(meleeAttackRange, chaseRange);
             }
             else
             {
-                if (DistancePlayer <= chaseRange && DistancePlayer > gunAttackRange)
-                {
-                    ResetBool();
-                    Chase();
-                }
+                VerifyDistanceForChase(gunAttackRange, chaseRange);
             }
 
             if (DistancePlayer > chaseRange)
@@ -114,6 +105,15 @@ public class EnnemiDetectionScript : EnnemiMovement, iDamageable
         if (DistancePlayer <= gunAttackRange && !isAPuncher)
         {
             Shoot();
+        }
+    }
+
+    private void VerifyDistanceForChase(float pAttackRange, float pChaseRange)
+    {
+        if (DistancePlayer <= pChaseRange && DistancePlayer > pAttackRange)
+        {
+            ResetBool();
+            Chase();
         }
     }
 
